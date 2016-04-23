@@ -50,9 +50,8 @@ entity *level::getPlatformAt(sf::Vector2f pos)
     {
         for (auto &platform : _platforms)
             {
-                auto platformPos = platform->getPosition();
                 auto platformBounds = platform->getSprite()->getGlobalBounds();
-                if (clsn::hasCollided(pos, sf::Vector2f(1, 1), platformPos, sf::Vector2f(platformBounds.width, platformBounds.height)))
+                if (clsn::hasCollided(pos, sf::Vector2f(1, 1), sf::Vector2f(platformBounds.left, platformBounds.top), sf::Vector2f(platformBounds.width, platformBounds.height)))
                     {
                         return &*platform;
                     }

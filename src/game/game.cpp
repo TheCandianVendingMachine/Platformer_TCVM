@@ -26,6 +26,9 @@ void game::initializeControls()
         globals::_mouseManager->add("editor_mouse_press", sf::Mouse::Left, true, LEVEL_EDITOR_STATE);
         globals::_mouseManager->add("editor_mouse_release", sf::Mouse::Left, false, LEVEL_EDITOR_STATE);
 
+        globals::_keyboardManager->add("editor_spin_block_right", sf::Keyboard::E, true, LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_spin_block_left", sf::Keyboard::Q, true, LEVEL_EDITOR_STATE);
+
         globals::_keyboardManager->add("editor_delete_entity", sf::Keyboard::Delete, true, LEVEL_EDITOR_STATE);
         globals::_keyboardManager->add("editor_snap_to_grid", sf::Keyboard::LAlt, true, LEVEL_EDITOR_STATE);
 
@@ -36,6 +39,11 @@ void game::initializeControls()
         
         globals::_keyboardManager->add("change_to_editor", sf::Keyboard::F1, true, GAME_STATE);
         globals::_keyboardManager->add("change_to_game", sf::Keyboard::F2, [] () { globals::_stateMachine->popState(); }, true, LEVEL_EDITOR_STATE);
+
+
+        globals::_keyboardManager->add("player_jump", sf::Keyboard::Space, true, GAME_STATE);
+        globals::_keyboardManager->add("player_move_left", sf::Keyboard::Left, true, GAME_STATE);
+        globals::_keyboardManager->add("player_move_right", sf::Keyboard::Right, true, GAME_STATE);
     }
 
 void game::initialize()

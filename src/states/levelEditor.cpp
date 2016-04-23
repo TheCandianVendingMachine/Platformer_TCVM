@@ -55,6 +55,21 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
                 _selectedEntity = nullptr;
             });
 
+        globals::_keyboardManager->changeFunction("editor_spin_block_right", [this] () 
+            {
+                if (_selectedEntity)
+                    {
+                        _selectedEntity->getSprite()->rotate(15);
+                    }
+            });
+        globals::_keyboardManager->changeFunction("editor_spin_block_left", [this] () 
+            {
+                if (_selectedEntity)
+                    {
+                        _selectedEntity->getSprite()->rotate(-15);
+                    }
+            });
+
         globals::_keyboardManager->changeFunction("editor_snap_to_grid", [this] () { _snapToGrid = true; });
         globals::_keyboardManager->changeInverseFunction("editor_snap_to_grid", [this] () { _snapToGrid = false; });
 
