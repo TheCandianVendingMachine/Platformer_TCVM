@@ -29,24 +29,33 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
         _viewImpulse = sf::Vector2f(0, 0);
 
         
-        globals::_mouseManager->changeFunction("editor_mouse_press", [this] () 
+        globals::_mouseManager->changeFunction("editor_left_mouse_press", [this] () 
             { 
-                sf::Vector2f mousePos = _mousePosToWorldCoord();
-                _selectedEntity = _level->getPlatformAt(mousePos);
+                _selectedEntity = _level->getPlatformAt(_mousePos);
                 if (!_selectedEntity)
                     {
                         _selectedEntity = _level->addPlatform();
                     }
             });
-        globals::_mouseManager->changeFunction("editor_mouse_release", [this] () 
+        globals::_mouseManager->changeInverseFunction("editor_left_mouse_press", [this] () 
             {
                 _selectedEntity = nullptr;
             });
 
         globals::_keyboardManager->changeFunction("editor_delete_entity", [this] () 
             {
-                sf::Vector2f mousePos = _mousePosToWorldCoord();
-                _selectedEntity = _level->getPlatformAt(mousePos);
+                _selectedEntity = _level->getPlatformAt(_mousePos);
+                if (_selectedEntity)
+                    {
+                        _level->removePlatform(_selectedEntity);
+                    }
+
+                _selectedEntity = nullptr;
+            });
+
+        globals::_mouseManager->changeFunction("editor_right_mouse_press", [this] () 
+            {
+                _selectedEntity = _level->getPlatformAt(_mousePos);
                 if (_selectedEntity)
                     {
                         _level->removePlatform(_selectedEntity);
@@ -85,11 +94,15 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
         globals::_keyboardManager->changeFunction("editor_move_view_down", [this] () { _viewImpulse.y = 250; });
         globals::_keyboardManager->changeInverseFunction("editor_move_view_down", [this] () { _viewImpulse.y = 0; });
 
+        globals::_keyboardManager->changeFunction("editor_zoom_view_out", [this] () { if (!_selectedEntity )_editorView.zoom(1.1); });
+        globals::_keyboardManager->changeFunction("editor_zoom_view_in", [this] () { if (!_selectedEntity) _editorView.zoom(0.9); });
+
     }
 
 void levelEditor::initialize()
     {
-        globals::_logger->logToConsole("Editor Activated");
+        globals::_logger->log("Initializing level editor");
+
         _editorView = globals::_stateMachine->getWindow()->getView();
 
         _snapToGrid = false;
@@ -99,16 +112,16 @@ void levelEditor::update(sf::Time deltaTime)
     {
         _editorView.move(_viewImpulse * deltaTime.asSeconds());
 
-        sf::Vector2f mousePos = _mousePosToWorldCoord();
+        _mousePos = _mousePosToWorldCoord();
         if (_selectedEntity)
             {
                 if (_snapToGrid)
                     {
-                        _selectedEntity->setPosition(_getClosestGridCoord(mousePos));
+                        _selectedEntity->setPosition(_getClosestGridCoord(_mousePos));
                     }
                 else
                     {
-                        _selectedEntity->setPosition(mousePos.x, mousePos.y);
+                        _selectedEntity->setPosition(_mousePos.x, _mousePos.y);
                     }
             }
 
@@ -124,7 +137,7 @@ void levelEditor::render()
 void levelEditor::cleanup()
     {
         globals::_stateMachine->getWindow()->setView(globals::_stateMachine->getWindow()->getDefaultView());
-        globals::_logger->logToConsole("Editor Deactivated");
+        globals::_logger->log("Cleaning up level editor");
     }
 
 levelEditor::~levelEditor()

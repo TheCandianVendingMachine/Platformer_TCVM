@@ -28,7 +28,9 @@ class entity
 
             virtual void draw(sf::RenderTarget &target);
             virtual void update(sf::Time deltaTime) = 0;
-            virtual void collide() {}
+
+            virtual void onCollide() {}
+            virtual void offCollide() {}
 
             void setPosition(sf::Vector2f pos);
             void setPosition(float X, float Y);

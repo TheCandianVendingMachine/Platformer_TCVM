@@ -13,11 +13,16 @@ class player : public entity
             bool _jumping;
 
             const float _acceleration;
+            const float _maxVelocity;
+
             const float _gravity;
+            const float _terminalVelocity;
 
         public:
             player();
             void update(sf::Time deltaTime);
-            void collide();
+
+            void onCollide();
+            void offCollide();
 
     };

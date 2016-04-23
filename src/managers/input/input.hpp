@@ -2,8 +2,8 @@
 // input object. What will happen when key is pressed, and what state it will be active in
 #pragma once
 
-#include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/System/Clock.hpp>
 
 #include <functional>
 
@@ -25,6 +25,8 @@ class input
 
             states _activeState;
 
+            sf::Clock _time;
+
         public:
             input() = default;
             input(T key, std::function<void()> onInput, bool onPress, states activeState);
@@ -32,6 +34,8 @@ class input
 
             void setFunction(std::function<void()> func);
             void setInverseFunction(std::function<void()> func);
+
+            sf::Time getTimePressed();
 
             T getInput() const;
             states getState() const;

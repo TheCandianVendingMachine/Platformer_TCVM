@@ -28,7 +28,7 @@ class game
             stateMachine _stateMachine;
             eventManager _eventManager;
 
-            logr::logger _logger;
+            logr::logger *_logger;
 
         private:
             sf::RenderWindow *app;
@@ -39,10 +39,9 @@ class game
             void initializeControls();
             void initialize();
 
-            void cleanup();
-
         public:
             void start();
+            void cleanup();
 
             ~game();
 

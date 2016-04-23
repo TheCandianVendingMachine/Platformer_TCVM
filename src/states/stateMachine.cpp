@@ -225,6 +225,8 @@ void stateMachine::setWindow(sf::RenderWindow *window)
 
 void stateMachine::cleanup()
     {
+        globals::_logger->log("Cleaning up game state machine");
+
         for (auto &topState : _currentStates)
             {
                 if (topState)
@@ -234,9 +236,9 @@ void stateMachine::cleanup()
                         topState = nullptr;
                     }
             }
+
+        globals::_logger->log("Game state machine cleaned up");
     }
 
 stateMachine::~stateMachine()
-    {
-        cleanup();
-    }
+    {}

@@ -23,6 +23,7 @@ void input<T>::execute(sf::Event &event, states active)
         if (active == _activeState && event.key.code == _input && (_onPress ? event.type == _press : event.type == _release))
             {
                 _onInput();
+                _time.restart();
             }
         else if (active == _activeState && event.key.code == _input && (!_onPress ? event.type == _press : event.type == _release))
             {
@@ -40,6 +41,12 @@ template<typename T>
 void input<T>::setInverseFunction(std::function<void()> func)
     {
         _onOppositeInput = func;
+    }
+
+template<typename T>
+sf::Time input<T>::getTimePressed()
+    {
+        return _time.getElapsedTime();
     }
 
 template<typename T>

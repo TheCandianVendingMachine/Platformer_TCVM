@@ -1,4 +1,5 @@
-#include "inputManager.hpp"
+#include "../../game/globals.hpp"
+
 template<typename T>
 inline void inputManager<T>::add(const std::string &name, T key, bool onPress, states activeState)
     {
@@ -16,13 +17,33 @@ void inputManager<T>::add(const std::string &name, T key, std::function<void()> 
 template<typename T>
 void inputManager<T>::changeFunction(const std::string &name, std::function<void()> func)
     {
-        _inputs[name].setFunction(func);
+        if (_inputs.find(name) != _inputs.end())
+            {
+                _inputs[name].setFunction(func);
+            }
+        else
+            {
+                globals::_logger->log("Input \"" + name + "\" does not exist in input manager");
+            }
     }
 
 template<typename T>
 inline void inputManager<T>::changeInverseFunction(const std::string & name, std::function<void()> func)
     {
-        _inputs[name].setInverseFunction(func);
+        if (_inputs.find(name) != _inputs.end())
+            {
+                _inputs[name].setInverseFunction(func);
+            }
+        else
+            {
+                globals::_logger->log("Input \"" + name + "\" does not exist in input manager");
+            }
+    }
+
+template<typename T>
+sf::Time inputManager<T>::getTimeKeyHasBeenPressed(const std::string &name)
+    {
+        return _inputs[name].getTimePressed();
     }
 
 template<typename T>
@@ -32,6 +53,10 @@ void inputManager<T>::remove(const std::string &name)
         if (it != _inputs.end())
             {
                 _inputs.erase(it);
+            }
+        else
+            {
+                globals::_logger->log("Input \"" + name + "\" does not exist in input manager");
             }
     }
 

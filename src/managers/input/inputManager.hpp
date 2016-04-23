@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <functional>
 
-#include <SFML/Window/Keyboard.hpp>
+#include <SFML/System/Time.hpp>
 
 #include "input.hpp"
 
@@ -21,6 +21,8 @@ class inputManager
 
             void changeFunction(const std::string &name, std::function<void()> func);
             void changeInverseFunction(const std::string &name, std::function<void()> func);
+
+            sf::Time getTimeKeyHasBeenPressed(const std::string &name);
 
             void remove(const std::string &name);
 

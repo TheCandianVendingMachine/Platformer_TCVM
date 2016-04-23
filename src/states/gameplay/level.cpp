@@ -20,7 +20,11 @@ void level::handleCollision(entity *collider)
                 auto platformBounds = platform->getSprite()->getGlobalBounds();
                 if (clsn::handleCollision(collider, &*platform))
                     {
-                        collider->collide();
+                        collider->onCollide();
+                    }
+                else
+                    {
+                        collider->offCollide();
                     }
             }
     }

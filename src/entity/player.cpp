@@ -2,7 +2,7 @@
 
 #include "../game/globals.hpp"
 
-player::player() : _acceleration(50.f), _gravity(500.f)
+player::player() : _acceleration(50.f), _gravity(500.f), _maxVelocity(400.f), _terminalVelocity(700.f)
     {
         _entID = PLAYER;
         _impulse = sf::Vector2f(0, 0);
@@ -30,7 +30,7 @@ void player::update(sf::Time deltaTime)
         if (_enablePhysics)
             {
                 _impulse.y += _gravity * deltaTime.asSeconds();
-                if (_impulse.y >= 700)
+                if (_impulse.y >= _terminalVelocity)
                     {
                         _impulse.y = 700;
                     }
@@ -41,12 +41,22 @@ void player::update(sf::Time deltaTime)
                 _impulse.x > 0 ? _impulse.x -= _acceleration / 4.f : _impulse.x += _acceleration / 4.f;
             }
 
+        if (abs(_impulse.x) >= _maxVelocity)
+            {
+                _impulse.x > 0 ? _impulse.x = _maxVelocity : _impulse.x = -_maxVelocity;
+            }
+
         _sprite.move(_impulse * deltaTime.asSeconds());
     }
 
-void player::collide()
+void player::onCollide()
     {
         _enablePhysics = false;
         _jumping = false;
         _impulse.y = 0;
+    }
+
+void player::offCollide()
+    {
+        _enablePhysics = true;
     }

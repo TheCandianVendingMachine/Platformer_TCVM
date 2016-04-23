@@ -19,6 +19,8 @@ class levelEditor : public state
             level *_level;
             entity *_selectedEntity;
 
+            sf::Vector2f _mousePos;
+
             const int _gridSize;
             bool _snapToGrid;
 

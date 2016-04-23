@@ -1,4 +1,6 @@
-#include "resourceManager.hpp"
+#include "../game/globals.hpp"
+#include <assert.h>
+
 template<typename T>
 T *resourceManager<T>::get(const std::string &resourceName, bool getDefaultTexture)
     {
@@ -11,10 +13,11 @@ T *resourceManager<T>::get(const std::string &resourceName, bool getDefaultTextu
             {
                 if (!_defaultResource.empty())
                     {
+                        globals::_logger->log("Default texture has to be used. \"" + resourceName + "\" not loaded");
                         return get(_defaultResource, false);
                     }
             }
-
+      
         return nullptr;
     }
 
@@ -33,7 +36,8 @@ T *resourceManager<T>::add(const std::string &filepath, const std::string &resou
                 _resources[resourceName] = std::make_shared<T>(*newResource);
                 return _resources[resourceName].get();
             }
-            
+        
+        globals::_logger->log("Cannot add \"" + resourceName + "\" to the resource pool");
         return nullptr;
     }
 
