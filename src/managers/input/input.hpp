@@ -9,6 +9,13 @@
 
 #include "../../states/states.hpp"
 
+enum inputState
+    {
+        ON_PRESS,
+        ON_RELEASE,
+        REAL_TIME
+    };
+
 template<typename T>
 class input
     {
@@ -19,9 +26,11 @@ class input
             T _input;
 
             std::function<void()> _onInput;
-            std::function<void()> _onOppositeInput;
+            std::function<void()> _offInput;
 
+            inputState _state;
             bool _onPress;
+            bool _pollRealtime;
 
             states _activeState;
 
@@ -29,8 +38,11 @@ class input
 
         public:
             input() = default;
+            input(T key, std::function<void()> onInput, inputState state, states activeState);
             input(T key, std::function<void()> onInput, bool onPress, states activeState);
+
             void execute(sf::Event &event, states active);
+            void execute(states active);
 
             void setFunction(std::function<void()> func);
             void setInverseFunction(std::function<void()> func);

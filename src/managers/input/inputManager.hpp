@@ -15,9 +15,20 @@ class inputManager
         private:
             std::unordered_map<std::string, input<T>> _inputs;
 
+            std::unordered_map<std::string, input<T>*> _eventTimeInputs;
+            std::unordered_map<std::string, input<T>*> _realTimeInputs;
+
         public:
+            // Any Non-Realtime inputs without function in constructor
+            void add(const std::string &name, T key, inputState inputState, states activeState);
+            // Any Non-Realtime inputs with function in constructor
+            void add(const std::string &name, T key, std::function<void()> onInput, inputState inputState, states activeState);
+
+            // Any Realtime inputs without function in constructor
             void add(const std::string &name, T key, bool onPress, states activeState);
+            // Any Realtime inputs with function in constructor
             void add(const std::string &name, T key, std::function<void()> onInput, bool onPress, states activeState);
+
 
             void changeFunction(const std::string &name, std::function<void()> func);
             void changeInverseFunction(const std::string &name, std::function<void()> func);
@@ -26,7 +37,9 @@ class inputManager
 
             void remove(const std::string &name);
 
+            void handleInput(states currentState);
             void handleInput(sf::Event &event, states currentState);
+            
 
     };
 

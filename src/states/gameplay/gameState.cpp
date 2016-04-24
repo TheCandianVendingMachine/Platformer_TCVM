@@ -11,7 +11,7 @@ gameState::gameState()
 
 void gameState::initialize()
     {
-        globals::_logger->log("Initializing game state");
+        globals::_logger->logToConsole("Initializing game state");
         globals::_keyboardManager->changeFunction("change_to_editor", [this] () { globals::_stateMachine->queueState(new levelEditor(_world.getLevel())); });
     }
 
@@ -27,7 +27,7 @@ void gameState::update(sf::Time deltaTime)
 
 void gameState::cleanup()
     {
-        globals::_logger->log("Cleaning up game state");
+        globals::_logger->logToConsole("Cleaning up game state");
     }
 
 gameState::~gameState()

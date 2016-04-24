@@ -131,13 +131,14 @@ void stateMachine::tick(sf::Time deltaTime)
 void stateMachine::handleInput()
     {
         sf::Event event;
+        states currentState = _currentStates.back()->getState();
         while (_window->pollEvent(event))
             {
                 // make sure a state is actually in the stack
                 if (!_currentStates.empty() && _currentStates.back())
                     {
-                        globals::_keyboardManager->handleInput(event, _currentStates.back()->getState());
-                        globals::_mouseManager->handleInput(event, _currentStates.back()->getState());
+                        globals::_keyboardManager->handleInput(event, currentState);
+                        globals::_mouseManager->handleInput(event, currentState);
                     }
 
                 switch (event.type)
@@ -145,12 +146,13 @@ void stateMachine::handleInput()
                         case sf::Event::Closed:
                             _window->close();
                             break;
-                        case sf::Event::KeyPressed:
-                            break;
                         default:
                             break;
                     }
             }
+
+        globals::_keyboardManager->handleInput(currentState);
+        globals::_mouseManager->handleInput(currentState);
     }
 
 void stateMachine::update(sf::Time deltaTime)
@@ -225,7 +227,7 @@ void stateMachine::setWindow(sf::RenderWindow *window)
 
 void stateMachine::cleanup()
     {
-        globals::_logger->log("Cleaning up game state machine");
+        globals::_logger->logToConsole("Cleaning up game state machine");
 
         for (auto &topState : _currentStates)
             {
@@ -237,7 +239,7 @@ void stateMachine::cleanup()
                     }
             }
 
-        globals::_logger->log("Game state machine cleaned up");
+        globals::_logger->logToConsole("Game state machine cleaned up");
     }
 
 stateMachine::~stateMachine()

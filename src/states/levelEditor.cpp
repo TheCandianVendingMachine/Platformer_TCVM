@@ -101,7 +101,7 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
 
 void levelEditor::initialize()
     {
-        globals::_logger->log("Initializing level editor");
+        globals::_logger->logToConsole("Initializing level editor");
 
         _editorView = globals::_stateMachine->getWindow()->getView();
 
@@ -137,7 +137,7 @@ void levelEditor::render()
 void levelEditor::cleanup()
     {
         globals::_stateMachine->getWindow()->setView(globals::_stateMachine->getWindow()->getDefaultView());
-        globals::_logger->log("Cleaning up level editor");
+        globals::_logger->logToConsole("Cleaning up level editor");
     }
 
 levelEditor::~levelEditor()

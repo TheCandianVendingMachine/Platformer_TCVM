@@ -1,10 +1,30 @@
 #include "../../game/globals.hpp"
 
 template<typename T>
-inline void inputManager<T>::add(const std::string &name, T key, bool onPress, states activeState)
+void inputManager<T>::add(const std::string &name, T key, inputState inputState, states activeState)
+    {
+        _inputs[name] = input<T>(key, [] () {}, inputState, activeState);
+        _inputs[name].setInverseFunction([] () {});
+
+        _eventTimeInputs[name] = &_inputs[name];
+    }
+
+template<typename T>
+void inputManager<T>::add(const std::string &name, T key, std::function<void()> onInput, inputState inputState, states activeState)
+    {
+        _inputs[name] = input<T>(key, onInput, inputState, activeState);
+        _inputs[name].setInverseFunction([] () {});
+
+        _eventTimeInputs[name] = &_inputs[name];
+    }
+
+template<typename T>
+void inputManager<T>::add(const std::string &name, T key, bool onPress, states activeState)
     {
         _inputs[name] = input<T>(key, [] () {}, onPress, activeState);
         _inputs[name].setInverseFunction([] () {});
+
+        _realTimeInputs[name] = &_inputs[name];
     }
 
 template<typename T>
@@ -12,6 +32,8 @@ void inputManager<T>::add(const std::string &name, T key, std::function<void()> 
     {
         _inputs[name] = input<T>(key, onInput, onPress, activeState);
         _inputs[name].setInverseFunction([] () {});
+
+        _realTimeInputs[name] = &_inputs[name];
     }
 
 template<typename T>
@@ -61,10 +83,25 @@ void inputManager<T>::remove(const std::string &name)
     }
 
 template<typename T>
+void inputManager<T>::handleInput(states currentState)
+    {
+        for (auto &key : _realTimeInputs)
+            {
+                if (key.second)
+                    {
+                        key.second->execute(currentState);
+                    }
+            }
+    }
+
+template<typename T>
 void inputManager<T>::handleInput(sf::Event &event, states currentState)
     {
-        for (auto &key : _inputs)
+        for (auto &key : _eventTimeInputs)
             {
-                key.second.execute(event, currentState);
+                if (key.second)
+                    {
+                        key.second->execute(event, currentState);
+                    }
             }
     }

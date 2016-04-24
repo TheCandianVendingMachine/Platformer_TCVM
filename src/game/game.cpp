@@ -8,7 +8,7 @@
 
 void game::initializeWindow()
     {
-        globals::_logger->log("Initializng window");
+        globals::_logger->logToConsole("Initializng window");
         
         app = new sf::RenderWindow(sf::VideoMode(1170, 700), "Breakout", sf::Style::Close);
         app->setFramerateLimit(60.0f);
@@ -16,12 +16,12 @@ void game::initializeWindow()
 
 void game::initializeSounds()
     {
-        globals::_logger->log("Initializng sounds");
+        globals::_logger->logToConsole("Initializng sounds");
     }
 
 void game::initializeTextures()
     {
-        globals::_logger->log("Initializng textures");
+        globals::_logger->logToConsole("Initializng textures");
 
         globals::_textureManager->add("assets/textures/platform.png", "platformTexture");
         globals::_textureManager->add("assets/textures/player.png", "playerTexture");
@@ -29,37 +29,40 @@ void game::initializeTextures()
 
 void game::initializeControls()
     {
-        globals::_logger->log("Initializng controls");
+        globals::_logger->logToConsole("Initializng controls");
 
-        globals::_mouseManager->add("editor_left_mouse_press", sf::Mouse::Left, true, LEVEL_EDITOR_STATE);
-        globals::_mouseManager->add("editor_right_mouse_press", sf::Mouse::Right, true, LEVEL_EDITOR_STATE);
+        globals::_mouseManager->add("editor_left_mouse_press",      sf::Mouse::Left,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
+        globals::_mouseManager->add("editor_right_mouse_press",     sf::Mouse::Right,       inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
 
-        globals::_keyboardManager->add("editor_spin_block_right", sf::Keyboard::E, true, LEVEL_EDITOR_STATE);
-        globals::_keyboardManager->add("editor_spin_block_left", sf::Keyboard::Q, true, LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_spin_block_right",   sf::Keyboard::E,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_spin_block_left",    sf::Keyboard::Q,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
 
-        globals::_keyboardManager->add("editor_delete_entity", sf::Keyboard::Delete, true, LEVEL_EDITOR_STATE);
-        globals::_keyboardManager->add("editor_snap_to_grid", sf::Keyboard::LAlt, true, LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_delete_entity",      sf::Keyboard::Delete,   inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_snap_to_grid",       sf::Keyboard::LAlt,     inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
 
-        globals::_keyboardManager->add("editor_move_view_right", sf::Keyboard::D, true, LEVEL_EDITOR_STATE);
-        globals::_keyboardManager->add("editor_move_view_left", sf::Keyboard::A, true, LEVEL_EDITOR_STATE);
-        globals::_keyboardManager->add("editor_move_view_up", sf::Keyboard::W, true, LEVEL_EDITOR_STATE);
-        globals::_keyboardManager->add("editor_move_view_down", sf::Keyboard::S, true, LEVEL_EDITOR_STATE);
-        globals::_keyboardManager->add("editor_zoom_view_out", sf::Keyboard::Q, true, LEVEL_EDITOR_STATE);
-        globals::_keyboardManager->add("editor_zoom_view_in", sf::Keyboard::E, true, LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_move_view_right",    sf::Keyboard::D,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_move_view_left",     sf::Keyboard::A,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_move_view_up",       sf::Keyboard::W,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_move_view_down",     sf::Keyboard::S,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_zoom_view_out",      sf::Keyboard::Q,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_zoom_view_in",       sf::Keyboard::E,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
         
-        globals::_keyboardManager->add("change_to_editor", sf::Keyboard::F1, true, GAME_STATE);
-        globals::_keyboardManager->add("change_to_game", sf::Keyboard::F2, [] () { globals::_stateMachine->popState(); }, true, LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("change_to_editor",          sf::Keyboard::F1,       inputState::ON_PRESS,   states::GAME_STATE);
+        globals::_keyboardManager->add("change_to_game",            sf::Keyboard::F2, [] () 
+                                                                    { globals::_stateMachine->popState(); }, 
+                                                                                            inputState::ON_PRESS, states::LEVEL_EDITOR_STATE);
 
 
-        globals::_keyboardManager->add("player_jump", sf::Keyboard::Space, true, GAME_STATE);
-        globals::_keyboardManager->add("player_move_left", sf::Keyboard::Left, true, GAME_STATE);
-        globals::_keyboardManager->add("player_move_right", sf::Keyboard::Right, true, GAME_STATE);
+        globals::_keyboardManager->add("player_jump",               sf::Keyboard::Space,    true, states::GAME_STATE);
+        globals::_keyboardManager->add("player_move_left",          sf::Keyboard::Left,     true, states::GAME_STATE);
+        globals::_keyboardManager->add("player_move_right",         sf::Keyboard::Right,    true, states::GAME_STATE);
     }
 
 void game::initialize()
     {
 #if _DEBUG
         _logger = new logr::logger("defaultLogger", "log", false);
+        _logger->clear();
     #else
         _logger = new logr::logger("defaultLogger", "log", true);
 #endif
@@ -73,7 +76,7 @@ void game::initialize()
         globals::_stateMachine =    &_stateMachine;
         globals::_logger =          _logger;
 
-        globals::_logger->log("Initializng game");
+        globals::_logger->logToConsole("Initializng game");
 
         rndm::initRandom();
 
@@ -91,7 +94,7 @@ void game::cleanup()
     {
         if (_logger)
             {
-                globals::_logger->log("Cleaning game loop");
+                globals::_logger->logToConsole("Cleaning game loop");
             }
 
         if (app)
@@ -112,7 +115,7 @@ void game::cleanup()
 
         if (_logger)
             {
-                globals::_logger->log("Freeing Logger Memory. Does this mean I'm dead?");
+                globals::_logger->logToConsole("Freeing Logger Memory. Does this mean I'm dead?");
                 delete _logger;
                 _logger = nullptr;
             }
