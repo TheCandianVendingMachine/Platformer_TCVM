@@ -22,6 +22,21 @@ void entity::setPosition(float X, float Y)
         _sprite.setPosition(X, Y);
     }
 
+sf::Vector2f entity::getSize()
+    {
+        return sf::Vector2f(_sprite.getGlobalBounds().width, _sprite.getGlobalBounds().height);
+    }
+
+void entity::setSize(float X, float Y)
+    {
+        _sprite.scale(X / _sprite.getScale().x, Y / _sprite.getScale().y);
+    }
+
+void entity::setSize(sf::Vector2f size)
+    {
+        _sprite.scale(size.x / _sprite.getScale().x, size.y / _sprite.getScale().y);
+    }
+
 const entity::entityID entity::getEntityID() const
 	{
 		return _entID;

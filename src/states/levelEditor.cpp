@@ -79,6 +79,15 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
                     }
             });
 
+        globals::_keyboardManager->changeFunction("editor_save_level", [this] () 
+            {
+                _level->save("assets/levels/level.json");
+            });
+        globals::_keyboardManager->changeFunction("editor_load_level", [this] () 
+            {
+                _level->load("assets/levels/level.json");
+            });
+
         globals::_keyboardManager->changeFunction("editor_snap_to_grid", [this] () { _snapToGrid = true; });
         globals::_keyboardManager->changeInverseFunction("editor_snap_to_grid", [this] () { _snapToGrid = false; });
 

@@ -34,6 +34,10 @@ class entity
 
             void setPosition(sf::Vector2f pos);
             void setPosition(float X, float Y);
+            sf::Vector2f getSize();
+
+            void setSize(float X, float Y);
+            void setSize(sf::Vector2f size);
 
             const entityID getEntityID() const;
 			const unsigned int getID() const;
