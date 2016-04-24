@@ -1,15 +1,25 @@
 {
 	"level" : 
 	{
-		"entity" : null,
+		"entity" : 
+		{
+			"player_0" : 
+			{
+				"position" : 
+				{
+					"X" : 0,
+					"Y" : 111.99998474121094
+				}
+			}
+		},
 		"platforms" : 
 		{
 			"platform_1" : 
 			{
 				"position" : 
 				{
-					"X" : 152,
-					"Y" : 333
+					"X" : 0,
+					"Y" : 176
 				},
 				"rotation" : 0,
 				"size" : 
@@ -22,10 +32,52 @@
 			{
 				"position" : 
 				{
-					"X" : 502,
-					"Y" : 298
+					"X" : 192.00003051757813,
+					"Y" : 176
 				},
 				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform_3" : 
+			{
+				"position" : 
+				{
+					"X" : 384,
+					"Y" : 176.00001525878906
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform_4" : 
+			{
+				"position" : 
+				{
+					"X" : 576,
+					"Y" : 176.00001525878906
+				},
+				"rotation" : 45,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform_5" : 
+			{
+				"position" : 
+				{
+					"X" : 704,
+					"Y" : 320
+				},
+				"rotation" : 90,
 				"size" : 
 				{
 					"X" : 192,

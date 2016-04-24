@@ -22,9 +22,6 @@ class globals
             static inputManager<sf::Keyboard::Key> *_keyboardManager;
             static inputManager<sf::Mouse::Button> *_mouseManager;
 
-            static resourceManager<sf::Font> *_fontManager;
-            static resourceManager<sf::Texture> *_textureManager;
-
             static stateMachine *_stateMachine;
             static eventManager *_eventManager;
             static logr::logger *_logger;

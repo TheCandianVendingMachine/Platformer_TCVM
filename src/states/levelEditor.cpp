@@ -5,7 +5,7 @@
 #include "gameplay/level.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
-
+/*
 sf::Vector2f levelEditor::_mousePosToWorldCoord()
     {
         sf::Vector2i mousePosInt(sf::Mouse::getPosition(*globals::_stateMachine->getWindow()));
@@ -153,3 +153,4 @@ levelEditor::~levelEditor()
     {
         
     }
+    */

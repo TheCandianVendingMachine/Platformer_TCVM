@@ -8,6 +8,6 @@
 class platform : public entity
     {
         public:
-            platform() { _entID = PLATFORM; _sprite.setTexture(*globals::_textureManager->get("platformTexture", false)); }
+            platform() { _entID = PLATFORM; setTexture(globals::_textureManager->get("platformTexture", false)); }
             void update(sf::Time deltaTime) {}
     };

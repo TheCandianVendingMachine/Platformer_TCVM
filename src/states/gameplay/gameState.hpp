@@ -3,12 +3,12 @@
 #pragma once
 
 #include "../state.hpp"
-#include "gameworld.hpp"
+#include "level.hpp"
 
 class gameState : public state
     {
         private:
-            gameworld _world;
+            level _world;
 
         public:
             gameState();

@@ -5,6 +5,8 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/System/Time.hpp>
 
+#include <string>
+
 class entity
     {
         public:
@@ -17,6 +19,9 @@ class entity
 
         protected:
             sf::Sprite _sprite;
+            sf::Vector2f _size;
+
+            std::string _entName;
 
             entityID _entID;
 			const unsigned int _ID;
@@ -27,10 +32,12 @@ class entity
 			entity();
 
             virtual void draw(sf::RenderTarget &target);
-            virtual void update(sf::Time deltaTime) = 0;
+            virtual void update(sf::Time deltaTime) {}
 
             virtual void onCollide() {}
             virtual void offCollide() {}
+
+            void setTexture(sf::Texture *texture);
 
             void setPosition(sf::Vector2f pos);
             void setPosition(float X, float Y);
@@ -39,6 +46,7 @@ class entity
             void setSize(float X, float Y);
             void setSize(sf::Vector2f size);
 
+            const std::string &getEntityName();
             const entityID getEntityID() const;
 			const unsigned int getID() const;
 

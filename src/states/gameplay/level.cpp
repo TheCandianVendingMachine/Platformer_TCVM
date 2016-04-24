@@ -1,39 +1,25 @@
 #include "level.hpp"
 
-#include "../../utilities/collision.hpp"
-#include "../../entity/entity.hpp"
-#include "../../entity/platform.hpp"
+#include "../../gameObject/gameObject/gameObject.hpp"
 
+#include "../../gameObject/components/components.hpp"
+
+#include "../../utilities/strFuncs.hpp"
+#include "../../game/globals.hpp"
+
+#include <fstream>
 #include <json/json.h>
 
-void level::draw(sf::RenderWindow &app)
+level::level()
     {
-        for (auto &platform : _platforms)
-            {
-                platform->draw(app);
-            }
-    }
-
-void level::handleCollision(entity *collider)
-    {
-        for (auto &platform : _platforms)
-            {
-                auto platformPos = platform->getPosition();
-                auto platformBounds = platform->getSprite()->getGlobalBounds();
-                if (clsn::handleCollision(collider, &*platform))
-                    {
-                        collider->onCollide();
-                    }
-                else
-                    {
-                        collider->offCollide();
-                    }
-            }
+        _currentEntityList = "assets/entities/entity_list.json";
+        _factory.initializeJsonFile(_currentEntityList);
     }
 
 void level::load(const std::string &levelPath)
     {
         _platforms.clear();
+        _entities.clear();
 
         Json::Value root;
         std::ifstream read(levelPath);
@@ -43,20 +29,38 @@ void level::load(const std::string &levelPath)
             }
         read.close();
 
+        _currentEntityList = root["level"]["entity_list"].asString();
+
         auto members = root["level"]["platforms"].getMemberNames();
         for (auto &platform : members)
             {
-                auto platformArr = root["level"]["platforms"][platform];
+                auto vars = root[platform];
 
-                sf::Vector2f pos(platformArr["position"]["X"].asFloat(), platformArr["position"]["Y"].asFloat());
-                sf::Vector2f size(platformArr["size"]["X"].asFloat(), platformArr["size"]["Y"].asFloat());
-                float angle = platformArr["rotation"].asFloat();
+                auto obj = _factory.addGameObject("platform", _currentEntityList);
+                auto textureComp = obj->get<textureComponent>();
 
-                auto _platform = addPlatform();
-                _platform->setPosition(pos);
-                _platform->setSize(size);
-                _platform->getSprite()->setRotation(angle);
-                
+                if (textureComp)
+                    {
+                        textureComp->setPosition(vars["position"]["X"].asFloat(), vars["position"]["Y"].asFloat());
+                        textureComp->getSprite()->setRotation(vars["rotation"].asFloat());
+                    }
+            }
+
+        members = root["level"]["entity"].getMemberNames();
+        for (auto &ent : members)
+            {
+                if (ent == "player")
+                    {
+                        auto vars = root[ent];
+
+                        auto obj = _factory.addGameObject("player", _currentEntityList);
+                        auto textureComp = obj->get<textureComponent>();
+
+                        if(textureComp)
+                            {
+                                textureComp->setPosition(vars["position"]["X"].asFloat(), vars["positon"]["X"].asFloat());
+                            }
+                    }
             }
 
         globals::_logger->logToConsole("Level Loaded");
@@ -66,19 +70,39 @@ void level::save(const std::string &levelPath)
     {
         Json::Value root;
 
+        root["level"]["entity_list"] = "assets/entities/entity_list.json";
         root["level"]["platforms"];
         for (auto &platform : _platforms)
             {
-                root["level"]["platforms"]["platform_" + std::to_string(platform->getID())]["position"]["X"] = platform->getPosition().x;
-                root["level"]["platforms"]["platform_" + std::to_string(platform->getID())]["position"]["Y"] = platform->getPosition().y;
+                sf::Vector2f pos(0, 0);
+                float angle = 0.f;
 
-                root["level"]["platforms"]["platform_" + std::to_string(platform->getID())]["size"]["X"] = platform->getSize().x;
-                root["level"]["platforms"]["platform_" + std::to_string(platform->getID())]["size"]["Y"] = platform->getSize().y;
+                auto textureComp = platform->get<textureComponent>();
+                if (textureComp)
+                    {
+                        pos = textureComp->getSprite()->getPosition();
+                        angle = textureComp->getSprite()->getRotation();
+                    }
 
-                root["level"]["platforms"]["platform_" + std::to_string(platform->getID())]["rotation"] = platform->getSprite()->getRotation();
+                root["level"]["platforms"]["platform"]["position"]["X"] = pos.x;
+                root["level"]["platforms"]["platform"]["position"]["Y"] = pos.y;
+                root["level"]["platforms"]["platform"]["rotation"] = angle;
             }
         
         root["level"]["entity"];
+        for (auto &ent : _entities)
+            {
+                sf::Vector2f pos(0, 0);
+
+                auto textureComp = ent->get<textureComponent>();
+                if (textureComp)
+                    {
+                        pos = textureComp->getSprite()->getPosition();
+                    }
+
+                root["level"]["entity"][ent->getName()]["position"]["X"] = pos.x;
+                root["level"]["entity"][ent->getName()]["position"]["Y"] = pos.y;
+            }
 
         std::ofstream write(levelPath);
         if (write.is_open())
@@ -90,27 +114,66 @@ void level::save(const std::string &levelPath)
         globals::_logger->logToConsole("Level Saved");
     }
 
-entity *level::addPlatform()
+void level::update(sf::Time deltaTime)
     {
-        _platforms.push_back(std::shared_ptr<platform>(new platform));
-        return &*_platforms.back();
-    }
-
-void level::removePlatform(entity *platform)
-    {
-        _platforms.erase(std::remove_if(_platforms.begin(), _platforms.end(), [this, &platform] (std::shared_ptr<entity> ent) { return platform->getID() == ent->getID(); }));
-    }
-
-entity *level::getPlatformAt(sf::Vector2f pos)
-    {
-        for (auto &platform : _platforms)
+        for (auto &ent : _entities)
             {
-                auto platformBounds = platform->getSprite()->getGlobalBounds();
-                if (clsn::hasCollided(pos, sf::Vector2f(1, 1), sf::Vector2f(platformBounds.left, platformBounds.top), sf::Vector2f(platformBounds.width, platformBounds.height)))
+                auto mc = ent->get<movementComponent>();
+                if (mc)
                     {
-                        return &*platform;
+                        mc->update(deltaTime);
+                    }
+
+                auto cc = ent->get<collisionComponent>();
+                if (cc)
+                    {
+                        for (auto &platform : _platforms)
+                            {
+                                auto platformCC = platform->get<collisionComponent>();
+                                if (platformCC)
+                                    {
+                                        cc->collide(*platformCC);
+                                    }
+                            }
+                    }
+            }
+    }
+
+void level::draw(sf::RenderWindow &app)
+    {
+        for (auto &ent : _platforms)
+            {
+                auto textureComp = ent->get<textureComponent>();
+                if (textureComp)
+                    {
+                        textureComp->draw(app);
                     }
             }
 
-        return nullptr;
+        for (auto &ent : _entities)
+            {
+                auto textureComp = ent->get<textureComponent>();
+                if (textureComp)
+                    {
+                        textureComp->draw(app);
+                    }
+            }
+    }
+
+gameObject* level::addEntity(const std::string &name)
+    {
+        auto ent = _factory.addGameObject(name, _currentEntityList);
+        if (ent)
+            {
+                if (name == "platform")
+                    {
+                        _platforms.push_back(ent);
+                    }
+                else
+                    {
+                        _entities.push_back(ent);
+                    }
+            }
+
+        return ent;
     }

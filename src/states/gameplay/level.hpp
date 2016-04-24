@@ -10,23 +10,29 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
 
-class entity;
+#include "../../gameObject/gameObject/gameObjectFactory.hpp"
+
+class gameObject;
 
 class level
     {
         private:
-            std::vector<std::shared_ptr<entity>> _platforms;
+            gameObjectFactory _factory;
+
+            std::vector<gameObject*> _platforms;
+            std::vector<gameObject*> _entities;
+
+            std::string _currentEntityList;
 
         public:
-            void draw(sf::RenderWindow &app);
-            void handleCollision(entity *collider);
+            level();
 
             void load(const std::string &levelPath);
             void save(const std::string &levelPath);
 
-            entity *addPlatform();
-            void removePlatform(entity *platform);
+            void update(sf::Time deltaTime);
+            void draw(sf::RenderWindow &app);
 
-            entity *getPlatformAt(sf::Vector2f pos);
+            gameObject *addEntity(const std::string &name);
 
     };

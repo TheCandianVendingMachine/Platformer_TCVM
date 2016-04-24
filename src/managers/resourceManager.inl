@@ -18,6 +18,7 @@ T *resourceManager<T>::get(const std::string &resourceName, bool getDefaultTextu
                     }
             }
       
+        globals::_logger->log("Cannot load \"" + resourceName + "\" from resource pool");
         return nullptr;
     }
 

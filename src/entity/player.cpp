@@ -5,9 +5,10 @@
 player::player() : _acceleration(50.f), _gravity(500.f), _maxVelocity(400.f), _terminalVelocity(700.f)
     {
         _entID = PLAYER;
+        _entName = "player";
         _impulse = sf::Vector2f(0, 0);
 
-        _sprite.setTexture(*globals::_textureManager->get("playerTexture", false));
+        //setTexture(globals::_textureManager->get("playerTexture", false));
 
         _enablePhysics = true;
 
@@ -34,7 +35,7 @@ void player::update(sf::Time deltaTime)
                     {
                         _impulse.y = 700;
                     }
-        }
+            }
 
         if (abs(_impulse.x) > 0)
             {

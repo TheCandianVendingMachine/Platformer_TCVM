@@ -17,7 +17,7 @@ class levelEditor : public state
     {
         private:
             level *_level;
-            entity *_selectedEntity;
+            //entity *_selectedEntity;
 
             sf::Vector2f _mousePos;
 

@@ -14,19 +14,6 @@ void game::initializeWindow()
         app->setFramerateLimit(60.0f);
     }
 
-void game::initializeSounds()
-    {
-        globals::_logger->logToConsole("Initializng sounds");
-    }
-
-void game::initializeTextures()
-    {
-        globals::_logger->logToConsole("Initializng textures");
-
-        globals::_textureManager->add("assets/textures/platform.png", "platformTexture");
-        globals::_textureManager->add("assets/textures/player.png", "playerTexture");
-    }
-
 void game::initializeControls()
     {
         globals::_logger->logToConsole("Initializng controls");
@@ -73,8 +60,8 @@ void game::initialize()
     #else
         _logger = new logr::logger("defaultLogger", "log", true);
 #endif
-        globals::_textureManager =  &_textureManager;
-        globals::_fontManager =     &_fontManager;
+        //globals::_textureManager =  &_textureManager;
+        //globals::_fontManager =     &_fontManager;
 
         globals::_keyboardManager = &_keyboardManager;
         globals::_mouseManager =    &_mouseManager;
@@ -88,8 +75,8 @@ void game::initialize()
         rndm::initRandom();
 
         initializeWindow();
-        initializeTextures();
-        initializeSounds();
+        //initializeTextures();
+        //initializeSounds();
         initializeControls();
 
         globals::_stateMachine->setWindow(app);
@@ -128,12 +115,12 @@ void game::cleanup()
             }
 
         globals::_eventManager = nullptr;
-        globals::_fontManager = nullptr;
+        //globals::_fontManager = nullptr;
         globals::_keyboardManager = nullptr;
         globals::_logger = nullptr;
         globals::_mouseManager = nullptr;
         globals::_stateMachine = nullptr;
-        globals::_textureManager = nullptr;
+        //globals::_textureManager = nullptr;
     }
 
 void game::start()
