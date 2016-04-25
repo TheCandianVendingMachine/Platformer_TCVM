@@ -27,7 +27,7 @@
 			"impulse" :
 			{
 				"X" : 0.0,
-				"Y" : 25.0
+				"Y" : 0.0
 			}
 		},
 		"collisionComponent" :
@@ -42,8 +42,8 @@
 		},
 		"physicsComponent" :
 		{
-			"gravity" : 50.0,
-			"terminal_velocity" : 500.0
+			"gravity" : 150.0,
+			"terminal_velocity" : 1000.0
 		}
 	}
 }

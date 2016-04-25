@@ -29,6 +29,11 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName, cons
                 if (comp == "textureComponent")
                     {
                         textureComponent *tc = new textureComponent;
+                        if (!_textureManager.get(objectName + "Texture", false))
+                            {
+                                _textureManager.add(root[objectName]["textureComponent"]["texture"].asString(), objectName + "Texture");
+                            }
+
                         tc->setTexture(*_textureManager.get(objectName + "Texture", false));
                         tc->setGameObject(newObj);
 

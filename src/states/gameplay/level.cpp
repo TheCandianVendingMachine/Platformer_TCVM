@@ -116,6 +116,15 @@ void level::save(const std::string &levelPath)
 
 void level::update(sf::Time deltaTime)
     {
+        for (auto &platform : _platforms)
+            {
+                auto platformMC = platform->get<movementComponent>();
+                if (platformMC)
+                    {
+                        platformMC->update(deltaTime);
+                    }
+            }
+
         for (auto &ent : _entities)
             {
                 auto mc = ent->get<movementComponent>();
