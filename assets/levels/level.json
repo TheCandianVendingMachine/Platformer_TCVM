@@ -1,89 +1,40 @@
 {
 	"level" : 
 	{
-		"entity" : 
-		{
-			"player_0" : 
-			{
-				"position" : 
-				{
-					"X" : 0,
-					"Y" : 111.99998474121094
-				}
-			}
-		},
+		"entity" : null,
 		"platforms" : 
 		{
-			"platform_1" : 
+			"platform0" : 
 			{
 				"position" : 
 				{
-					"X" : 0,
-					"Y" : 176
+					"X" : 128,
+					"Y" : 160.00001525878906
 				},
-				"rotation" : 0,
-				"size" : 
-				{
-					"X" : 192,
-					"Y" : 32
-				}
+				"rotation" : 0
 			},
-			"platform_2" : 
+			"platform1" : 
 			{
 				"position" : 
 				{
-					"X" : 192.00003051757813,
-					"Y" : 176
+					"X" : 372,
+					"Y" : 263
 				},
-				"rotation" : 0,
-				"size" : 
-				{
-					"X" : 192,
-					"Y" : 32
-				}
+				"rotation" : 15
 			},
-			"platform_3" : 
+			"platform2" : 
 			{
 				"position" : 
 				{
-					"X" : 384,
-					"Y" : 176.00001525878906
+					"X" : 320,
+					"Y" : 128
 				},
-				"rotation" : 0,
-				"size" : 
-				{
-					"X" : 192,
-					"Y" : 32
-				}
-			},
-			"platform_4" : 
-			{
-				"position" : 
-				{
-					"X" : 576,
-					"Y" : 176.00001525878906
-				},
-				"rotation" : 45,
-				"size" : 
-				{
-					"X" : 192,
-					"Y" : 32
-				}
-			},
-			"platform_5" : 
-			{
-				"position" : 
-				{
-					"X" : 704,
-					"Y" : 320
-				},
-				"rotation" : 90,
-				"size" : 
-				{
-					"X" : 192,
-					"Y" : 32
-				}
+				"rotation" : 0
 			}
 		}
+	},
+	"level_entity_lists" : 
+	{
+		
 	}
 }

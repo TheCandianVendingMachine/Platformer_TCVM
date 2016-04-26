@@ -1,0 +1,51 @@
+{
+	"platform" :
+	{
+		"textureComponent" :
+		{
+			"texture" : "assets/textures/platform.png",
+			"texture_name" : "platform"
+		},
+		"collisionComponent" :
+		{
+			"bounding_box" :
+			{
+				"size_X" : 192,
+				"size_Y" : 32,
+				"pos_X" : 0,
+				"pos_Y" : 0
+			}
+		}
+	},
+	"player" : 
+	{
+		"textureComponent" :
+		{
+			"texture" : "assets/textures/player.png",
+			"texture_name" : "player"
+		},
+		"movementComponent" :
+		{
+			"impulse" :
+			{
+				"X" : 0.0,
+				"Y" : 0.0
+			}
+		},
+		"collisionComponent" :
+		{
+			"bounding_box" :
+			{
+				"size_X" : 64,
+				"size_Y" : 64,
+				"pos_X" : 0,
+				"pos_Y" : 0
+			}
+		},
+		"physicsComponent" :
+		{
+			"gravity" : 150.0,
+			"terminal_velocity" : 1000.0
+		}
+	}
+}

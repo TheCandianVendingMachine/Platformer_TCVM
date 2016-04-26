@@ -9,6 +9,8 @@
 #include <memory>
 
 #include "../../managers/resourceManager.hpp"
+
+#include <json/json.h>
 #include <SFML/Graphics/Texture.hpp>
 
 class gameObject;
@@ -17,13 +19,19 @@ class gameObjectFactory
     {
         private:
             std::unordered_map<std::string, std::vector<gameObject*>> _gameObjects;
+            std::vector<std::string> _initializedFiles;
 
             resourceManager<sf::Texture> _textureManager;
 
+            void loadJsonFile(const std::string &file, Json::Value *root);
+
         public:
-            gameObject *addGameObject(const std::string &objectName, const std::string &filepath);
+            gameObject *addGameObject(const std::string &objectName);
+            void removeGameObject(gameObject *obj);
 
             void initializeJsonFile(const std::string &filepath);
+            void deInitializeJsonFile(const std::string &filepath);
+            void deInitializeJsonFile();
 
             std::vector<gameObject*> *getGameObjects(const std::string &objectName);
             std::unordered_map<std::string, std::vector<gameObject*>> *getGameObjects();

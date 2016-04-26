@@ -60,9 +60,6 @@ void game::initialize()
     #else
         _logger = new logr::logger("defaultLogger", "log", true);
 #endif
-        //globals::_textureManager =  &_textureManager;
-        //globals::_fontManager =     &_fontManager;
-
         globals::_keyboardManager = &_keyboardManager;
         globals::_mouseManager =    &_mouseManager;
 
@@ -75,8 +72,6 @@ void game::initialize()
         rndm::initRandom();
 
         initializeWindow();
-        //initializeTextures();
-        //initializeSounds();
         initializeControls();
 
         globals::_stateMachine->setWindow(app);

@@ -1,19 +1,31 @@
 #include "level.hpp"
 
 #include "../../gameObject/gameObject/gameObject.hpp"
-
+#include "../../utilities/collision.hpp"
 #include "../../gameObject/components/components.hpp"
 
 #include "../../utilities/strFuncs.hpp"
 #include "../../game/globals.hpp"
 
 #include <fstream>
-#include <json/json.h>
+
+void level::loadJsonFile(const std::string &file, Json::Value *root)
+    {
+        std::ifstream read(file);
+        try
+            {
+                read >> *root;
+            }
+        catch (std::exception &e)
+            {
+                globals::_logger->log(file + e.what());
+            }
+        read.close();
+    }
 
 level::level()
     {
-        _currentEntityList = "assets/entities/entity_list.json";
-        _factory.initializeJsonFile(_currentEntityList);
+        _factory.initializeJsonFile("assets/entities/default_entity_list.json");
     }
 
 void level::load(const std::string &levelPath)
@@ -29,14 +41,18 @@ void level::load(const std::string &levelPath)
             }
         read.close();
 
-        _currentEntityList = root["level"]["entity_list"].asString();
+        auto members = root["level_entity_lists"].getMemberNames();
+        for (auto &entLists : members)
+            {
+                _factory.initializeJsonFile(entLists);
+            }
 
-        auto members = root["level"]["platforms"].getMemberNames();
+        members = root["level"]["platforms"].getMemberNames();
         for (auto &platform : members)
             {
-                auto vars = root[platform];
+                auto vars = root["level"]["platforms"][platform];
 
-                auto obj = _factory.addGameObject("platform", _currentEntityList);
+                auto obj = _factory.addGameObject("platform");
                 auto textureComp = obj->get<textureComponent>();
 
                 if (textureComp)
@@ -44,6 +60,8 @@ void level::load(const std::string &levelPath)
                         textureComp->setPosition(vars["position"]["X"].asFloat(), vars["position"]["Y"].asFloat());
                         textureComp->getSprite()->setRotation(vars["rotation"].asFloat());
                     }
+
+                _platforms.push_back(obj);
             }
 
         members = root["level"]["entity"].getMemberNames();
@@ -51,15 +69,17 @@ void level::load(const std::string &levelPath)
             {
                 if (ent == "player")
                     {
-                        auto vars = root[ent];
+                        auto vars = root["level"]["entity"][ent];
 
-                        auto obj = _factory.addGameObject("player", _currentEntityList);
+                        auto obj = _factory.addGameObject("player");
                         auto textureComp = obj->get<textureComponent>();
 
                         if(textureComp)
                             {
                                 textureComp->setPosition(vars["position"]["X"].asFloat(), vars["positon"]["X"].asFloat());
                             }
+
+                        _entities.push_back(obj);
                     }
             }
 
@@ -70,7 +90,6 @@ void level::save(const std::string &levelPath)
     {
         Json::Value root;
 
-        root["level"]["entity_list"] = "assets/entities/entity_list.json";
         root["level"]["platforms"];
         for (auto &platform : _platforms)
             {
@@ -83,10 +102,10 @@ void level::save(const std::string &levelPath)
                         pos = textureComp->getSprite()->getPosition();
                         angle = textureComp->getSprite()->getRotation();
                     }
-
-                root["level"]["platforms"]["platform"]["position"]["X"] = pos.x;
-                root["level"]["platforms"]["platform"]["position"]["Y"] = pos.y;
-                root["level"]["platforms"]["platform"]["rotation"] = angle;
+                
+                root["level"]["platforms"]["platform" + std::to_string(platform->getID())]["position"]["X"] = pos.x;
+                root["level"]["platforms"]["platform" + std::to_string(platform->getID())]["position"]["Y"] = pos.y;
+                root["level"]["platforms"]["platform" + std::to_string(platform->getID())]["rotation"] = angle;
             }
         
         root["level"]["entity"];
@@ -102,6 +121,15 @@ void level::save(const std::string &levelPath)
 
                 root["level"]["entity"][ent->getName()]["position"]["X"] = pos.x;
                 root["level"]["entity"][ent->getName()]["position"]["Y"] = pos.y;
+            }
+
+        Json::Value loadedRoot;
+        loadJsonFile(levelPath, &loadedRoot);
+        root["level_entity_lists"];
+        auto members = loadedRoot["level_entity_lists"].getMemberNames();
+        for (auto &entLists : members)
+            {
+                root["level_entity_lists"][entLists];
             }
 
         std::ofstream write(levelPath);
@@ -171,10 +199,10 @@ void level::draw(sf::RenderWindow &app)
 
 gameObject* level::addEntity(const std::string &name)
     {
-        auto ent = _factory.addGameObject(name, _currentEntityList);
+        auto ent = _factory.addGameObject(name);
         if (ent)
             {
-                if (name == "platform")
+                if (name == "platform" || name == "moving_platform")
                     {
                         _platforms.push_back(ent);
                     }
@@ -185,4 +213,49 @@ gameObject* level::addEntity(const std::string &name)
             }
 
         return ent;
+    }
+
+gameObject *level::getEntityAtPosition(sf::Vector2f pos)
+    {
+        auto allEnts = _factory.getGameObjects();
+        for (auto &ent : *allEnts)
+            {
+                for (auto &obj : ent.second)
+                    {
+                        auto tc = obj->get<textureComponent>();
+                        if (tc)
+                            {
+                                sf::Vector2f entPos = tc->getSprite()->getPosition();
+                                auto cc = obj->get<collisionComponent>();
+                                if (cc)
+                                    {
+                                        if (clsn::hasCollided(pos, sf::Vector2f(1, 1), entPos, sf::Vector2f(cc->getBounds().width, cc->getBounds().height)))
+                                            {
+                                                return obj;
+                                            }
+                                    }
+                            }
+                    }
+            }
+
+        return nullptr;
+    }
+
+void level::removeEntity(gameObject *obj)
+    {
+        auto itEnt = std::remove_if(_entities.begin(), _entities.end(), [&obj] (gameObject *eObj) { return eObj->getID() == obj->getID(); });
+        if (itEnt != _entities.end())
+            {
+                _entities.erase(itEnt);
+                _factory.removeGameObject(obj);
+                return;
+            }
+
+        auto itPlat = std::remove_if(_platforms.begin(), _platforms.end(), [&obj] (gameObject *eObj) { return eObj->getID() == obj->getID(); });
+        if (itPlat != _platforms.end())
+            {
+                _platforms.erase(itPlat);
+                _factory.removeGameObject(obj);
+                return;
+            }
     }

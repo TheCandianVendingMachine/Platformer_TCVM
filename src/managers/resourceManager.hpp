@@ -18,6 +18,10 @@ class resourceManager
             T *get(const std::string &resourceName, bool getDefaultTexture);
             /* add a new resource to the map. If one exists or it succesfully adds it, it will return a pointer to the resource. Otherwise a nullptr is returned */
             T *add(const std::string &filepath, const std::string& resourceName);
+            /* Remove a resource from the map */
+            void remove(const std::string &resourceName);
+            /* remove all resources from the map */
+            void removeAll();
 
             /* set the default resource that will be used if a texture isnt avaliable */
             void setDefaultResource(const std::string &resourceName);

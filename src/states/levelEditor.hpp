@@ -11,13 +11,13 @@
 #include <vector>
 
 class level;
-class entity;
+class gameObject;
 
 class levelEditor : public state
     {
         private:
             level *_level;
-            //entity *_selectedEntity;
+            gameObject *_selectedEntity;
 
             sf::Vector2f _mousePos;
 

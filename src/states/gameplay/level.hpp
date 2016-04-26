@@ -12,6 +12,8 @@
 
 #include "../../gameObject/gameObject/gameObjectFactory.hpp"
 
+#include <json/json.h>
+
 class gameObject;
 
 class level
@@ -22,7 +24,7 @@ class level
             std::vector<gameObject*> _platforms;
             std::vector<gameObject*> _entities;
 
-            std::string _currentEntityList;
+            void loadJsonFile(const std::string &file, Json::Value *root);
 
         public:
             level();
@@ -34,5 +36,8 @@ class level
             void draw(sf::RenderWindow &app);
 
             gameObject *addEntity(const std::string &name);
+            gameObject *getEntityAtPosition(sf::Vector2f pos);
+
+            void removeEntity(gameObject *obj);
 
     };

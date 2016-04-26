@@ -18,10 +18,14 @@ class gameObject
             std::unordered_map<std::type_index, component*> _components;
             std::string _name;
 
+            unsigned int _ID;
+            static unsigned int _allIDS;
+
         public:
             gameObject(const std::string &name);
 
             const std::string getName() const;
+            const unsigned int getID() const;
 
             void addComponent(std::type_index index, component *comp);
             template<typename T>

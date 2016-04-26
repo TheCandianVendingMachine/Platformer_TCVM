@@ -1,5 +1,7 @@
 #include "../game/globals.hpp"
 #include <assert.h>
+#include <exception>
+#include "resourceManager.hpp"
 
 template<typename T>
 T *resourceManager<T>::get(const std::string &resourceName, bool getDefaultTexture)
@@ -18,7 +20,7 @@ T *resourceManager<T>::get(const std::string &resourceName, bool getDefaultTextu
                     }
             }
       
-        globals::_logger->log("Cannot load \"" + resourceName + "\" from resource pool");
+        globals::_logger->logToConsole("Cannot load \"" + resourceName + "\" from resource pool");
         return nullptr;
     }
 
@@ -40,6 +42,18 @@ T *resourceManager<T>::add(const std::string &filepath, const std::string &resou
         
         globals::_logger->log("Cannot add \"" + resourceName + "\" to the resource pool");
         return nullptr;
+    }
+
+template<typename T>
+void resourceManager<T>::remove(const std::string &resourceName)
+    {
+        _resources.erase(_resources.find(resourceName));
+    }
+
+template<typename T>
+void resourceManager<T>::removeAll()
+    {
+        _resources.clear();
     }
 
 template<typename T>

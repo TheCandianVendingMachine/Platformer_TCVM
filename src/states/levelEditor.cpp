@@ -1,11 +1,13 @@
 #include "levelEditor.hpp"
 
-#include "../entity/entity.hpp"
+#include "../gameObject/gameObject/gameObject.hpp"
+#include "../gameObject/components/textureComponent.hpp"
+
 #include "../game/globals.hpp"
 #include "gameplay/level.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
-/*
+
 sf::Vector2f levelEditor::_mousePosToWorldCoord()
     {
         sf::Vector2i mousePosInt(sf::Mouse::getPosition(*globals::_stateMachine->getWindow()));
@@ -31,10 +33,10 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
         
         globals::_mouseManager->changeFunction("editor_left_mouse_press", [this] () 
             { 
-                _selectedEntity = _level->getPlatformAt(_mousePos);
+                _selectedEntity = _level->getEntityAtPosition(_mousePos);
                 if (!_selectedEntity)
                     {
-                        _selectedEntity = _level->addPlatform();
+                        _selectedEntity = _level->addEntity("platform");
                     }
             });
         globals::_mouseManager->changeInverseFunction("editor_left_mouse_press", [this] () 
@@ -44,10 +46,10 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
 
         globals::_keyboardManager->changeFunction("editor_delete_entity", [this] () 
             {
-                _selectedEntity = _level->getPlatformAt(_mousePos);
+                _selectedEntity = _level->getEntityAtPosition(_mousePos);
                 if (_selectedEntity)
                     {
-                        _level->removePlatform(_selectedEntity);
+                        _level->removeEntity(_selectedEntity);
                     }
 
                 _selectedEntity = nullptr;
@@ -55,10 +57,10 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
 
         globals::_mouseManager->changeFunction("editor_right_mouse_press", [this] () 
             {
-                _selectedEntity = _level->getPlatformAt(_mousePos);
+                _selectedEntity = _level->getEntityAtPosition(_mousePos);
                 if (_selectedEntity)
                     {
-                        _level->removePlatform(_selectedEntity);
+                        _level->removeEntity(_selectedEntity);
                     }
 
                 _selectedEntity = nullptr;
@@ -68,14 +70,22 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
             {
                 if (_selectedEntity)
                     {
-                        _selectedEntity->getSprite()->rotate(15);
+                        auto tc = _selectedEntity->get<textureComponent>();
+                        if (tc)
+                            {
+                                tc->getSprite()->rotate(15);
+                            }
                     }
             });
         globals::_keyboardManager->changeFunction("editor_spin_block_left", [this] () 
             {
                 if (_selectedEntity)
                     {
-                        _selectedEntity->getSprite()->rotate(-15);
+                        auto tc = _selectedEntity->get<textureComponent>();
+                        if (tc)
+                            {
+                                tc->getSprite()->rotate(-15);
+                            }
                     }
             });
 
@@ -126,11 +136,19 @@ void levelEditor::update(sf::Time deltaTime)
             {
                 if (_snapToGrid)
                     {
-                        _selectedEntity->setPosition(_getClosestGridCoord(_mousePos));
+                        auto tc = _selectedEntity->get<textureComponent>();
+                        if (tc)
+                            {
+                                tc->setPosition(_getClosestGridCoord(_mousePos));
+                            }
                     }
                 else
                     {
-                        _selectedEntity->setPosition(_mousePos.x, _mousePos.y);
+                        auto tc = _selectedEntity->get<textureComponent>();
+                        if (tc)
+                            {
+                                tc->setPosition(_mousePos);
+                            }
                     }
             }
 
@@ -153,4 +171,4 @@ levelEditor::~levelEditor()
     {
         
     }
-    */
+    

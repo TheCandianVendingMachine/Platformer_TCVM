@@ -25,7 +25,7 @@ void physicsComponent::update(sf::Time deltaTime)
                     {
                         if (!cc->getColliding())
                             {
-                                impulse = sf::Vector2f(0, mc->getImpulse().y + (_gravity * deltaTime.asSeconds()));
+                                impulse = sf::Vector2f(mc->getImpulse().x, mc->getImpulse().y + (_gravity * deltaTime.asSeconds()));
                                 if (impulse.y >= _terminalVelocity)
                                     {
                                         impulse.y = _terminalVelocity;
@@ -34,7 +34,7 @@ void physicsComponent::update(sf::Time deltaTime)
                     }
                 else
                     {
-                        impulse = sf::Vector2f(0, mc->getImpulse().y + (_gravity * deltaTime.asSeconds()));
+                        impulse = sf::Vector2f(mc->getImpulse().x, mc->getImpulse().y + (_gravity * deltaTime.asSeconds()));
                         if (impulse.y >= _terminalVelocity)
                             {
                                 impulse.y = _terminalVelocity;

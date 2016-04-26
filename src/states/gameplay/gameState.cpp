@@ -16,22 +16,7 @@ gameState::gameState()
 void gameState::initialize()
     {
         globals::_logger->logToConsole("Initializing game state");
-        //globals::_keyboardManager->changeFunction("change_to_editor", [this] () { globals::_stateMachine->queueState(new levelEditor(&_world)); });
-
-        _world.addEntity("player");
-        auto it = _world.addEntity("platform");
-        auto tc = it->get<textureComponent>();
-        if (tc)
-            {
-                tc->setPosition(0, 690);
-            }
-
-        it = _world.addEntity("platform");
-        tc = it->get<textureComponent>();
-        if (tc)
-            {
-                tc->setPosition(0, 0);
-            }
+        globals::_keyboardManager->changeFunction("change_to_editor", [this] () { globals::_stateMachine->queueState(new levelEditor(&_world)); });
     }
 
 void gameState::render()
