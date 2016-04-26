@@ -114,18 +114,14 @@ void game::cleanup()
             }
 
         globals::_eventManager = nullptr;
-        //globals::_fontManager = nullptr;
         globals::_keyboardManager = nullptr;
         globals::_logger = nullptr;
         globals::_mouseManager = nullptr;
         globals::_stateMachine = nullptr;
-        //globals::_textureManager = nullptr;
     }
 
 void game::start()
     {
-        bool updateOnFocus = false;
-
         initialize();
 
         sf::Clock deltaClock; 
@@ -146,10 +142,7 @@ void game::start()
 
                 while (accumulator >= updateTime)
                     {
-                        if (app->hasFocus() && !updateOnFocus)
-                            {
-                                globals::_stateMachine->tick(deltaTime);
-                            }
+                        globals::_stateMachine->tick(deltaTime);
                         accumulator -= updateTime;
                     }
                 globals::_stateMachine->render();

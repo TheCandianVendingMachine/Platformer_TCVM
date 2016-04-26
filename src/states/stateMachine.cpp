@@ -125,7 +125,10 @@ void stateMachine::tick(sf::Time deltaTime)
             }
         
         handleInput();
-        update(deltaTime);
+        if (_window->hasFocus())
+            {
+                update(deltaTime);
+            }
     }
 
 void stateMachine::handleInput()
@@ -134,11 +137,14 @@ void stateMachine::handleInput()
         states currentState = _currentStates.back()->getState();
         while (_window->pollEvent(event))
             {
-                // make sure a state is actually in the stack
-                if (!_currentStates.empty() && _currentStates.back())
+                if (_window->hasFocus())
                     {
-                        globals::_keyboardManager->handleInput(event, currentState);
-                        globals::_mouseManager->handleInput(event, currentState);
+                        // make sure a state is actually in the stack
+                        if (!_currentStates.empty() && _currentStates.back())
+                            {
+                                globals::_keyboardManager->handleInput(event, currentState);
+                                globals::_mouseManager->handleInput(event, currentState);
+                            }
                     }
 
                 globals::_textEntered->getInput(event);
@@ -153,8 +159,11 @@ void stateMachine::handleInput()
                     }
             }
 
-        globals::_keyboardManager->handleInput(currentState);
-        globals::_mouseManager->handleInput(currentState);
+        if (_window->hasFocus())
+            {
+                globals::_keyboardManager->handleInput(currentState);
+                globals::_mouseManager->handleInput(currentState);
+            }
     }
 
 void stateMachine::update(sf::Time deltaTime)
