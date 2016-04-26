@@ -14,6 +14,7 @@
 #include "../states/stateMachine.hpp"
 #include "../managers/events/eventManager.hpp"
 #include "../managers/input/inputManager.hpp"
+#include "../managers/input/stringInputManager.hpp"
 #include "../managers/resourceManager.hpp"
 
 class globals
@@ -21,6 +22,8 @@ class globals
         public:
             static inputManager<sf::Keyboard::Key> *_keyboardManager;
             static inputManager<sf::Mouse::Button> *_mouseManager;
+
+            static stringInputManager *_textEntered;
 
             static stateMachine *_stateMachine;
             static eventManager *_eventManager;

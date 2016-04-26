@@ -39,6 +39,8 @@ void game::initializeControls()
 
         globals::_keyboardManager->add("editor_save_level",         sf::Keyboard::F3,       inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
         globals::_keyboardManager->add("editor_load_level",         sf::Keyboard::F4,       inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
+
+        globals::_keyboardManager->add("editor_confirm",            sf::Keyboard::Return,   inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
         
 
         globals::_keyboardManager->add("change_to_editor",          sf::Keyboard::F1,       inputState::ON_PRESS,   states::GAME_STATE);
@@ -63,11 +65,13 @@ void game::initialize()
         globals::_keyboardManager = &_keyboardManager;
         globals::_mouseManager =    &_mouseManager;
 
+        globals::_textEntered = &_textEntered;
+
         globals::_eventManager =    &_eventManager;
         globals::_stateMachine =    &_stateMachine;
         globals::_logger =          _logger;
 
-        globals::_logger->logToConsole("Initializng game");
+        globals::_logger->logToConsole("Initializing game");
 
         rndm::initRandom();
 

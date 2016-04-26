@@ -10,12 +10,16 @@
 
 #include <vector>
 
+#include "../UI/userInterfaceFactory.hpp"
+
 class level;
 class gameObject;
 
 class levelEditor : public state
     {
         private:
+            userInterfaceFactory _UIFactory;
+
             level *_level;
             gameObject *_selectedEntity;
 
@@ -26,6 +30,8 @@ class levelEditor : public state
 
             sf::View _editorView;
             sf::Vector2f _viewImpulse;
+
+            bool _enteringString;
 
         private:
             sf::Vector2f _mousePosToWorldCoord();

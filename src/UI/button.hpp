@@ -4,7 +4,6 @@
 
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-
 #include <functional>
 
 class button

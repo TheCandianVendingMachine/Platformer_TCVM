@@ -141,6 +141,8 @@ void stateMachine::handleInput()
                         globals::_mouseManager->handleInput(event, currentState);
                     }
 
+                globals::_textEntered->getInput(event);
+
                 switch (event.type)
                     {
                         case sf::Event::Closed:
