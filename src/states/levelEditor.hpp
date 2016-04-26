@@ -35,7 +35,7 @@ class levelEditor : public state
 
         private:
             sf::Vector2f _mousePosToWorldCoord();
-            sf::Vector2f _getClosestGridCoord(sf::Vector2f pos);
+            sf::Vector2i _getClosestGridCoord(sf::Vector2f pos);
 
         public:
             levelEditor(level *lvl);

@@ -14,10 +14,10 @@ sf::Vector2f levelEditor::_mousePosToWorldCoord()
         return globals::_stateMachine->getWindow()->mapPixelToCoords(mousePosInt);
     }
 
-sf::Vector2f levelEditor::_getClosestGridCoord(sf::Vector2f pos)
+sf::Vector2i levelEditor::_getClosestGridCoord(sf::Vector2f pos)
     {
-        return sf::Vector2f(pos.x - (static_cast<int>(pos.x) % _gridSize),
-                            pos.y - (static_cast<int>(pos.y) % _gridSize));
+        return sf::Vector2i(static_cast<int>(pos.x) - (static_cast<int>(pos.x) % _gridSize),
+                            static_cast<int>(pos.y) - (static_cast<int>(pos.y) % _gridSize));
     }
 
 levelEditor::levelEditor(level *lvl) : _gridSize(16)
@@ -207,7 +207,7 @@ void levelEditor::update(sf::Time deltaTime)
                         auto tc = _selectedEntity->get<textureComponent>();
                         if (tc)
                             {
-                                tc->setPosition(_getClosestGridCoord(_mousePos));
+                                tc->setPosition(sf::Vector2f(_getClosestGridCoord(_mousePos)));
                             }
                     }
                 else
