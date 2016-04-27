@@ -35,6 +35,7 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
 
         _viewImpulse = sf::Vector2f(0, 0);
 
+		_resizing = false;
         
         globals::_mouseManager->changeFunction("editor_left_mouse_press", [this] () 
             { 
@@ -105,6 +106,14 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
                             }
                     }
             });
+
+		globals::_keyboardManager->changeFunction("editor_toggle_resize", [this]() 
+			{
+				if (!_enteringString)
+					{
+						_resizing = !_resizing;
+					}
+			});
 
         globals::_keyboardManager->changeFunction("editor_save_level", [this] () 
             {

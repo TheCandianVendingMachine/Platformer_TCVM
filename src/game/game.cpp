@@ -27,7 +27,7 @@ void game::initializeControls()
 
         globals::_keyboardManager->add("editor_delete_entity",      sf::Keyboard::Delete,   inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
         globals::_keyboardManager->add("editor_snap_to_grid",       sf::Keyboard::LAlt,     inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
-
+		globals::_keyboardManager->add("editor_toggle_resize",		sf::Keyboard::R,		inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
 
         globals::_keyboardManager->add("editor_move_view_right",    sf::Keyboard::D,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
         globals::_keyboardManager->add("editor_move_view_left",     sf::Keyboard::A,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
