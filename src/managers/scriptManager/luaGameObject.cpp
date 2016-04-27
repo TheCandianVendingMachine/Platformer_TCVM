@@ -2,6 +2,9 @@
 #include "../../gameObject/gameObject/gameObject.hpp"
 #include "../../gameObject/components/components.hpp"
 
+#include "../../game/globals.hpp"
+#include "../../states/stateMachine.hpp"
+
 #include <iostream>
 
 luaGameObject::luaGameObject(gameObject *obj)
@@ -35,6 +38,11 @@ float luaGameObject::getImpulseY()
                 return mc->getImpulse().y;
             }
     }
+
+float luaGameObject::getDeltaTime()
+	{
+		return globals::_stateMachine->getDeltaTime();
+	}
 
 void luaGameObject::test()
     {

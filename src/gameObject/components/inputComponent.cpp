@@ -2,8 +2,9 @@
 #include "../../game/globals.hpp"
 #include "../../managers/input/inputManager.hpp"
 
+#include "../../utilities/json/json/json.h"
+
 #include <logger.hpp>
-#include <json/json.h>
 #include <fstream>
 
 void inputComponent::loadJsonFile(const std::string &file, Json::Value *root)

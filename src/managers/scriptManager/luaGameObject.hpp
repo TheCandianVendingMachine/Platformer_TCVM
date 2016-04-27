@@ -17,6 +17,8 @@ class luaGameObject
             float getImpulseX();
             float getImpulseY();
 
+			float getDeltaTime();
+
             void test();
 
     };

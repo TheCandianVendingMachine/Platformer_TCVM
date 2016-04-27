@@ -241,6 +241,16 @@ void stateMachine::setWindow(sf::RenderWindow *window)
         _window = window;
     }
 
+const float stateMachine::getDeltaTime() const
+	{
+		return _deltaTime;
+	}
+
+void stateMachine::setDeltaTime(float num)
+	{
+		_deltaTime = num;
+	}
+
 void stateMachine::cleanup()
     {
         globals::_logger->logToConsole("Cleaning up game state machine");

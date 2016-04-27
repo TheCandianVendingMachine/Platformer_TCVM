@@ -13,6 +13,7 @@ class stateMachine
     {
         private:
             sf::RenderWindow *_window;
+			float _deltaTime;
 
             std::vector<state*> _currentStates;
             std::queue<state*> _queuedState;
@@ -52,6 +53,9 @@ class stateMachine
             void closeWindow();
             sf::RenderWindow *getWindow() const;
             void setWindow(sf::RenderWindow *window);
+
+			const float getDeltaTime() const;
+			void setDeltaTime(float num);
 
             void cleanup();
             ~stateMachine();

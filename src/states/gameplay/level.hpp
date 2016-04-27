@@ -12,7 +12,7 @@
 
 #include "../../gameObject/gameObject/gameObjectFactory.hpp"
 
-#include <json/json.h>
+#include "../../utilities/json/json/json.h"
 
 class gameObject;
 

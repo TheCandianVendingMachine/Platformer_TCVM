@@ -146,6 +146,8 @@ void game::start()
                         accumulator -= updateTime;
                     }
                 globals::_stateMachine->render();
+
+				_stateMachine.setDeltaTime(deltaTime.asSeconds());
             }
     }
 

@@ -11,6 +11,7 @@ input<T>::input(T key, std::function<void()> onInput, inputState state, states a
         _state = state;
 
         _pollRealtime = true;
+		_pressed = false;
     }
 
 template<typename T>
@@ -25,6 +26,7 @@ input<T>::input(T key, std::function<void()> onInput, bool onPress, states activ
         _state = inputState::REAL_TIME;
 
         _pollRealtime = true;
+		_pressed = false;
     }
 
 template<typename T>
@@ -79,8 +81,18 @@ void input<T>::execute(states active)
                     {
                         _onInput();
                         _time.restart();
-                        _pollRealtime = true;
+						_pressed = true;
                     }
+				else if (pressed != _onPress && _pollRealtime && _pressed)
+					{
+						_pollRealtime = false;
+						_pressed = false;
+					}
+				else if (!_pollRealtime && pressed != _onPress)
+					{
+						_offInput();
+						_pollRealtime = true;
+					}
             }
         else
             {

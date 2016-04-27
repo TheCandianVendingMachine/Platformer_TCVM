@@ -23,7 +23,7 @@ class scriptManager
             void initializeLuaHelpers();
 
 			void callLuaScript(const std::string &scriptPath);
-			void registerLuaFunction(const std::string &name, const std::string &scriptPath, const std::string &script);
+			luabridge::LuaRef *registerLuaFunction(const std::string &name, const std::string &scriptPath, const std::string &script);
 
             #pragma region Register CPP Functions to LUA
 			void registerFunctionToLua(const std::string &name, const std::string &_namespace, void (*func)(void));

@@ -30,6 +30,8 @@ class input
 
             inputState _state;
             bool _onPress;
+
+			bool _pressed;
             bool _pollRealtime;
 
             states _activeState;

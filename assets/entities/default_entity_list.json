@@ -67,7 +67,7 @@
 		},
 		"physicsComponent" :
 		{
-			"gravity" : 0.0,
+			"gravity" : 150.0,
 			"terminal_velocity" : 1000.0
 		}
 	}

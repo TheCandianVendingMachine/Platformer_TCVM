@@ -10,7 +10,7 @@
 
 #include "../../managers/resourceManager.hpp"
 
-#include <json/json.h>
+#include "../../utilities/json/json/json.h"
 #include <SFML/Graphics/Texture.hpp>
 
 class gameObject;
