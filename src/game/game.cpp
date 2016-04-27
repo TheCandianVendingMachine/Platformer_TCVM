@@ -18,35 +18,35 @@ void game::initializeControls()
     {
         globals::_logger->logToConsole("Initializng controls");
 
-        globals::_mouseManager->add("editor_left_mouse_press",      sf::Mouse::Left,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
-        globals::_mouseManager->add("editor_right_mouse_press",     sf::Mouse::Right,       inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
+        globals::_mouseManager->add("editor_left_mouse_press",      sf::Mouse::Left,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
+        globals::_mouseManager->add("editor_right_mouse_press",     sf::Mouse::Right,       inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
 
 
-        globals::_keyboardManager->add("editor_spin_block_right",   sf::Keyboard::E,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
-        globals::_keyboardManager->add("editor_spin_block_left",    sf::Keyboard::Q,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_spin_block_right",   sf::Keyboard::E,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_spin_block_left",    sf::Keyboard::Q,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
 
-        globals::_keyboardManager->add("editor_delete_entity",      sf::Keyboard::Delete,   inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
-        globals::_keyboardManager->add("editor_snap_to_grid",       sf::Keyboard::LAlt,     inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
-
-
-        globals::_keyboardManager->add("editor_move_view_right",    sf::Keyboard::D,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
-        globals::_keyboardManager->add("editor_move_view_left",     sf::Keyboard::A,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
-        globals::_keyboardManager->add("editor_move_view_up",       sf::Keyboard::W,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
-        globals::_keyboardManager->add("editor_move_view_down",     sf::Keyboard::S,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
-        globals::_keyboardManager->add("editor_zoom_view_out",      sf::Keyboard::Q,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
-        globals::_keyboardManager->add("editor_zoom_view_in",       sf::Keyboard::E,        inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_delete_entity",      sf::Keyboard::Delete,   inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_snap_to_grid",       sf::Keyboard::LAlt,     inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
 
 
-        globals::_keyboardManager->add("editor_save_level",         sf::Keyboard::F3,       inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
-        globals::_keyboardManager->add("editor_load_level",         sf::Keyboard::F4,       inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_move_view_right",    sf::Keyboard::D,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_move_view_left",     sf::Keyboard::A,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_move_view_up",       sf::Keyboard::W,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_move_view_down",     sf::Keyboard::S,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_zoom_view_out",      sf::Keyboard::Q,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_zoom_view_in",       sf::Keyboard::E,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
 
-        globals::_keyboardManager->add("editor_confirm",            sf::Keyboard::Return,   inputState::ON_PRESS,   states::LEVEL_EDITOR_STATE);
+
+        globals::_keyboardManager->add("editor_save_level",         sf::Keyboard::F3,       inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_load_level",         sf::Keyboard::F4,       inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
+
+        globals::_keyboardManager->add("editor_confirm",            sf::Keyboard::Return,   inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
         
 
-        globals::_keyboardManager->add("change_to_editor",          sf::Keyboard::F1,       inputState::ON_PRESS,   states::GAME_STATE);
+        globals::_keyboardManager->add("change_to_editor",          sf::Keyboard::F1,       inputState::ON_PRESS,			states::GAME_STATE);
         globals::_keyboardManager->add("change_to_game",            sf::Keyboard::F2, [] () 
                                                                     { globals::_stateMachine->popState(); }, 
-                                                                                            inputState::ON_PRESS, states::LEVEL_EDITOR_STATE);
+                                                                                            inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
 
     }
 

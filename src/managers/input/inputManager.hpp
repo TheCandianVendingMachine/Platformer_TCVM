@@ -19,15 +19,27 @@ class inputManager
             std::unordered_map<std::string, input<T>*> _realTimeInputs;
 
         public:
+			#pragma region add inputs
             // Any Non-Realtime inputs without function in constructor
             void add(const std::string &name, T key, inputState inputState, states activeState);
             // Any Non-Realtime inputs with function in constructor
             void add(const std::string &name, T key, std::function<void()> onInput, inputState inputState, states activeState);
 
+			// Any Non-Realtime inputs without function in constructor and double click
+			void add(const std::string &name, T key, inputState inputState, bool doubleClick, states activeState);
+			// Any Non-Realtime inputs with function in constructor and double click
+			void add(const std::string &name, T key, std::function<void()> onInput, inputState inputState, bool doubleClick, states activeState);
+
             // Any Realtime inputs without function in constructor
             void add(const std::string &name, T key, bool onPress, states activeState);
             // Any Realtime inputs with function in constructor
             void add(const std::string &name, T key, std::function<void()> onInput, bool onPress, states activeState);
+
+			// Any Realtime inputs without function in constructor with double click
+			void add(const std::string &name, T key, bool onPress, bool doubleClick, states activeState);
+			// Any Realtime inputs with function in constructor with double click
+			void add(const std::string &name, T key, std::function<void()> onInput, bool onPress, bool doubleClick, states activeState);
+			#pragma endregion
 
             void changeFunction(const std::string &name, std::function<void()> func);
             void changeInverseFunction(const std::string &name, std::function<void()> func);

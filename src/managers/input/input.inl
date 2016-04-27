@@ -1,6 +1,6 @@
 #include "input.hpp"
 template<typename T>
-input<T>::input(T key, std::function<void()> onInput, inputState state, states activeState)
+input<T>::input(T key, std::function<void()> onInput, inputState state, bool doubleClick, states activeState)
     {
         _input = key;
         
@@ -12,10 +12,12 @@ input<T>::input(T key, std::function<void()> onInput, inputState state, states a
 
         _pollRealtime = true;
 		_pressed = false;
+
+		_doubleClick = doubleClick;
     }
 
 template<typename T>
-input<T>::input(T key, std::function<void()> onInput, bool onPress, states activeState)
+input<T>::input(T key, std::function<void()> onInput, bool onPress, bool doubleClick, states activeState)
     {
         _input = key;
         
@@ -27,6 +29,8 @@ input<T>::input(T key, std::function<void()> onInput, bool onPress, states activ
 
         _pollRealtime = true;
 		_pressed = false;
+
+		_doubleClick = doubleClick;
     }
 
 template<typename T>
@@ -50,8 +54,22 @@ void input<T>::execute(sf::Event &event, states active)
                     {
                         if ((_state == ON_PRESS ? _press : _release) == event.type)
                             {
-                                _onInput();
-                                _time.restart();
+								if (_doubleClick) 
+									{
+										if (_time.getElapsedTime().asMilliseconds() <= 500)
+											{
+												_onInput();
+												_time.restart();
+											}
+										else
+											{
+												_time.restart();
+											}
+									}
+								else
+									{
+										_onInput();
+									}
                             }
                         else if ((_state != ON_PRESS ? _press : _release) == event.type)
                             {
@@ -79,9 +97,23 @@ void input<T>::execute(states active)
 
                 if (_pollRealtime && pressed == _onPress)
                     {
-                        _onInput();
-                        _time.restart();
-						_pressed = true;
+                        if (_doubleClick) 
+							{
+								if (_time.getElapsedTime().asMilliseconds() <= 500) 
+									{
+										_onInput();
+										_time.restart();
+										_pressed = true;
+									}
+								else
+									{
+										_time.restart();
+									}
+							}
+						else
+							{
+								_onInput();
+							}
                     }
 				else if (pressed != _onPress && _pollRealtime && _pressed)
 					{

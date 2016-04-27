@@ -1,10 +1,11 @@
 #include "../../game/globals.hpp"
 #include "input.hpp"
+#include "inputManager.hpp"
 
 template<typename T>
 void inputManager<T>::add(const std::string &name, T key, inputState inputState, states activeState)
     {
-        _inputs[name] = input<T>(key, [] () {}, inputState, activeState);
+        _inputs[name] = input<T>(key, [] () {}, inputState, false, activeState);
         _inputs[name].setInverseFunction([] () {});
 
         _eventTimeInputs[name] = &_inputs[name];
@@ -13,11 +14,42 @@ void inputManager<T>::add(const std::string &name, T key, inputState inputState,
 template<typename T>
 void inputManager<T>::add(const std::string &name, T key, std::function<void()> onInput, inputState inputState, states activeState)
     {
-        _inputs[name] = input<T>(key, onInput, inputState, activeState);
+        _inputs[name] = input<T>(key, onInput, inputState, false, activeState);
         _inputs[name].setInverseFunction([] () {});
 
         _eventTimeInputs[name] = &_inputs[name];
     }
+
+template<typename T>
+void inputManager<T>::add(const std::string &name, T key, inputState inputState, bool doubleClick, states activeState)
+	{
+		_inputs[name] = input<T>(key, [] () {}, inputState, doubleClick, activeState);
+        _inputs[name].setInverseFunction([] () {});
+
+        _eventTimeInputs[name] = &_inputs[name];
+	}
+
+template<typename T>
+void inputManager<T>::add(const std::string &name, T key, std::function<void()> onInput, inputState inputState, bool doubleClick, states activeState)
+	{
+		auto it = _inputs.find(name);
+        if (it == _inputs.end())
+            {
+                _inputs[name] = input<T>(key, onInput, doubleClick, activeState);
+                _inputs[name].setInverseFunction([] () {});
+
+				_eventTimeInputs[name] = &_inputs[name];
+            }
+        else
+            {
+                // if the input is in the map, and onPress isnt the same as the previous value, assume that the
+                // user wants to change the inverse function
+                if (_inputs[name].onPress() != onPress)
+                    {
+                        _inputs[name].setInverseFunction(onInput);
+                    }
+            }
+	}
 
 template<typename T>
 void inputManager<T>::add(const std::string &name, T key, bool onPress, states activeState)
@@ -25,7 +57,7 @@ void inputManager<T>::add(const std::string &name, T key, bool onPress, states a
         auto it = _inputs.find(name);
         if (it == _inputs.end())
             {
-                _inputs[name] = input<T>(key, [] () {}, onPress, activeState);
+                _inputs[name] = input<T>(key, [] () {}, onPress, false, activeState);
                 _inputs[name].setInverseFunction([] () {});
             }
         else
@@ -47,7 +79,7 @@ void inputManager<T>::add(const std::string &name, T key, std::function<void()> 
         auto it = _inputs.find(name);
         if (it == _inputs.end())
             {
-                _inputs[name] = input<T>(key, onInput, onPress, activeState);
+                _inputs[name] = input<T>(key, onInput, onPress, false, activeState);
                 _inputs[name].setInverseFunction([] () {});
 
                 _realTimeInputs[name] = &_inputs[name];
@@ -62,6 +94,50 @@ void inputManager<T>::add(const std::string &name, T key, std::function<void()> 
                     }
             }
     }
+
+template<typename T>
+void inputManager<T>::add(const std::string &name, T key, bool onPress, bool doubleClick, states activeState)
+	{
+	    auto it = _inputs.find(name);
+        if (it == _inputs.end())
+            {
+				_inputs[name] = input<T>(key, [] () {}, onPress, doubleClick, activeState);
+                _inputs[name].setInverseFunction([] () {});
+
+                _realTimeInputs[name] = &_inputs[name];
+            }
+        else
+            {
+                // if the input is in the map, and onPress isnt the same as the previous value, assume that the
+                // user wants to change the inverse function
+                if (_inputs[name].onPress() != onPress)
+                    {
+                        _inputs[name].setInverseFunction(onInput);
+                    }
+            }
+	}
+
+template<typename T>
+void inputManager<T>::add(const std::string &name, T key, std::function<void()> onInput, bool onPress, bool doubleClick, states activeState)
+	{
+		auto it = _inputs.find(name);
+        if (it == _inputs.end())
+            {
+				_inputs[name] = input<T>(key, onInput, onPress, doubleClick, activeState);
+                _inputs[name].setInverseFunction([] () {});
+
+                _realTimeInputs[name] = &_inputs[name];
+            }
+        else
+            {
+                // if the input is in the map, and onPress isnt the same as the previous value, assume that the
+                // user wants to change the inverse function
+                if (_inputs[name].onPress() != onPress)
+                    {
+                        _inputs[name].setInverseFunction(onInput);
+                    }
+            }
+	}
 
 template<typename T>
 void inputManager<T>::changeFunction(const std::string &name, std::function<void()> func)

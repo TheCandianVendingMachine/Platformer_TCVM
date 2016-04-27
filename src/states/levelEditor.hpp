@@ -25,6 +25,8 @@ class levelEditor : public state
 
             sf::Vector2f _mousePos;
 
+			bool _resizing;
+
             const int _gridSize;
             bool _snapToGrid;
 

@@ -12,6 +12,7 @@ class textureComponent : public component
     {
         private:
             sf::Sprite _sprite;
+			sf::Vector2f _size;
             sf::Texture _texture;
 
         public:
@@ -19,6 +20,11 @@ class textureComponent : public component
             sf::Texture *getTexture();
 
             sf::Sprite *getSprite();
+
+			void setSize(float X, float Y);
+			void setSize(sf::Vector2f size);
+
+			sf::Vector2f getSize();
 
             void setPosition(float X, float Y);
             void setPosition(sf::Vector2f pos);

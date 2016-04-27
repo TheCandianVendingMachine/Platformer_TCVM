@@ -34,14 +34,16 @@ class input
 			bool _pressed;
             bool _pollRealtime;
 
+			bool _doubleClick;
+
             states _activeState;
 
             sf::Clock _time;
 
         public:
             input() = default;
-            input(T key, std::function<void()> onInput, inputState state, states activeState);
-            input(T key, std::function<void()> onInput, bool onPress, states activeState);
+            input(T key, std::function<void()> onInput, inputState state, bool doubleClick, states activeState);
+            input(T key, std::function<void()> onInput, bool onPress, bool doubleClick, states activeState);
 
             void execute(sf::Event &event, states active);
             void execute(states active);

@@ -104,5 +104,7 @@ void collisionComponent::update()
                 sf::Vector2f objPos = objSprite->getSprite()->getPosition();
                 _boundingBox.left = objPos.x + _positionOffset.x;
                 _boundingBox.top = objPos.y + _positionOffset.y;
+				_boundingBox.width = objSprite->getSize().x;
+				_boundingBox.height = objSprite->getSize().y;
             }
     }
