@@ -29,7 +29,6 @@ class inputManager
             // Any Realtime inputs with function in constructor
             void add(const std::string &name, T key, std::function<void()> onInput, bool onPress, states activeState);
 
-
             void changeFunction(const std::string &name, std::function<void()> func);
             void changeInverseFunction(const std::string &name, std::function<void()> func);
 

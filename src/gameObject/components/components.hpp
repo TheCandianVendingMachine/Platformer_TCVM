@@ -8,3 +8,4 @@
 #include "textureComponent.hpp"
 #include "movementComponent.hpp"
 #include "physicsComponent.hpp"
+#include "inputComponent.hpp"

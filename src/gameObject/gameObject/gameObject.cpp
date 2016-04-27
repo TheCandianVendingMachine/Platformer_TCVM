@@ -7,6 +7,7 @@ gameObject::gameObject(const std::string &name)
     {
         _name = name;
         _ID = _allIDS++;
+        _luaGameObject = this;
     }
 
 const std::string gameObject::getName() const
@@ -22,6 +23,11 @@ const unsigned int gameObject::getID() const
 void gameObject::addComponent(std::type_index index, component *comp)
     {
         _components[index] = comp;
+    }
+
+luaGameObject *gameObject::getGameObjectHandle()
+    {
+        return &_luaGameObject;
     }
 
 gameObject::~gameObject()

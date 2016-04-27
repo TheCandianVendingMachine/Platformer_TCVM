@@ -1,7 +1,6 @@
 #include "scriptManager.hpp"
-
 #include "../../game/globals.hpp"
-#include <logger.hpp>
+#include "luaGameObject.hpp"
 
 #include "LuaBridge/LuaBridge.h"
 extern "C" 
@@ -11,35 +10,48 @@ extern "C"
 		#include <lualib.h>
 	}
 
+#include <logger.hpp>
+
 using namespace luabridge;
 scriptManager::scriptManager()
 	{
         globals::_logger->logToConsole("Initializing Script Manager");
-		state = luaL_newstate();
-		luaL_openlibs(state);
+        _state = luaL_newstate();
+		luaL_openlibs(_state);
+
+        initializeLuaHelpers();
 	}
+
+void scriptManager::initializeLuaHelpers()
+    {
+        getGlobalNamespace(_state).beginClass<luaGameObject>("luaGameObject")
+                .addFunction("setImpulse", &luaGameObject::setImpulse)
+                .addFunction("getImpulseX", &luaGameObject::getImpulseX)
+                .addFunction("getImpulseY", &luaGameObject::getImpulseY)
+                .addFunction("test", &luaGameObject::test)
+            .endClass();
+    }
 
 void scriptManager::callLuaScript(const std::string &scriptPath)
 	{
-		luaL_dofile(state, scriptPath.c_str());
-		lua_pcall(state, 0, 0, 0);
+		luaL_dofile(_state, scriptPath.c_str());
+		lua_pcall(_state, 0, 0, 0);
 	}
 
 void scriptManager::registerLuaFunction(const std::string &name, const std::string &scriptPath, const std::string &script)
 	{
         globals::_logger->logToConsole("Adding Lua Function \"" + name + "\" with script \"" + script + "\" at \"" + scriptPath + "\"");
 
-		luaL_dofile(state, scriptPath.c_str());
-		lua_pcall(state, 0, 0, 0);
-		luabridge::LuaRef *ref = new luabridge::LuaRef(luabridge::getGlobal(state, script.c_str()));
+		luaL_dofile(_state, scriptPath.c_str());
+		luabridge::lua_pcall(_state, 0, 0, 0);
+		luabridge::LuaRef *ref = new luabridge::LuaRef(luabridge::getGlobal(_state, script.c_str()));
 		_luaFuncs[name] = ref;
 	}
 
-void scriptManager::callLuaFunc(const std::string &name)
-	{
-        auto func = _luaFuncs[name];
-        (*func)();
-	}
+luabridge::lua_State *scriptManager::getState()
+    {
+        return _state;
+    }
 
 scriptManager::~scriptManager()
     {

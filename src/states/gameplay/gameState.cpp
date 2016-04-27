@@ -16,6 +16,8 @@ gameState::gameState()
         _renderOvertop = false;
         _updateUnderneath = false;
         _state = GAME_STATE;
+
+        _world.addEntity("player");
     }
 
 void gameState::initialize()

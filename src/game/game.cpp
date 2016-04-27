@@ -48,10 +48,6 @@ void game::initializeControls()
                                                                     { globals::_stateMachine->popState(); }, 
                                                                                             inputState::ON_PRESS, states::LEVEL_EDITOR_STATE);
 
-
-        globals::_keyboardManager->add("player_jump",               sf::Keyboard::Space,    true, states::GAME_STATE);
-        globals::_keyboardManager->add("player_move_left",          sf::Keyboard::Left,     true, states::GAME_STATE);
-        globals::_keyboardManager->add("player_move_right",         sf::Keyboard::Right,    true, states::GAME_STATE);
     }
 
 void game::initialize()

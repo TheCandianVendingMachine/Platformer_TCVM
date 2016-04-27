@@ -1,4 +1,5 @@
 #include "../../game/globals.hpp"
+#include "input.hpp"
 
 template<typename T>
 void inputManager<T>::add(const std::string &name, T key, inputState inputState, states activeState)
@@ -21,8 +22,21 @@ void inputManager<T>::add(const std::string &name, T key, std::function<void()> 
 template<typename T>
 void inputManager<T>::add(const std::string &name, T key, bool onPress, states activeState)
     {
-        _inputs[name] = input<T>(key, [] () {}, onPress, activeState);
-        _inputs[name].setInverseFunction([] () {});
+        auto it = _inputs.find(name);
+        if (it == _inputs.end())
+            {
+                _inputs[name] = input<T>(key, [] () {}, onPress, activeState);
+                _inputs[name].setInverseFunction([] () {});
+            }
+        else
+            {
+                // if the input is in the map, and onPress isnt the same as the previous value, assume that the
+                // user wants to change the inverse function
+                if (_inputs[name].onPress() != onPress)
+                    {
+                        _inputs[name].setInverseFunction(onInput);
+                    }
+            }
 
         _realTimeInputs[name] = &_inputs[name];
     }
@@ -30,10 +44,23 @@ void inputManager<T>::add(const std::string &name, T key, bool onPress, states a
 template<typename T>
 void inputManager<T>::add(const std::string &name, T key, std::function<void()> onInput, bool onPress, states activeState)
     {
-        _inputs[name] = input<T>(key, onInput, onPress, activeState);
-        _inputs[name].setInverseFunction([] () {});
+        auto it = _inputs.find(name);
+        if (it == _inputs.end())
+            {
+                _inputs[name] = input<T>(key, onInput, onPress, activeState);
+                _inputs[name].setInverseFunction([] () {});
 
-        _realTimeInputs[name] = &_inputs[name];
+                _realTimeInputs[name] = &_inputs[name];
+            }
+        else
+            {
+                // if the input is in the map, and onPress isnt the same as the previous value, assume that the
+                // user wants to change the inverse function
+                if (_inputs[name].onPress() != onPress)
+                    {
+                        _inputs[name].setInverseFunction(onInput);
+                    }
+            }
     }
 
 template<typename T>

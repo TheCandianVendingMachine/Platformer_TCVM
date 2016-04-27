@@ -32,6 +32,29 @@
 				"Y" : 0.0
 			}
 		},
+		"inputComponent":
+		{
+			"move_left" : 
+			{
+				"key" : "key_left",
+				"script" : "assets/scripts/player.lua",
+				"func_start" : "move_left",
+				"func_end" : "move_stop"
+			},
+			"move_right" :
+			{
+				"key" : "key_right",
+				"script" : "assets/scripts/player.lua",
+				"func_start" : "move_right",
+				"func_end" : "move_stop"
+			},
+			"move_jump" :
+			{
+				"key" : "key_spacebar",
+				"script" : "assets/scripts/player.lua",
+				"func_start" : "move_jump"
+			}
+		},
 		"collisionComponent" :
 		{
 			"bounding_box" :
@@ -44,7 +67,7 @@
 		},
 		"physicsComponent" :
 		{
-			"gravity" : 150.0,
+			"gravity" : 0.0,
 			"terminal_velocity" : 1000.0
 		}
 	}

@@ -95,6 +95,18 @@ void input<T>::setFunction(std::function<void()> func)
     }
 
 template<typename T>
+inline const bool input<T>::isRealTime() const
+    {
+        return _state == REAL_TIME;
+    }
+
+template<typename T>
+inline const bool input<T>::onPress() const
+    {
+        return _onPress;
+    }
+
+template<typename T>
 void input<T>::setInverseFunction(std::function<void()> func)
     {
         _offInput = func;

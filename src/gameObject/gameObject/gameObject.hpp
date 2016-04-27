@@ -10,6 +10,8 @@
 #include <memory>
 #include <string>
 
+#include "../../managers/scriptManager/luaGameObject.hpp"
+
 class component;
 
 class gameObject
@@ -21,6 +23,8 @@ class gameObject
             unsigned int _ID;
             static unsigned int _allIDS;
 
+            luaGameObject _luaGameObject;
+
         public:
             gameObject(const std::string &name);
 
@@ -30,6 +34,8 @@ class gameObject
             void addComponent(std::type_index index, component *comp);
             template<typename T>
             T *get();
+
+            luaGameObject *getGameObjectHandle();
 
             ~gameObject();
 

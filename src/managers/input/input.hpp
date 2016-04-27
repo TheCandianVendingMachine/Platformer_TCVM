@@ -45,6 +45,10 @@ class input
             void execute(states active);
 
             void setFunction(std::function<void()> func);
+
+            const bool isRealTime() const;
+            const bool onPress() const;
+
             void setInverseFunction(std::function<void()> func);
 
             sf::Time getTimePressed();

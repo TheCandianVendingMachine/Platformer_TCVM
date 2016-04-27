@@ -2,6 +2,8 @@
 #include "gameObject.hpp"
 
 #include "../../game/globals.hpp"
+#include "../../managers/scriptManager/scriptManager.hpp"
+#include "../../managers/input/inputManager.hpp"
 
 #include "../components/components.hpp"
 
@@ -97,6 +99,48 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
                                 pc->setGameObject(newObj);
 
                                 newObj->addComponent(std::type_index(typeid(physicsComponent)), pc);
+                            }
+                        else if (comp == "inputComponent")
+                            {
+                                addedComp = true;
+
+                                inputComponent *ic = new inputComponent();
+
+                                for (auto &control : root[objectName][comp].getMemberNames())
+                                    {
+                                        sf::Keyboard::Key key = ic->setKey(root[objectName][comp][control]["key"].asString());
+                                        
+                                        bool startReal = !root[objectName][comp][control]["func_start"].isNull();
+                                        bool endReal = !root[objectName][comp][control]["func_end"].isNull();
+
+                                        newObj->addComponent(std::type_index(typeid(inputComponent)), ic);
+
+                                        if (startReal)
+                                            {
+                                                std::string controlName = root[objectName][comp][control]["key"].asString() + "_start";
+                                                ic->setFuncCallStart(controlName);
+                                                globals::_scriptManager->registerLuaFunction(controlName, root[objectName][comp][control]["script"].asString(), root[objectName][comp][control]["func_start"].asString());
+                                                globals::_keyboardManager->add(control, key, [newObj] () 
+                                                    { 
+                                                        auto funcCall = newObj->get<inputComponent>()->getFuncCallStart();
+                                                        globals::_scriptManager->callLuaFunc(funcCall, *newObj->getGameObjectHandle()); 
+                                                    }, true, GAME_STATE);
+                                            }
+
+                                        if (endReal)
+                                            {
+                                                std::string controlName = root[objectName][comp][control]["key"].asString() + "_end";
+                                                ic->setFuncCallEnd(controlName);
+                                                globals::_scriptManager->registerLuaFunction(controlName, root[objectName][comp][control]["script"].asString(), root[objectName][comp][control]["func_end"].asString());
+                                                globals::_keyboardManager->add(control, key, [newObj] ()
+                                                    {
+                                                        auto funcCall = newObj->get<inputComponent>()->getFuncCallEnd();
+                                                        globals::_scriptManager->callLuaFunc(funcCall, *newObj->getGameObjectHandle()); 
+                                                    }, false, GAME_STATE);
+                                            }
+                                    }
+
+                                int i = 2;
                             }
                     }
 

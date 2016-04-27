@@ -14,14 +14,15 @@ class scriptManager
 		private:
 			std::unordered_map<std::string, luabridge::LuaRef*> _luaFuncs;
 			std::unordered_map<std::string, const void*> _luaCFuncs;
-
-			luabridge::lua_State *state;
+            
+			luabridge::lua_State *_state;
 
 		public:
 			scriptManager();
 
-			void callLuaScript(const std::string &scriptPath);
+            void initializeLuaHelpers();
 
+			void callLuaScript(const std::string &scriptPath);
 			void registerLuaFunction(const std::string &name, const std::string &scriptPath, const std::string &script);
 
             #pragma region Register CPP Functions to LUA
@@ -34,10 +35,24 @@ class scriptManager
 			void registerFunctionToLua(const std::string &name, void (*func)(Targ));
             template<typename Targ, typename Targ2>
             void registerFunctionToLua(const std::string &name, void(*func)(Targ, Targ2));
+
+            template<typename Targ, typename Tret>
+            void registerFunctionToLua(const std::string &name, const std::string &_namespace, Tret(*func)(Targ));
+            template<typename Targ, typename Tret>
+            void registerFunctionToLua(const std::string &name, Tret(*func)(Targ));
+            template<typename Targ, typename Targ2, typename Tret>
+            void registerFunctionToLua(const std::string &name, Tret(*func)(Targ, Targ2));
+
             // End Register CPP Functions to LUA
             #pragma endregion
 
 			void callLuaFunc(const std::string &name);
+            template<typename Targ>
+            void callLuaFunc(const std::string &name, Targ &arg);
+            template<typename Targ, typename Targ2>
+            void callLuaFunc(const std::string &name, Targ &arg, Targ2 &arg2);
+
+            luabridge::lua_State *getState();
 
             ~scriptManager();
 
