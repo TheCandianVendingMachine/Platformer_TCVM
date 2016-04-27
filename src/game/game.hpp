@@ -13,10 +13,13 @@
 #include "../managers/input/stringInputManager.hpp"
 #include "../states/stateMachine.hpp"
 #include "../managers/events/eventManager.hpp"
+#include "../managers/scriptManager/scriptManager.hpp"
 
 class game
     {
         private:
+            scriptManager _scriptManager;
+
             inputManager<sf::Keyboard::Key> _keyboardManager;
             inputManager<sf::Mouse::Button> _mouseManager;
 

@@ -8,18 +8,28 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
-#include <logger.hpp>
-
 #include "../states/states.hpp"
-#include "../states/stateMachine.hpp"
-#include "../managers/events/eventManager.hpp"
-#include "../managers/input/inputManager.hpp"
-#include "../managers/input/stringInputManager.hpp"
-#include "../managers/resourceManager.hpp"
+
+template<typename T>
+class inputManager;
+
+class stringInputManager;
+
+class stateMachine;
+class eventManager;
+
+class scriptManager;
+
+namespace logr
+    {
+        class logger;
+    }
 
 class globals
     {
         public:
+            static scriptManager *_scriptManager;
+
             static inputManager<sf::Keyboard::Key> *_keyboardManager;
             static inputManager<sf::Mouse::Button> *_mouseManager;
 

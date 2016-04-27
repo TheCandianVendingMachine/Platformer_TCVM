@@ -6,6 +6,11 @@
 #include "../game/globals.hpp"
 #include "gameplay/level.hpp"
 
+#include <logger.hpp>
+#include "../states/stateMachine.hpp"
+#include "../managers/input/inputManager.hpp"
+#include "../managers/input/stringInputManager.hpp"
+
 #include <SFML/Graphics/RenderWindow.hpp>
 
 sf::Vector2f levelEditor::_mousePosToWorldCoord()

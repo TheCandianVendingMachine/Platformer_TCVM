@@ -2,6 +2,11 @@
 #include "state.hpp"
 #include "../game/globals.hpp"
 
+#include <logger.hpp>
+#include "../managers/input/stringInputManager.hpp"
+#include "../managers/input/inputManager.hpp"
+
+
 #include <SFML/Graphics.hpp>
 
 void stateMachine::popStateFromStack()

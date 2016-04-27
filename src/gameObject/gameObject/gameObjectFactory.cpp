@@ -5,6 +5,7 @@
 
 #include "../components/components.hpp"
 
+#include <logger.hpp>
 #include <json/json.h>
 #include <fstream>
 #include <exception>

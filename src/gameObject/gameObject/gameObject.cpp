@@ -1,4 +1,5 @@
 #include "gameObject.hpp"
+#include <logger.hpp>
 
 unsigned int gameObject::_allIDS = 0;
 

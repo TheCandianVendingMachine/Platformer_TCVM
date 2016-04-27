@@ -7,6 +7,7 @@
 #include "../../utilities/strFuncs.hpp"
 #include "../../game/globals.hpp"
 
+#include <logger.hpp>
 #include <fstream>
 
 void level::loadJsonFile(const std::string &file, Json::Value *root)

@@ -62,14 +62,17 @@ void game::initialize()
     #else
         _logger = new logr::logger("defaultLogger", "log", true);
 #endif
+        globals::_scriptManager =   &_scriptManager;
+
         globals::_keyboardManager = &_keyboardManager;
         globals::_mouseManager =    &_mouseManager;
 
-        globals::_textEntered = &_textEntered;
+        globals::_textEntered =     &_textEntered;
 
         globals::_eventManager =    &_eventManager;
         globals::_stateMachine =    &_stateMachine;
         globals::_logger =          _logger;
+
 
         globals::_logger->logToConsole("Initializing game");
 
@@ -113,6 +116,7 @@ void game::cleanup()
                 _logger = nullptr;
             }
 
+        globals::_scriptManager = nullptr;
         globals::_eventManager = nullptr;
         globals::_keyboardManager = nullptr;
         globals::_logger = nullptr;

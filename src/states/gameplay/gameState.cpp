@@ -1,10 +1,15 @@
 #include "gameState.hpp"
+
 #include "../../game/globals.hpp"
+
 #include "../levelEditor.hpp"
 
 #include "../../gameObject/gameObject/gameObject.hpp"
-
 #include "../../gameObject/components/textureComponent.hpp"
+
+#include <logger.hpp>
+#include "../../managers/input/inputManager.hpp"
+#include "../stateMachine.hpp"
 
 gameState::gameState()
     {
