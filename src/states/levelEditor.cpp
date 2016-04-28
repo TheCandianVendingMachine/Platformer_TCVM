@@ -42,7 +42,7 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
                 if (!_enteringString)
                     {
                         _selectedEntity = _level->getEntityAtPosition(_mousePos);
-                        if (!_selectedEntity && !_resizing)
+                        if (!_selectedEntity)
                             {
                                 _selectedEntity = _level->addEntity("platform");
                             }
@@ -106,6 +106,14 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
                             }
                     }
             });
+
+		globals::_keyboardManager->changeFunction("editor_toggle_resize", [this]() 
+			{
+				if (!_enteringString)
+					{
+						_resizing = !_resizing;
+					}
+			});
 
         globals::_keyboardManager->changeFunction("editor_save_level", [this] () 
             {
@@ -208,25 +216,37 @@ void levelEditor::update(sf::Time deltaTime)
         _mousePos = _mousePosToWorldCoord();
         if (_selectedEntity)
             {
-                if (!_resizing)
-                    {
-                        if (_snapToGrid)
-                            {
-                                auto tc = _selectedEntity->get<textureComponent>();
-                                if (tc)
-                                    {
-                                        tc->setPosition(sf::Vector2f(_getClosestGridCoord(_mousePos)));
-                                    }
-                            }
-                        else
-                            {
-                                auto tc = _selectedEntity->get<textureComponent>();
-                                if (tc)
-                                    {
-                                        tc->setPosition(_mousePos);
-                                    }
-                            }
-                    }
+				if (!_resizing)
+					{
+						if (_snapToGrid)
+							{
+								auto tc = _selectedEntity->get<textureComponent>();
+								if (tc)
+									{
+										tc->setPosition(sf::Vector2f(_getClosestGridCoord(_mousePos)));
+									}
+							}
+						else
+							{
+								auto tc = _selectedEntity->get<textureComponent>();
+								if (tc)
+									{
+										tc->setPosition(_mousePos);
+									}
+							}
+					}
+				else
+					{
+						auto tc = _selectedEntity->get<textureComponent>();
+						if (tc)
+							{
+								sf::Vector2f objSize = tc->getSize();
+								sf::Vector2f objPos = tc->getSprite()->getPosition();
+
+								sf::Vector2f size = _mousePos - objPos;
+								tc->setSize(size);
+							}
+					}
             }
 
         if (_enteringString)
