@@ -120,7 +120,7 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
                                                 std::string controlName = root[objectName][comp][control]["key"].asString() + "_start";
 												std::string scriptPath = root[objectName][comp][control]["script"].asString();
 												std::string scriptName = root[objectName][comp][control]["func_start"].asString();
-                                                ic->setFuncCallStart(controlName);
+                                                // keep the memory that the script is saved to. When the lamdba calls it, it will reference the script it's self
                                                 auto luaCall = globals::_scriptManager->registerLuaFunction(controlName, scriptPath, scriptName);
                                                 globals::_keyboardManager->add(control, key, [newObj, luaCall] () 
                                                     { 
@@ -136,7 +136,7 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
 												std::string controlName = root[objectName][comp][control]["key"].asString() + "_end";
 												std::string scriptPath = root[objectName][comp][control]["script"].asString();
 												std::string scriptName = root[objectName][comp][control]["func_end"].asString();
-                                                ic->setFuncCallEnd(controlName);
+                                                // keep the memory that the script is saved to. When the lamdba calls it, it will reference the script it's self
                                                 auto luaCall = globals::_scriptManager->registerLuaFunction(controlName, scriptPath, scriptName);
                                                 globals::_keyboardManager->add(control, key, [newObj, luaCall] ()
                                                     {

@@ -42,7 +42,7 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
                 if (!_enteringString)
                     {
                         _selectedEntity = _level->getEntityAtPosition(_mousePos);
-                        if (!_selectedEntity)
+                        if (!_selectedEntity && !_resizing)
                             {
                                 _selectedEntity = _level->addEntity("platform");
                             }
@@ -106,14 +106,6 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
                             }
                     }
             });
-
-		globals::_keyboardManager->changeFunction("editor_toggle_resize", [this]() 
-			{
-				if (!_enteringString)
-					{
-						_resizing = !_resizing;
-					}
-			});
 
         globals::_keyboardManager->changeFunction("editor_save_level", [this] () 
             {
@@ -216,20 +208,23 @@ void levelEditor::update(sf::Time deltaTime)
         _mousePos = _mousePosToWorldCoord();
         if (_selectedEntity)
             {
-                if (_snapToGrid)
+                if (!_resizing)
                     {
-                        auto tc = _selectedEntity->get<textureComponent>();
-                        if (tc)
+                        if (_snapToGrid)
                             {
-                                tc->setPosition(sf::Vector2f(_getClosestGridCoord(_mousePos)));
+                                auto tc = _selectedEntity->get<textureComponent>();
+                                if (tc)
+                                    {
+                                        tc->setPosition(sf::Vector2f(_getClosestGridCoord(_mousePos)));
+                                    }
                             }
-                    }
-                else
-                    {
-                        auto tc = _selectedEntity->get<textureComponent>();
-                        if (tc)
+                        else
                             {
-                                tc->setPosition(_mousePos);
+                                auto tc = _selectedEntity->get<textureComponent>();
+                                if (tc)
+                                    {
+                                        tc->setPosition(_mousePos);
+                                    }
                             }
                     }
             }

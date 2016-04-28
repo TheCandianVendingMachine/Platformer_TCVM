@@ -6,6 +6,7 @@ void textureComponent::setTexture(sf::Texture texture)
     {
         _texture = texture;
         _sprite.setTexture(_texture);
+        _size = sf::Vector2f(_texture.getSize());
     }
 
 sf::Texture *textureComponent::getTexture()
