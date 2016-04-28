@@ -208,8 +208,6 @@ void levelEditor::initialize()
         _UIFactory.setFont("assets/textures/fonts/Squares_Bold_Free.otf");
         _UIFactory.add("loadSaveText", "");
         _UIFactory.add("inputText", "");
-
-		globals::_scriptManager->registerLuaFunction("setEntSize", "assets/scripts/level_editor.lua", "setSize");
     }
 
 void levelEditor::update(sf::Time deltaTime)
@@ -249,13 +247,6 @@ void levelEditor::update(sf::Time deltaTime)
 								sf::Vector2f size = _mousePos - objPos;
 								tc->setSize(size);
 							}
-						
-						/*
-						globals::_scriptManager->callLuaFunc("setEntSize",
-						*_selectedEntity->getGameObjectHandle(),
-						_mousePos.x,
-						_mousePos.y);
-						*/
 					}
             }
 
@@ -283,8 +274,6 @@ void levelEditor::cleanup()
     {
         globals::_stateMachine->getWindow()->setView(globals::_stateMachine->getWindow()->getDefaultView());
         globals::_logger->logToConsole("Cleaning up level editor");
-
-		globals::_scriptManager->removeLuaFunc("setEntSize");
     }
 
 levelEditor::~levelEditor()
