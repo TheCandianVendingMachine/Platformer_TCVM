@@ -39,6 +39,64 @@ float luaGameObject::getImpulseY()
             }
     }
 
+void luaGameObject::setPos(float X, float Y)
+	{
+		auto tc = _obj->get<textureComponent>();
+		if (tc)
+			{
+				tc->setPosition(X, Y);
+			}
+	}
+
+float luaGameObject::getPosX()
+	{
+		auto tc = _obj->get<textureComponent>();
+		if (tc)
+			{
+				tc->getSprite()->getPosition().x;
+			}
+		return 0.0f;
+	}
+
+float luaGameObject::getPosY()
+	{
+		auto tc = _obj->get<textureComponent>();
+		if (tc)
+			{
+				tc->getSprite()->getPosition().y;
+			}
+		return 0.0f;
+	}
+
+void luaGameObject::setSize(float X, float Y)
+	{
+		auto tc = _obj->get<textureComponent>();
+		if (tc)
+			{
+				tc->setSize(X, Y);
+			}
+	}
+
+float luaGameObject::getSizeX()
+	{
+		auto tc = _obj->get<textureComponent>();
+		if (tc)
+			{
+				tc->getSize().x;
+			}
+		return 0.0f;
+	}
+
+float luaGameObject::getSizeY()
+	{
+		auto tc = _obj->get<textureComponent>();
+		if (tc)
+			{
+				tc->getSize().y;
+			}
+		return 0.0f;
+	}
+
 float luaGameObject::getDeltaTime()
 	{
 		return globals::_stateMachine->getDeltaTime();

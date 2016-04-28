@@ -51,6 +51,11 @@ class scriptManager
             void callLuaFunc(const std::string &name, Targ &arg);
             template<typename Targ, typename Targ2>
             void callLuaFunc(const std::string &name, Targ &arg, Targ2 &arg2);
+			template<typename Targ, typename Targ2, typename Targ3>
+			void callLuaFunc(const std::string &name, Targ &arg, Targ2 &arg2, Targ3 &arg3);
+
+			void removeCFunc(const std::string &name);
+			void removeLuaFunc(const std::string &name);
 
             luabridge::lua_State *getState();
 

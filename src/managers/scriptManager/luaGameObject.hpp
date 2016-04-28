@@ -17,6 +17,14 @@ class luaGameObject
             float getImpulseX();
             float getImpulseY();
 
+			void setPos(float X, float Y);
+			float getPosX();
+			float getPosY();
+
+			void setSize(float X, float Y);
+			float getSizeX();
+			float getSizeY();
+
 			float getDeltaTime();
 
             void test();

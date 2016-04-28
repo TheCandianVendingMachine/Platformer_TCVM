@@ -50,20 +50,55 @@ void scriptManager::registerFunctionToLua(const std::string &name, void(*func)(T
 
 inline void scriptManager::callLuaFunc(const std::string &name)
 	{
-        auto func = _luaFuncs[name];
-        (*func)();
+		try 
+			{
+				auto func = _luaFuncs[name];
+				(*func)();
+			}
+		catch (luabridge::LuaException &e)
+			{
+				globals::_logger->log(e.what());
+			}
 	}
 
 template<typename Targ>
 void scriptManager::callLuaFunc(const std::string &name, Targ &arg)
     {
-        auto func = _luaFuncs[name];
-        (*func)(arg);
+		try 
+			{
+				auto func = _luaFuncs[name];
+				(*func)(arg);
+			}
+		catch (luabridge::LuaException &e)
+			{
+				globals::_logger->log(e.what());
+			}
     }
 
 template<typename Targ, typename Targ2>
 void scriptManager::callLuaFunc(const std::string &name, Targ &arg, Targ2 &arg2)
     {
-        auto func = _luaFuncs[name];
-        (*func)(arg, arg2);
+		try 
+			{
+				auto func = _luaFuncs[name];
+				(*func)(arg, arg2);
+			}
+		catch (luabridge::LuaException &e)
+			{
+				globals::_logger->log(e.what());
+			}
     }
+
+template<typename Targ, typename Targ2, typename Targ3>
+void scriptManager::callLuaFunc(const std::string &name, Targ &arg, Targ2 &arg2, Targ3 &arg3)
+	{
+		try 
+			{
+				auto func = _luaFuncs[name];
+				(*func)(arg, arg2, arg3);
+			}
+		catch (luabridge::LuaException &e)
+			{
+				globals::_logger->log(e.what());
+			}
+	}

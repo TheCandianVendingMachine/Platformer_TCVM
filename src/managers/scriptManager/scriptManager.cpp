@@ -25,9 +25,19 @@ scriptManager::scriptManager()
 void scriptManager::initializeLuaHelpers()
     {
         getGlobalNamespace(_state).beginClass<luaGameObject>("luaGameObject")
+
                 .addFunction("setImpulse", &luaGameObject::setImpulse)
                 .addFunction("getImpulseX", &luaGameObject::getImpulseX)
                 .addFunction("getImpulseY", &luaGameObject::getImpulseY)
+				
+				.addFunction("setPos", &luaGameObject::setPos)
+				.addFunction("getPosX", &luaGameObject::getPosX)
+				.addFunction("getPosY", &luaGameObject::getPosY)
+
+				.addFunction("setSize", &luaGameObject::setSize)
+				.addFunction("getSizeX", &luaGameObject::getSizeX)
+				.addFunction("getSizeY", &luaGameObject::getSizeY)
+
 				.addFunction("getDeltaTime", &luaGameObject::getDeltaTime)
                 .addFunction("test", &luaGameObject::test)
             .endClass();
@@ -49,6 +59,24 @@ luabridge::LuaRef *scriptManager::registerLuaFunction(const std::string &name, c
 		_luaFuncs[name] = ref;
 
 		return _luaFuncs[name];
+	}
+
+void scriptManager::removeCFunc(const std::string &name)
+	{
+		auto it = _luaCFuncs.find(name);
+		if (it != _luaCFuncs.end())
+			{
+				_luaCFuncs.erase(it);
+			}
+	}
+
+void scriptManager::removeLuaFunc(const std::string &name)
+	{
+		auto it = _luaFuncs.find(name);
+		if (it != _luaFuncs.end())
+			{
+				_luaFuncs.erase(it);
+			}
 	}
 
 luabridge::lua_State *scriptManager::getState()
