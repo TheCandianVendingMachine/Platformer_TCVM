@@ -217,35 +217,38 @@ void levelEditor::update(sf::Time deltaTime)
         _mousePos = _mousePosToWorldCoord();
         if (_selectedEntity)
             {
+                auto tc = _selectedEntity->get<textureComponent>();
 				if (!_resizing)
 					{
-						if (_snapToGrid)
-							{
-								auto tc = _selectedEntity->get<textureComponent>();
-								if (tc)
-									{
-										tc->setPosition(sf::Vector2f(_getClosestGridCoord(_mousePos)));
-									}
-							}
-						else
-							{
-								auto tc = _selectedEntity->get<textureComponent>();
-								if (tc)
-									{
-										tc->setPosition(_mousePos);
-									}
-							}
+                        if (tc)
+                            {
+						        if (_snapToGrid)
+							        {
+								        tc->setPosition(sf::Vector2f(_getClosestGridCoord(_mousePos)));
+							        }
+						        else
+							        {
+								        tc->setPosition(_mousePos);
+							        }
+                            }
 					}
 				else
 					{
-						auto tc = _selectedEntity->get<textureComponent>();
 						if (tc)
 							{
 								sf::Vector2f objSize = tc->getSize();
 								sf::Vector2f objPos = tc->getSprite()->getPosition();
 
 								sf::Vector2f size = _mousePos - objPos;
-								tc->setSize(size);
+
+                                if (_snapToGrid)
+                                    {
+                                        tc->setSize(sf::Vector2f(_getClosestGridCoord(size)));
+                                    }
+                                else
+                                    {
+                                        tc->setSize(size);
+                                    }
 							}
 					}
             }

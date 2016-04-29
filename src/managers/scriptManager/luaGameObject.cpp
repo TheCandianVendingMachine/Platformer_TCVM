@@ -97,6 +97,44 @@ float luaGameObject::getSizeY()
 		return 0.0f;
 	}
 
+void luaGameObject::setAcceleration(float accel)
+    {
+        auto mc = _obj->get<movementComponent>();
+        if (mc)
+            {
+                return mc->setAcceleration(accel);
+            }
+    }
+
+float luaGameObject::getAcceleration()
+    {
+        auto mc = _obj->get<movementComponent>();
+        if (mc)
+            {
+                return mc->getAcceleration();
+            }
+        return 0.0f;
+    }
+
+void luaGameObject::setMaxSpeed(float speed)
+    {
+        auto mc = _obj->get<movementComponent>();
+        if (mc)
+            {
+                return mc->setMaxSpeed(speed);
+            }
+    }
+
+float luaGameObject::getMaxSpeed()
+    {
+        auto mc = _obj->get<movementComponent>();
+        if (mc)
+            {
+                return mc->getMaxSpeed();
+            }
+        return 0.0f;
+    }
+
 float luaGameObject::getDeltaTime()
 	{
 		return globals::_stateMachine->getDeltaTime();

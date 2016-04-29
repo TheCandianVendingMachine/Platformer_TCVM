@@ -26,6 +26,11 @@ void movementComponent::update(sf::Time deltaTime)
                         physicsComp->update(deltaTime);
                     }
 
+                if (abs(_impulse.x) >= _maxSpeed)
+                    {
+                        _impulse.x > 0 ? _impulse.x = _maxSpeed : _impulse.x = -_maxSpeed;
+                    }
+
                 textureComp->getSprite()->move(_impulse * deltaTime.asSeconds());
 
                 auto cc = _obj->get<collisionComponent>();
@@ -34,4 +39,24 @@ void movementComponent::update(sf::Time deltaTime)
                         cc->update();
                     }
             }
+    }
+
+float movementComponent::getMaxSpeed()
+    {
+        return _maxSpeed;
+    }
+
+void movementComponent::setMaxSpeed(float speed)
+    {
+        _maxSpeed = speed;
+    }
+
+float movementComponent::getAcceleration()
+    {
+        return _acceleration;
+    }
+
+void movementComponent::setAcceleration(float acceleration)
+    {
+        _acceleration = acceleration;
     }

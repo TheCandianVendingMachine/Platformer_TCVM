@@ -13,6 +13,11 @@ void physicsComponent::setTerminalVelocity(float terminalVelocity)
         _terminalVelocity = terminalVelocity;
     }
 
+void physicsComponent::setFriction(float friction)
+    {
+        _frictionCoefficient = friction;
+    }
+
 void physicsComponent::update(sf::Time deltaTime)
     {
         auto mc = _obj->get<movementComponent>();
@@ -29,6 +34,20 @@ void physicsComponent::update(sf::Time deltaTime)
                                 if (impulse.y >= _terminalVelocity)
                                     {
                                         impulse.y = _terminalVelocity;
+                                    }
+                            }
+
+                        if (abs(impulse.x) > 0)
+                            {
+                                if (impulse.x > 0)
+                                    {
+                                        impulse.x -= _frictionCoefficient * deltaTime.asSeconds();
+                                        impulse.x < 0 ? impulse.x = 0 : 0;
+                                    }
+                                else if (impulse.x < 0)
+                                    {
+                                        impulse.x += _frictionCoefficient * deltaTime.asSeconds();
+                                        impulse.x > 0 ? impulse.x = 0 : 0;
                                     }
                             }
                     }

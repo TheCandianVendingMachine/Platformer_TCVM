@@ -67,9 +67,15 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
                                 impulse.x = root[objectName][comp]["impulse"]["X"].asFloat();
                                 impulse.y = root[objectName][comp]["impulse"]["Y"].asFloat();
 
+                                float maxSpeed = root[objectName][comp]["max_speed"].asFloat();
+                                float acceleration = root[objectName][comp]["acceleration"].asFloat();
+
                                 movementComponent *mc = new movementComponent();
                                 mc->setGameObject(newObj);
                                 mc->move(impulse);
+
+                                mc->setAcceleration(acceleration);
+                                mc->setMaxSpeed(maxSpeed);
 
                                 newObj->addComponent(std::type_index(typeid(movementComponent)), mc);
                             }
@@ -93,9 +99,12 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
                                 float gravity = root[objectName][comp]["gravity"].asFloat();
                                 float terminalVelocity = root[objectName][comp]["terminal_velocity"].asFloat();
 
+                                float friction = root[objectName][comp]["friction_coefficient"].asFloat();
+
                                 physicsComponent *pc = new physicsComponent();
                                 pc->setGravity(gravity);
                                 pc->setTerminalVelocity(terminalVelocity);
+                                pc->setFriction(friction);
                                 pc->setGameObject(newObj);
 
                                 newObj->addComponent(std::type_index(typeid(physicsComponent)), pc);

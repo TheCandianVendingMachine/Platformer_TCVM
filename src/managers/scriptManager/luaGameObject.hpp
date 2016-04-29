@@ -25,6 +25,12 @@ class luaGameObject
 			float getSizeX();
 			float getSizeY();
 
+            void setAcceleration(float accel);
+            float getAcceleration();
+
+            void setMaxSpeed(float speed);
+            float getMaxSpeed();
+
 			float getDeltaTime();
 
             void test();

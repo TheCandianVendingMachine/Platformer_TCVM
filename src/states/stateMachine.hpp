@@ -18,17 +18,15 @@ class stateMachine
             std::vector<state*> _currentStates;
             std::queue<state*> _queuedState;
 
-            // handles input for the current tick
-            void handleInput();
-            // update the current state
-            void update(sf::Time deltaTime);
-
             bool _popState;
             int _amountToPop;
 
             bool _closeWindow;
 
             void popStateFromStack();
+
+            // update the current state
+            void update(sf::Time deltaTime);
 
         public:
             stateMachine() = default;
@@ -45,7 +43,9 @@ class stateMachine
             
             state* getStateUnderneath();
 
-            // handles current tick
+            // handles input for the current tick
+            void handleInput();
+            // handle all state machine stuff, as well as updating the state
             void tick(sf::Time deltaTime);
             // render the current state
             void render();

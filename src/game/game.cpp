@@ -140,6 +140,7 @@ void game::start()
 
                 accumulator += deltaTime.asSeconds();
 
+                globals::_stateMachine->handleInput();
                 while (accumulator >= updateTime)
                     {
                         globals::_stateMachine->tick(deltaTime);

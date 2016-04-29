@@ -1,9 +1,9 @@
 move_left = function(ent)
-	ent:setImpulse(ent:getImpulseX() - (500 * ent:getDeltaTime()), ent:getImpulseY())
+	ent:setImpulse(ent:getImpulseX() - (ent:getAcceleration() * ent:getDeltaTime()), ent:getImpulseY())
 end
 
 move_right = function(ent)
-	ent:setImpulse(ent:getImpulseX() + (500 * ent:getDeltaTime()), ent:getImpulseY())
+	ent:setImpulse(ent:getImpulseX() + (ent:getAcceleration() * ent:getDeltaTime()), ent:getImpulseY())
 end
 
 move_stop = function(ent)
@@ -12,5 +12,5 @@ move_stop = function(ent)
 end
 
 move_jump = function(ent)
-	ent:setImpulse(ent:getImpulseX(), ent:getImpulseY() - 100 - (500 * ent:getDeltaTime()))
+	ent:setImpulse(ent:getImpulseX(), ent:getImpulseY() - 100 - (ent:getAcceleration() * ent:getDeltaTime()))
 end

@@ -14,10 +14,19 @@ class movementComponent : public component
         private:
             sf::Vector2f _impulse;
 
+            float _maxSpeed;
+            float _acceleration;
+
         public:
             sf::Vector2f getImpulse();
 
             void move(sf::Vector2f impulse);
             void update(sf::Time deltaTime);
+
+            float getMaxSpeed();
+            void setMaxSpeed(float speed);
+
+            float getAcceleration();
+            void setAcceleration(float acceleration);
 
     };

@@ -26,6 +26,8 @@
 		},
 		"movementComponent" :
 		{
+			"max_speed" : 750.0,
+			"acceleration" : 300.0,
 			"impulse" :
 			{
 				"X" : 0.0,
@@ -67,8 +69,9 @@
 		},
 		"physicsComponent" :
 		{
-			"gravity" : 150.0,
-			"terminal_velocity" : 1000.0
+			"gravity" : 500.0,
+			"terminal_velocity" : 1000.0,
+			"friction_coefficient" : 100.0
 		}
 	}
 }

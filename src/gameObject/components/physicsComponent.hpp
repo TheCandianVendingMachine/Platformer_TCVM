@@ -13,10 +13,12 @@ class physicsComponent : public component
         private:
             float _gravity;
             float _terminalVelocity;
+            float _frictionCoefficient;
             
         public:
             void setGravity(float gravity);
             void setTerminalVelocity(float terminalVelocity);
+            void setFriction(float friction);
 
             void update(sf::Time deltaTime);
 

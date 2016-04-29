@@ -38,6 +38,12 @@ void scriptManager::initializeLuaHelpers()
 				.addFunction("getSizeX", &luaGameObject::getSizeX)
 				.addFunction("getSizeY", &luaGameObject::getSizeY)
 
+                .addFunction("setMaxSpeed", &luaGameObject::setMaxSpeed)
+                .addFunction("getMaxSpeed", &luaGameObject::getMaxSpeed)
+            
+                .addFunction("setAcceleration", &luaGameObject::setAcceleration)
+                .addFunction("getAcceleration", &luaGameObject::getAcceleration)
+
 				.addFunction("getDeltaTime", &luaGameObject::getDeltaTime)
                 .addFunction("test", &luaGameObject::test)
             .endClass();
