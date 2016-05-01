@@ -10,7 +10,6 @@
 #include <logger.hpp>
 
 #include "../managers/input/inputManager.hpp"
-#include "../managers/input/stringInputManager.hpp"
 #include "../states/stateMachine.hpp"
 #include "../managers/events/eventManager.hpp"
 #include "../managers/scriptManager/scriptManager.hpp"
@@ -22,8 +21,6 @@ class game
 
             inputManager<sf::Keyboard::Key> _keyboardManager;
             inputManager<sf::Mouse::Button> _mouseManager;
-
-            stringInputManager _textEntered;
 
             stateMachine _stateMachine;
             eventManager _eventManager;

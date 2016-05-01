@@ -33,7 +33,7 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
 
         for (auto &init : _initializedFiles)
             {
-                loadJsonFile(init, &root);
+                loadJsonFile(init.first, &root);
             
                 bool addedComp = false;
 
@@ -86,7 +86,16 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
                                 sf::Vector2f size(root[objectName][comp]["bounding_box"]["size_X"].asFloat(), root[objectName][comp]["bounding_box"]["size_Y"].asFloat());
                                 sf::Vector2f offset(root[objectName][comp]["bounding_box"]["pos_X"].asFloat(), root[objectName][comp]["bounding_box"]["pos_Y"].asFloat());
 
+                                std::string scriptPath = root[objectName][comp]["on_collide_script"].asString();
+                                std::string scriptName = root[objectName][comp]["on_collide_func_name"].asString();
+
+
                                 collisionComponent *cc = new collisionComponent();
+                                if (!scriptPath.empty() || !scriptName.empty())
+                                    {
+                                        globals::_scriptManager->registerLuaFunction(objectName + scriptName, scriptPath, scriptName);
+                                        cc->setOnCollisionScript(objectName + scriptName);
+                                    }
                                 cc->setBounds(size, offset);
                                 cc->setGameObject(newObj);
 
@@ -187,7 +196,6 @@ void gameObjectFactory::removeGameObject(gameObject *obj)
 void gameObjectFactory::initializeJsonFile(const std::string &filepath)
     {
         globals::_logger->logToConsole("Initializing \"" + filepath + "\"");
-        _initializedFiles.push_back(filepath);
 
         Json::Value root;
         loadJsonFile(filepath, &root);
@@ -203,6 +211,8 @@ void gameObjectFactory::initializeJsonFile(const std::string &filepath)
                                 _textureManager.add(texturePath, textureName);
                             }
                     }
+
+                _initializedFiles[filepath].push_back(obj);
             }
     }
 
@@ -226,7 +236,7 @@ void gameObjectFactory::deInitializeJsonFile(const std::string &filepath)
                     }
             }
 
-        _initializedFiles.erase(std::remove(_initializedFiles.begin(), _initializedFiles.end(), filepath));
+        _initializedFiles.erase(_initializedFiles.find(filepath));
     }
 
 void gameObjectFactory::deInitializeJsonFile()
@@ -243,6 +253,11 @@ std::vector<gameObject*> *gameObjectFactory::getGameObjects(const std::string &o
 std::unordered_map<std::string, std::vector<gameObject*>> *gameObjectFactory::getGameObjects()
     {
         return &_gameObjects;
+    }
+
+std::unordered_map<std::string, std::vector<std::string>> *gameObjectFactory::getInitializedEntities()
+    {
+        return &_initializedFiles;
     }
 
 gameObjectFactory::~gameObjectFactory()

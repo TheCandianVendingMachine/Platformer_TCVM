@@ -59,6 +59,7 @@ void level::load(const std::string &levelPath)
                 if (textureComp)
                     {
                         textureComp->setPosition(vars["position"]["X"].asFloat(), vars["position"]["Y"].asFloat());
+                        textureComp->setSize(vars["size"]["X"].asFloat(), vars["size"]["Y"].asFloat());
                         textureComp->getSprite()->setRotation(vars["rotation"].asFloat());
                     }
 
@@ -95,17 +96,21 @@ void level::save(const std::string &levelPath)
         for (auto &platform : _platforms)
             {
                 sf::Vector2f pos(0, 0);
+                sf::Vector2f size(0, 0);
                 float angle = 0.f;
 
                 auto textureComp = platform->get<textureComponent>();
                 if (textureComp)
                     {
                         pos = textureComp->getSprite()->getPosition();
+                        size = textureComp->getSize();
                         angle = textureComp->getSprite()->getRotation();
                     }
                 
                 root["level"]["platforms"]["platform" + std::to_string(platform->getID())]["position"]["X"] = pos.x;
                 root["level"]["platforms"]["platform" + std::to_string(platform->getID())]["position"]["Y"] = pos.y;
+                root["level"]["platforms"]["platform" + std::to_string(platform->getID())]["size"]["X"] = size.x;
+                root["level"]["platforms"]["platform" + std::to_string(platform->getID())]["size"]["Y"] = size.y;
                 root["level"]["platforms"]["platform" + std::to_string(platform->getID())]["rotation"] = angle;
             }
         
@@ -240,6 +245,16 @@ gameObject *level::getEntityAtPosition(sf::Vector2f pos)
             }
 
         return nullptr;
+    }
+
+std::unordered_map<std::string, std::vector<gameObject*>> *level::getAllGameObjects()
+    {
+        return _factory.getGameObjects();
+    }
+
+std::unordered_map<std::string, std::vector<std::string>> *level::getInitializedObjects()
+    {
+        return _factory.getInitializedEntities();
     }
 
 void level::removeEntity(gameObject *obj)

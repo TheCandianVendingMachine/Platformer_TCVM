@@ -1,7 +1,8 @@
 #include "game.hpp"
 #include "globals.hpp"
-#include <SFML/Graphics.hpp>
-#include <iostream>
+
+#include "imgui.h"
+#include "imgui-SFML.h"
 
 #include "../utilities/randomizer.hpp"
 #include "../states/gameplay/gameState.hpp"
@@ -10,7 +11,7 @@ void game::initializeWindow()
     {
         globals::_logger->logToConsole("Initializng window");
         
-        app = new sf::RenderWindow(sf::VideoMode(1170, 700), "Breakout", sf::Style::Close);
+        app = new sf::RenderWindow(sf::VideoMode(1170, 700), "Window", sf::Style::Close);
         app->setFramerateLimit(60.0f);
     }
 
@@ -26,8 +27,7 @@ void game::initializeControls()
         globals::_keyboardManager->add("editor_spin_block_left",    sf::Keyboard::Q,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
 
         globals::_keyboardManager->add("editor_delete_entity",      sf::Keyboard::Delete,   inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
-        globals::_keyboardManager->add("editor_snap_to_grid",       sf::Keyboard::LAlt,     inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
-		globals::_keyboardManager->add("editor_toggle_resize",		sf::Keyboard::R,		inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_place_multiple",     sf::Keyboard::LAlt,     inputState::ON_PRESS,           states::LEVEL_EDITOR_STATE);
 
         globals::_keyboardManager->add("editor_move_view_right",    sf::Keyboard::D,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
         globals::_keyboardManager->add("editor_move_view_left",     sf::Keyboard::A,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
@@ -35,13 +35,6 @@ void game::initializeControls()
         globals::_keyboardManager->add("editor_move_view_down",     sf::Keyboard::S,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
         globals::_keyboardManager->add("editor_zoom_view_out",      sf::Keyboard::Q,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
         globals::_keyboardManager->add("editor_zoom_view_in",       sf::Keyboard::E,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
-
-
-        globals::_keyboardManager->add("editor_save_level",         sf::Keyboard::F3,       inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
-        globals::_keyboardManager->add("editor_load_level",         sf::Keyboard::F4,       inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
-
-        globals::_keyboardManager->add("editor_confirm",            sf::Keyboard::Return,   inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
-        
 
         globals::_keyboardManager->add("change_to_editor",          sf::Keyboard::F1,       inputState::ON_PRESS,			states::GAME_STATE);
         globals::_keyboardManager->add("change_to_game",            sf::Keyboard::F2, [] () 
@@ -63,8 +56,6 @@ void game::initialize()
         globals::_keyboardManager = &_keyboardManager;
         globals::_mouseManager =    &_mouseManager;
 
-        globals::_textEntered =     &_textEntered;
-
         globals::_eventManager =    &_eventManager;
         globals::_stateMachine =    &_stateMachine;
         globals::_logger =          _logger;
@@ -79,6 +70,8 @@ void game::initialize()
 
         globals::_stateMachine->setWindow(app);
         globals::_stateMachine->queueState(new gameState);
+
+        ImGui::SFML::Init(*app);
         
     }
 
@@ -118,6 +111,8 @@ void game::cleanup()
         globals::_logger = nullptr;
         globals::_mouseManager = nullptr;
         globals::_stateMachine = nullptr;
+
+        ImGui::SFML::Shutdown();
     }
 
 void game::start()

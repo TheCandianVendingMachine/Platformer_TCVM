@@ -2,6 +2,8 @@
 // handles the passing in and out of game objects to Lua safely.
 #pragma once
 
+#include <string>
+
 class gameObject;
 
 class luaGameObject
@@ -33,6 +35,7 @@ class luaGameObject
 
 			float getDeltaTime();
 
-            void test();
+            void log(const std::string &message);
+            void logToConsole(const std::string &message);
 
     };

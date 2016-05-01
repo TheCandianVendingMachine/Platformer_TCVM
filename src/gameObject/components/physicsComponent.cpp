@@ -36,20 +36,6 @@ void physicsComponent::update(sf::Time deltaTime)
                                         impulse.y = _terminalVelocity;
                                     }
                             }
-
-                        if (abs(impulse.x) > 0)
-                            {
-                                if (impulse.x > 0)
-                                    {
-                                        impulse.x -= _frictionCoefficient * deltaTime.asSeconds();
-                                        impulse.x < 0 ? impulse.x = 0 : 0;
-                                    }
-                                else if (impulse.x < 0)
-                                    {
-                                        impulse.x += _frictionCoefficient * deltaTime.asSeconds();
-                                        impulse.x > 0 ? impulse.x = 0 : 0;
-                                    }
-                            }
                     }
                 else
                     {
@@ -57,6 +43,21 @@ void physicsComponent::update(sf::Time deltaTime)
                         if (impulse.y >= _terminalVelocity)
                             {
                                 impulse.y = _terminalVelocity;
+                            }
+                    }
+
+                if (abs(impulse.x) > 0)
+                    {
+                        if (impulse.x > 0)
+                            {
+                                impulse.x -= _frictionCoefficient * deltaTime.asSeconds();
+                                impulse.x < 0 ? impulse.x = 0 : 0;
+                            }
+                        else if (impulse.x < 0)
+                            {
+                                impulse.x += _frictionCoefficient * deltaTime.asSeconds();
+                                // make sure we didnt over shoot with the friction
+                                impulse.x > 0 ? impulse.x = 0 : 0;
                             }
                     }
 

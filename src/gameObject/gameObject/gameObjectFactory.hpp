@@ -19,7 +19,8 @@ class gameObjectFactory
     {
         private:
             std::unordered_map<std::string, std::vector<gameObject*>> _gameObjects;
-            std::vector<std::string> _initializedFiles;
+            // file path, entity name
+            std::unordered_map<std::string, std::vector<std::string>> _initializedFiles;
 
             resourceManager<sf::Texture> _textureManager;
 
@@ -34,7 +35,9 @@ class gameObjectFactory
             void deInitializeJsonFile();
 
             std::vector<gameObject*> *getGameObjects(const std::string &objectName);
+
             std::unordered_map<std::string, std::vector<gameObject*>> *getGameObjects();
+            std::unordered_map<std::string, std::vector<std::string>> *getInitializedEntities();
 
             ~gameObjectFactory();
 

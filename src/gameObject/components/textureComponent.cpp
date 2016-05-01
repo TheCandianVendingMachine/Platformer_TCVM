@@ -29,7 +29,7 @@ sf::Sprite *textureComponent::getSprite()
 
 void textureComponent::setSize(float X, float Y)
 	{
-		_sprite.setScale(X / _sprite.getLocalBounds().width, X / _sprite.getLocalBounds().height);
+		_sprite.setScale(X / _sprite.getLocalBounds().width, Y / _sprite.getLocalBounds().height);
 		_size = sf::Vector2f(X, Y);
 		auto cc = _obj->get<collisionComponent>();
         if (cc)

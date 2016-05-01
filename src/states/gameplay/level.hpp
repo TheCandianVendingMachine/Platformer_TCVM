@@ -38,6 +38,9 @@ class level
             gameObject *addEntity(const std::string &name);
             gameObject *getEntityAtPosition(sf::Vector2f pos);
 
+            std::unordered_map<std::string, std::vector<gameObject*>> *getAllGameObjects();
+            std::unordered_map<std::string, std::vector<std::string>> *getInitializedObjects();
+
             void removeEntity(gameObject *obj);
 
     };

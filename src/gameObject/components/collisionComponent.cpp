@@ -1,6 +1,9 @@
 #include "collisionComponent.hpp"
 #include "textureComponent.hpp"
 
+#include "../../game/globals.hpp"
+#include "../../managers/scriptManager/scriptManager.hpp"
+
 #include "../gameObject/gameObject.hpp"
 
 std::pair<sf::Vector2f, sf::Vector2f> collisionComponent::_getDistance(collisionComponent &other)
@@ -57,20 +60,10 @@ bool collisionComponent::collide(collisionComponent &other)
                     {
                         auto obj = objSprite->getSprite();
                         sf::Vector2f overlap = _getOverlap(other);
-                        if (abs(overlap.x) > abs(overlap.y))
+                        
+                        if (!_onCollide.empty())
                             {
-                                // if Y is shallow axis, the entity will move to the bottom/top of the object
-                                obj->setPosition(obj->getPosition().x, obj->getPosition().y + overlap.y);
-                            }
-                        else if (abs(overlap.x) < abs(overlap.y))
-                            {
-                                // if X is shallow axis, the entity will move to the side of the object
-                                obj->setPosition(obj->getPosition().x + overlap.x, obj->getPosition().y);
-                            }
-                        else
-                            {
-                                // equal on both sides. Entity will move in diagonal direction
-                               obj->setPosition(obj->getPosition().x + overlap.x, obj->getPosition().y + overlap.y);
+                                globals::_scriptManager->callLuaFunc(_onCollide, *_obj->getGameObjectHandle(), overlap.x, overlap.y);
                             }
 
                         update();
@@ -86,6 +79,11 @@ collisionComponent::collisionComponent()
         _colliding = false;
         _boundingBox = sf::FloatRect();
         _positionOffset = sf::Vector2f();
+    }
+
+void collisionComponent::setOnCollisionScript(const std::string &collisionScript)
+    {
+        _onCollide = collisionScript;
     }
 
 void collisionComponent::setBounds(sf::Vector2f size, sf::Vector2f offset)

@@ -45,7 +45,8 @@ void scriptManager::initializeLuaHelpers()
                 .addFunction("getAcceleration", &luaGameObject::getAcceleration)
 
 				.addFunction("getDeltaTime", &luaGameObject::getDeltaTime)
-                .addFunction("test", &luaGameObject::test)
+                .addFunction("log", &luaGameObject::log)
+                .addFunction("logToConsole", &luaGameObject::logToConsole)
             .endClass();
     }
 

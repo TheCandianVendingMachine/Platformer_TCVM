@@ -3,9 +3,10 @@
 #include "../game/globals.hpp"
 
 #include <logger.hpp>
-#include "../managers/input/stringInputManager.hpp"
 #include "../managers/input/inputManager.hpp"
 
+#include "imgui.h"
+#include "imgui-sfml.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -155,7 +156,7 @@ void stateMachine::handleInput()
                                 globals::_mouseManager->handleInput(event, currentState);
                             }
 
-                        globals::_textEntered->getInput(event);
+                        ImGui::SFML::ProcessEvent(event);
                     }
 
                 switch (event.type)
@@ -172,6 +173,7 @@ void stateMachine::handleInput()
             {
                 globals::_keyboardManager->handleInput(currentState);
                 globals::_mouseManager->handleInput(currentState);
+                ImGui::SFML::Update();
             }
     }
 
