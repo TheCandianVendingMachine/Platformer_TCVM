@@ -7,9 +7,10 @@
 #include "../managers/scriptManager/scriptManager.hpp"
 #include "gameplay/level.hpp"
 
-#include <logger.hpp>
+#include "../utilities/logger/logger.hpp"
 #include "../states/stateMachine.hpp"
 #include "../managers/input/inputManager.hpp"
+#include "../managers/events/eventManager.hpp"
 
 #include "imgui.h"
 #include "imgui-sfml.h"
@@ -69,12 +70,6 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
         _state = LEVEL_EDITOR_STATE;
 
         _viewImpulse = sf::Vector2f(0, 0);
-
-		_resizing = false;
-        _placeMultiple = false;
-
-        _selectedEntity = nullptr;
-        _placingEntity = "";
 
         globals::_mouseManager->changeFunction("editor_left_mouse_press", [this] () 
             { 
@@ -179,6 +174,15 @@ void levelEditor::initialize()
         _editorView = globals::_stateMachine->getWindow()->getView();
 
         _snapToGrid = false;
+        _resizing = false;
+        _placeMultiple = false;
+
+        _selectedEntity = nullptr;
+
+        _placingEntity = "";
+
+        globals::_eventManager->subscribe(this, events::LOAD_ENTITY_LIST);
+        globals::_eventManager->subscribe(this, events::RELOAD_ENTITY_LIST);
     }
 
 void levelEditor::update(sf::Time deltaTime)
@@ -230,13 +234,28 @@ void levelEditor::render()
         globals::_stateMachine->getWindow()->setView(_editorView);
 
         handleUI();
-        ImGui::Render();
+    }
+
+void levelEditor::alert(eventData data)
+    {
+        switch (data._event)
+            {
+                case events::LOAD_ENTITY_LIST:
+                case events::RELOAD_ENTITY_LIST:
+                    _allGameObjects = _level->getInitializedObjects();
+                    break;
+                default:
+                    break;
+            }
     }
 
 void levelEditor::cleanup()
     {
         globals::_stateMachine->getWindow()->setView(globals::_stateMachine->getWindow()->getDefaultView());
         globals::_logger->logToConsole("Cleaning up level editor");
+
+        globals::_eventManager->unsubscribe(this, events::LOAD_ENTITY_LIST);
+        globals::_eventManager->unsubscribe(this, events::RELOAD_ENTITY_LIST);
     }
 
 levelEditor::~levelEditor()

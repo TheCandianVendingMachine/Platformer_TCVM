@@ -13,10 +13,12 @@
 #include <vector>
 #include <unordered_map>
 
+#include "../managers/events/observer.hpp"
+
 class level;
 class gameObject;
 
-class levelEditor : public state
+class levelEditor : public state, public observer
     {
         private:
             std::unordered_map<std::string, std::vector<std::string>> *_allGameObjects;
@@ -51,6 +53,8 @@ class levelEditor : public state
 
             void update(sf::Time deltaTime);
             void render();
+
+            void alert(eventData data);
 
             void cleanup();
 

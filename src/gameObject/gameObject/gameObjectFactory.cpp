@@ -1,15 +1,16 @@
 #include "gameObjectFactory.hpp"
 #include "gameObject.hpp"
 
-#include "../../game/globals.hpp"
-#include "../../managers/scriptManager/scriptManager.hpp"
-#include "../../managers/input/inputManager.hpp"
+#include "../game/globals.hpp"
+#include "../managers/scriptManager/scriptManager.hpp"
+#include "../managers/events/eventManager.hpp"
+#include "../managers/input/inputManager.hpp"
 
 #include "../components/components.hpp"
 
-#include "../../utilities/json/json/json.h"
+#include "../utilities/json/json/json.h"
 
-#include <logger.hpp>
+#include "../utilities/logger/logger.hpp"
 #include <fstream>
 #include <exception>
 
@@ -25,6 +26,12 @@ void gameObjectFactory::loadJsonFile(const std::string &file, Json::Value *root)
                 globals::_logger->log(file + e.what());
             }
         read.close();
+    }
+
+gameObjectFactory::gameObjectFactory()
+    {
+        globals::_eventManager->subscribe(this, events::LOAD_ENTITY_LIST);
+        globals::_eventManager->subscribe(this, events::RELOAD_ENTITY_LIST);
     }
 
 gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
@@ -196,7 +203,6 @@ void gameObjectFactory::removeGameObject(gameObject *obj)
 void gameObjectFactory::initializeJsonFile(const std::string &filepath)
     {
         globals::_logger->logToConsole("Initializing \"" + filepath + "\"");
-
         Json::Value root;
         loadJsonFile(filepath, &root);
 
@@ -260,6 +266,25 @@ std::unordered_map<std::string, std::vector<std::string>> *gameObjectFactory::ge
         return &_initializedFiles;
     }
 
+void gameObjectFactory::alert(eventData _data)
+    {
+        switch (_data._event)
+            {
+                case RELOAD_ENTITY_LIST:
+                    for (auto &entList : _initializedFiles)
+                        {
+                            deInitializeJsonFile(entList.first);
+                            initializeJsonFile(entList.first);
+                        }
+                    break;
+                case LOAD_ENTITY_LIST:
+                    initializeJsonFile(_data._data.stringDat);
+                    break;
+                default:
+                    break;
+            }
+    }
+
 gameObjectFactory::~gameObjectFactory()
     {
         globals::_logger->logToConsole("Cleaning Up Game Object Factory");
@@ -275,4 +300,7 @@ gameObjectFactory::~gameObjectFactory()
                             }
                     }
             }
+
+        globals::_eventManager->unsubscribe(this, events::LOAD_ENTITY_LIST);
+        globals::_eventManager->unsubscribe(this, events::RELOAD_ENTITY_LIST);
     }

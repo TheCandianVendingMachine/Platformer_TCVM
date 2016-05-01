@@ -11,7 +11,6 @@ class state;
 
 class stateMachine
     {
-        private:
             sf::RenderWindow *_window;
 			float _deltaTime;
 
@@ -29,7 +28,7 @@ class stateMachine
             void update(sf::Time deltaTime);
 
         public:
-            stateMachine() = default;
+            stateMachine();
             stateMachine(sf::RenderWindow *window);
 
             void queueState(state *newState);

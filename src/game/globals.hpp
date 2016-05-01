@@ -10,6 +10,8 @@
 
 #include "../states/states.hpp"
 
+class console;
+
 template<typename T>
 class inputManager;
 
@@ -28,6 +30,8 @@ namespace logr
 class globals
     {
         public:
+            static console *_console;
+
             static scriptManager *_scriptManager;
 
             static inputManager<sf::Keyboard::Key> *_keyboardManager;

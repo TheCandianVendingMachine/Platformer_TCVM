@@ -9,13 +9,14 @@
 #include <memory>
 
 #include "../../managers/resourceManager.hpp"
+#include "../../managers/events/observer.hpp"
 
 #include "../../utilities/json/json/json.h"
 #include <SFML/Graphics/Texture.hpp>
 
 class gameObject;
 
-class gameObjectFactory
+class gameObjectFactory : public observer
     {
         private:
             std::unordered_map<std::string, std::vector<gameObject*>> _gameObjects;
@@ -27,6 +28,8 @@ class gameObjectFactory
             void loadJsonFile(const std::string &file, Json::Value *root);
 
         public:
+            gameObjectFactory();
+            
             gameObject *addGameObject(const std::string &objectName);
             void removeGameObject(gameObject *obj);
 
@@ -38,6 +41,8 @@ class gameObjectFactory
 
             std::unordered_map<std::string, std::vector<gameObject*>> *getGameObjects();
             std::unordered_map<std::string, std::vector<std::string>> *getInitializedEntities();
+
+            void alert(eventData _data);
 
             ~gameObjectFactory();
 

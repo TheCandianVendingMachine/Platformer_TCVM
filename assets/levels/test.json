@@ -1,0 +1,62 @@
+{
+	"level" : 
+	{
+		"entity" : 
+		{
+			"player" : 
+			{
+				"position" : 
+				{
+					"X" : 0,
+					"Y" : 25.067253112792969
+				}
+			}
+		},
+		"platforms" : 
+		{
+			"platform1" : 
+			{
+				"position" : 
+				{
+					"X" : 0,
+					"Y" : 336
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform2" : 
+			{
+				"position" : 
+				{
+					"X" : 192,
+					"Y" : 336
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform3" : 
+			{
+				"position" : 
+				{
+					"X" : 384,
+					"Y" : 336
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 784,
+					"Y" : 32
+				}
+			}
+		}
+	},
+	"level_entity_lists" : null
+}

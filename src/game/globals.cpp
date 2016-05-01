@@ -1,10 +1,13 @@
 #include "globals.hpp"
 
-#include <logger.hpp>
+#include "../utilities/logger/logger.hpp"
 #include "../states/stateMachine.hpp"
 #include "../managers/events/eventManager.hpp"
 #include "../managers/input/inputManager.hpp"
 #include "../managers/resourceManager.hpp"
+#include "../game/console.hpp"
+
+console *globals::_console = nullptr;
 
 scriptManager *globals::_scriptManager = nullptr;
 

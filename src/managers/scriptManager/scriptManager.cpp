@@ -1,5 +1,5 @@
 #include "scriptManager.hpp"
-#include "../../game/globals.hpp"
+#include "../game/globals.hpp"
 #include "luaGameObject.hpp"
 
 #include "LuaBridge/LuaBridge.h"
@@ -10,12 +10,11 @@ extern "C"
 		#include <lualib.h>
 	}
 
-#include <logger.hpp>
+#include "../utilities/logger/logger.hpp"
 
 using namespace luabridge;
 scriptManager::scriptManager()
 	{
-        globals::_logger->logToConsole("Initializing Script Manager");
         _state = luaL_newstate();
 		luaL_openlibs(_state);
 

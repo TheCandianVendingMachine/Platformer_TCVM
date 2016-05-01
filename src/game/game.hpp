@@ -7,16 +7,20 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
 
-#include <logger.hpp>
+#include "../utilities/logger/logger.hpp"
 
 #include "../managers/input/inputManager.hpp"
 #include "../states/stateMachine.hpp"
 #include "../managers/events/eventManager.hpp"
 #include "../managers/scriptManager/scriptManager.hpp"
 
+#include "../game/console.hpp"
+
 class game
     {
         private:
+            console _console;
+
             scriptManager _scriptManager;
 
             inputManager<sf::Keyboard::Key> _keyboardManager;

@@ -1,10 +1,10 @@
 #include "inputComponent.hpp"
-#include "../../game/globals.hpp"
-#include "../../managers/input/inputManager.hpp"
+#include "../game/globals.hpp"
+#include "../managers/input/inputManager.hpp"
 
-#include "../../utilities/json/json/json.h"
+#include "../utilities/json/json/json.h"
 
-#include <logger.hpp>
+#include "../utilities/logger/logger.hpp"
 #include <fstream>
 
 void inputComponent::loadJsonFile(const std::string &file, Json::Value *root)

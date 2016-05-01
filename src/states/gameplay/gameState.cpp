@@ -1,14 +1,14 @@
 #include "gameState.hpp"
 
-#include "../../game/globals.hpp"
+#include "../game/globals.hpp"
 
 #include "../levelEditor.hpp"
 
-#include "../../gameObject/gameObject/gameObject.hpp"
-#include "../../gameObject/components/textureComponent.hpp"
+#include "../gameObject/gameObject/gameObject.hpp"
+#include "../gameObject/components/textureComponent.hpp"
 
-#include <logger.hpp>
-#include "../../managers/input/inputManager.hpp"
+#include "../utilities/logger/logger.hpp"
+#include "../managers/input/inputManager.hpp"
 #include "../stateMachine.hpp"
 
 gameState::gameState()
@@ -16,8 +16,6 @@ gameState::gameState()
         _renderOvertop = false;
         _updateUnderneath = false;
         _state = GAME_STATE;
-
-        _world.addEntity("player");
     }
 
 void gameState::initialize()

@@ -1,13 +1,13 @@
 #include "level.hpp"
 
-#include "../../gameObject/gameObject/gameObject.hpp"
-#include "../../utilities/collision.hpp"
-#include "../../gameObject/components/components.hpp"
+#include "../gameObject/gameObject/gameObject.hpp"
+#include "../utilities/collision.hpp"
+#include "../gameObject/components/components.hpp"
 
-#include "../../utilities/strFuncs.hpp"
-#include "../../game/globals.hpp"
+#include "../utilities/strFuncs.hpp"
+#include "../game/globals.hpp"
 
-#include <logger.hpp>
+#include "../utilities/logger/logger.hpp"
 #include <fstream>
 
 void level::loadJsonFile(const std::string &file, Json::Value *root)

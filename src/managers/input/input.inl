@@ -47,9 +47,6 @@ void input<T>::execute(sf::Event &event, states active)
             {
                 bool correctInput = (std::is_same<T, sf::Keyboard::Key>::value ? event.key.code : event.mouseButton.button) == _input;
 
-                bool pressed = event.type == _press;
-                bool released = event.type == _release;
-
                 if (correctInput && active == _activeState)
                     {
                         if ((_state == ON_PRESS ? _press : _release) == event.type)
@@ -95,7 +92,7 @@ void input<T>::execute(states active)
                                 sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(_input)) :
                                 sf::Mouse::isButtonPressed(static_cast<sf::Mouse::Button>(_input)));
 
-                if (_pollRealtime && pressed == _onPress)
+                if (_pollRealtime && pressed == _onPress && active == _activeState)
                     {
                         if (_doubleClick) 
 							{

@@ -8,6 +8,8 @@
 		},
 		"collisionComponent" :
 		{
+			"on_collide_script" : "",
+			"on_collide_func_name" : "",
 			"bounding_box" :
 			{
 				"size_X" : 192,
@@ -27,6 +29,7 @@
 		"movementComponent" :
 		{
 			"max_speed" : 750.0,
+			"max_jump_height" : 100,
 			"acceleration" : 300.0,
 			"impulse" :
 			{
@@ -40,15 +43,13 @@
 			{
 				"key" : "key_left",
 				"script" : "assets/scripts/player.lua",
-				"func_start" : "move_left",
-				"func_end" : "move_stop"
+				"func_start" : "move_left"
 			},
 			"move_right" :
 			{
 				"key" : "key_right",
 				"script" : "assets/scripts/player.lua",
-				"func_start" : "move_right",
-				"func_end" : "move_stop"
+				"func_start" : "move_right"
 			},
 			"move_jump" :
 			{
@@ -59,6 +60,8 @@
 		},
 		"collisionComponent" :
 		{
+			"on_collide_script" : "assets/scripts/player.lua",
+			"on_collide_func_name" : "on_collide",
 			"bounding_box" :
 			{
 				"size_X" : 64,

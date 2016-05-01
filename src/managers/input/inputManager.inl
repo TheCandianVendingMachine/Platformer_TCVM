@@ -153,7 +153,7 @@ void inputManager<T>::changeFunction(const std::string &name, std::function<void
     }
 
 template<typename T>
-inline void inputManager<T>::changeInverseFunction(const std::string & name, std::function<void()> func)
+void inputManager<T>::changeInverseFunction(const std::string &name, std::function<void()> func)
     {
         if (_inputs.find(name) != _inputs.end())
             {
@@ -192,7 +192,14 @@ void inputManager<T>::handleInput(states currentState)
             {
                 if (key.second)
                     {
-                        key.second->execute(currentState);
+                        if (key.second->getState() == states::ALL_STATES)
+                            {
+                                key.second->execute(states::ALL_STATES);
+                            }
+                        else
+                            {
+                                key.second->execute(currentState);
+                            }
                     }
             }
     }
@@ -203,8 +210,15 @@ void inputManager<T>::handleInput(sf::Event &event, states currentState)
         for (auto &key : _eventTimeInputs)
             {
                 if (key.second)
-                    {
-                        key.second->execute(event, currentState);
+                    {   
+                        if (key.second->getState() == states::ALL_STATES)
+                            {
+                                key.second->execute(event, states::ALL_STATES);
+                            }
+                        else
+                            {
+                                key.second->execute(event, currentState);
+                            }
                     }
             }
     }

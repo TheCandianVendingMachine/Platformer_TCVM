@@ -4,6 +4,7 @@
 
 enum states
     {
+        ALL_STATES,
         GAME_STATE,
         MENU_STATE,
         LEVEL_EDITOR_STATE,

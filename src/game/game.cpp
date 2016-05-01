@@ -36,10 +36,14 @@ void game::initializeControls()
         globals::_keyboardManager->add("editor_zoom_view_out",      sf::Keyboard::Q,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
         globals::_keyboardManager->add("editor_zoom_view_in",       sf::Keyboard::E,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
 
+
         globals::_keyboardManager->add("change_to_editor",          sf::Keyboard::F1,       inputState::ON_PRESS,			states::GAME_STATE);
         globals::_keyboardManager->add("change_to_game",            sf::Keyboard::F2, [] () 
                                                                     { globals::_stateMachine->popState(); }, 
                                                                                             inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
+
+        globals::_keyboardManager->add("open_console", sf::Keyboard::Tilde, [] ()
+                         { globals::_console->setActive(!globals::_console->getActive());}, inputState::ON_PRESS,           states::ALL_STATES);
 
     }
 
@@ -51,15 +55,18 @@ void game::initialize()
     #else
         _logger = new logr::logger("defaultLogger", "log", true);
 #endif
+        _logger->setConsole(&_console);
+        globals::_console = &_console;
+
         globals::_scriptManager =   &_scriptManager;
 
         globals::_keyboardManager = &_keyboardManager;
         globals::_mouseManager =    &_mouseManager;
 
         globals::_eventManager =    &_eventManager;
-        globals::_stateMachine =    &_stateMachine;
-        globals::_logger =          _logger;
 
+        globals::_logger =          _logger;
+        globals::_stateMachine =    &_stateMachine;
 
         globals::_logger->logToConsole("Initializing game");
 

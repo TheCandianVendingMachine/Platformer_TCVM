@@ -25,6 +25,13 @@ class scriptManager
 			void callLuaScript(const std::string &scriptPath);
 			luabridge::LuaRef *registerLuaFunction(const std::string &name, const std::string &scriptPath, const std::string &script);
 
+            #pragma region Run native Lua
+            void runLua(const std::string &lua);
+            template<typename Targ>
+            void runLua(const std::string &lua, Targ &arg);
+            template<typename Targ, typename Targ2>
+            void runLua(const std::string &lua, Targ &arg, Targ2 &arg2);
+            #pragma region
             #pragma region Register CPP Functions to LUA
 			void registerFunctionToLua(const std::string &name, const std::string &_namespace, void (*func)(void));
             template<typename Targ>
@@ -45,7 +52,7 @@ class scriptManager
 
             // End Register CPP Functions to LUA
             #pragma endregion
-
+            #pragma region Calling Lua functions
 			void callLuaFunc(const std::string &name);
             template<typename Targ>
             void callLuaFunc(const std::string &name, Targ &arg);
@@ -53,6 +60,7 @@ class scriptManager
             void callLuaFunc(const std::string &name, Targ &arg, Targ2 &arg2);
 			template<typename Targ, typename Targ2, typename Targ3>
 			void callLuaFunc(const std::string &name, Targ &arg, Targ2 &arg2, Targ3 &arg3);
+            #pragma endregion
 
 			void removeCFunc(const std::string &name);
 			void removeLuaFunc(const std::string &name);

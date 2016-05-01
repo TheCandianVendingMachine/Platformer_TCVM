@@ -1,12 +1,15 @@
 {
-	"platform" :
+	"moving_platform" :
 	{
 		"textureComponent" :
 		{
-			"texture" : "assets/textures/platform.png"
+			"texture" : "assets/textures/platform.png",
+			"texture_name" : "platform"
 		},
 		"collisionComponent" :
 		{
+			"on_collide_script" : "",
+			"on_collide_func_name" : "",
 			"bounding_box" :
 			{
 				"size_X" : 192,
@@ -14,36 +17,17 @@
 				"pos_X" : 0,
 				"pos_Y" : 0
 			}
-		}
-	},
-	"player" : 
-	{
-		"textureComponent" :
-		{
-			"texture" : "assets/textures/player.png"
 		},
 		"movementComponent" :
 		{
+			"max_speed" : 750.0,
+			"max_jump_height" : 100,
+			"acceleration" : 300.0,
 			"impulse" :
 			{
 				"X" : 0.0,
-				"Y" : 0.0
+				"Y" : 50.0
 			}
-		},
-		"collisionComponent" :
-		{
-			"bounding_box" :
-			{
-				"size_X" : 64,
-				"size_Y" : 64,
-				"pos_X" : 0,
-				"pos_Y" : 0
-			}
-		},
-		"physicsComponent" :
-		{
-			"gravity" : 150.0,
-			"terminal_velocity" : 1000.0
 		}
 	}
 }

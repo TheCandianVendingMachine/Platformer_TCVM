@@ -1,10 +1,10 @@
 #include "luaGameObject.hpp"
-#include "../../gameObject/gameObject/gameObject.hpp"
-#include "../../gameObject/components/components.hpp"
+#include "../gameObject/gameObject/gameObject.hpp"
+#include "../gameObject/components/components.hpp"
 
-#include <logger.hpp>
-#include "../../game/globals.hpp"
-#include "../../states/stateMachine.hpp"
+#include "../utilities/logger/logger.hpp"
+#include "../game/globals.hpp"
+#include "../states/stateMachine.hpp"
 
 luaGameObject::luaGameObject(gameObject *obj)
     {

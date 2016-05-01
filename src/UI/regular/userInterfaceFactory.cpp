@@ -1,7 +1,7 @@
 #include "userInterfaceFactory.hpp"
 #include "button.hpp"
 
-#include <logger.hpp>
+#include "../utilities/logger/logger.hpp"
 
 void userInterfaceFactory::setFont(const std::string &filepath)
     {

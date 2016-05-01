@@ -2,7 +2,8 @@
 #include "state.hpp"
 #include "../game/globals.hpp"
 
-#include <logger.hpp>
+#include "../utilities/logger/logger.hpp"
+#include "../game/console.hpp"
 #include "../managers/input/inputManager.hpp"
 
 #include "imgui.h"
@@ -39,6 +40,15 @@ void stateMachine::popStateFromStack()
             }
 
         _popState = false;
+    }
+
+stateMachine::stateMachine()
+    {
+        _amountToPop = 0;
+
+        _popState = false;
+        _closeWindow = false;
+        _window = nullptr;
     }
 
 stateMachine::stateMachine(sf::RenderWindow *window)
@@ -229,6 +239,13 @@ void stateMachine::render()
                             }
                     }
             }
+
+        if (_window->hasFocus())
+            {
+                globals::_console->draw();
+            }
+
+        ImGui::Render();
         _window->display();
     }
 
