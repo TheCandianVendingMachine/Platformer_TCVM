@@ -41,9 +41,22 @@ void levelEditor::handleUI()
                     }
                 ImGui::End();
 
+				if (ImGui::Begin("Entity Data"))
+					{
+						if (_selectedEntity)
+							{
+								ImGui::Text("Components");
+								for (auto &comp : *_selectedEntity->getAllComponents())
+									{
+										ImGui::BulletText(comp.first.name());
+									}
+							}
+					}
+				ImGui::End();
+
                 if (ImGui::Begin("Entity Select"))
                     {
-                        ImGui::BeginChild("test", sf::Vector2f(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y - 64), true);
+                        ImGui::BeginChild("EntitySelect", sf::Vector2f(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y - 64), true);
                         if (ImGui::TreeNode("Entities"))
                             {
                                 static unsigned int selected = -1;
@@ -113,10 +126,10 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
             { 
                 if (!_inUI)
                     {
-                        _selectedEntity = _level->getEntityAtPosition(_mousePos);
-                        if (!_selectedEntity && !_placingEntity.empty())
+						_holdingEntity = _selectedEntity;
+                        if (!_holdingEntity && !_placingEntity.empty())
                             {
-                                _selectedEntity = _level->addEntity(_placingEntity);
+                                _holdingEntity = _level->addEntity(_placingEntity);
                             }
                     }
             });
@@ -124,7 +137,7 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
             {
                 if (!_inUI)
                     {
-                        _selectedEntity = nullptr;
+						_holdingEntity = nullptr;
                     }
             });
 
@@ -132,13 +145,10 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
             {
                 if (!_inUI)
                     {
-                        _selectedEntity = _level->getEntityAtPosition(_mousePos);
                         if (_selectedEntity)
                             {
                                 _level->removeEntity(_selectedEntity);
                             }
-
-                        _selectedEntity = nullptr;
                     }
             });
 
@@ -162,13 +172,10 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
             {
                 if (!_inUI)
                     {
-                        _selectedEntity = _level->getEntityAtPosition(_mousePos);
                         if (_selectedEntity)
                             {
                                 _level->removeEntity(_selectedEntity);
                             }
-
-                        _selectedEntity = nullptr;
                     }
             });
 
@@ -325,9 +332,10 @@ void levelEditor::update(sf::Time deltaTime)
         _editorView.move(_viewImpulse * deltaTime.asSeconds());
 
         _mousePos = _mousePosToWorldCoord();
-        if (_selectedEntity)
+		_selectedEntity = _level->getEntityAtPosition(_mousePos);
+        if (_holdingEntity)
             {
-                auto tc = _selectedEntity->get<textureComponent>();
+                auto tc = _holdingEntity->get<textureComponent>();
 				if (!_resizing)
 					{
                         if (tc)

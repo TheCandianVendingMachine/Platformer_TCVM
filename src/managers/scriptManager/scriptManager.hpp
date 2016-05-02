@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "LuaBridge/LuaBridge.h"
+#include "../managers/events/observer.hpp"
 
 class scriptManager
 	{
@@ -25,13 +26,13 @@ class scriptManager
 			void callLuaScript(const std::string &scriptPath);
 			luabridge::LuaRef *registerLuaFunction(const std::string &name, const std::string &scriptPath, const std::string &script);
 
-            #pragma region Run native Lua
+            #pragma region Run Native Lua
             void runLua(const std::string &lua);
             template<typename Targ>
             void runLua(const std::string &lua, Targ &arg);
             template<typename Targ, typename Targ2>
             void runLua(const std::string &lua, Targ &arg, Targ2 &arg2);
-            #pragma region
+            #pragma endregion
             #pragma region Register CPP Functions to LUA
 			void registerFunctionToLua(const std::string &name, const std::string &_namespace, void (*func)(void));
             template<typename Targ>
@@ -64,6 +65,8 @@ class scriptManager
 
 			void removeCFunc(const std::string &name);
 			void removeLuaFunc(const std::string &name);
+
+			void alert(eventData data);
 
             luabridge::lua_State *getState();
 

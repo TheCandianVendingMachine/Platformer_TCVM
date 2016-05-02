@@ -25,6 +25,11 @@ void gameObject::addComponent(std::type_index index, component *comp)
         _components[index] = comp;
     }
 
+std::unordered_map<std::type_index, component*> *gameObject::getAllComponents()
+	{
+		return &_components;
+	}
+
 luaGameObject *gameObject::getGameObjectHandle()
     {
         return &_luaGameObject;

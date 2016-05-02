@@ -3,6 +3,7 @@
 #pragma once
 
 #include <SFML/System/Time.hpp>
+#include <string>
 
 class gameObject;
 
@@ -13,6 +14,7 @@ class component
             
         public:
             void setGameObject(gameObject *obj) { _obj = obj; };
+
             virtual ~component() {}
 
     };

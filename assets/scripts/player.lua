@@ -7,7 +7,7 @@ move_right = function(ent)
 end
 
 move_jump = function(ent)
-	ent:setImpulse(ent:getImpulseX(), ent:getImpulseY() - 100 - (ent:getAcceleration() * ent:getDeltaTime()))
+	ent:setImpulse(ent:getImpulseX(), ent:getImpulseY() - 150 - (ent:getAcceleration() * ent:getDeltaTime()))
 end
 
 on_collide = function(ent, offsetX, offsetY)

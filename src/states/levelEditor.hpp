@@ -24,7 +24,10 @@ class levelEditor : public state, public observer
             std::unordered_map<std::string, std::vector<std::string>> *_allGameObjects;
 
             level *_level;
+
             gameObject *_selectedEntity;
+			gameObject *_holdingEntity;
+
             std::string _placingEntity;
 
             sf::Vector2f _mousePos;

@@ -9,3 +9,4 @@
 #include "movementComponent.hpp"
 #include "physicsComponent.hpp"
 #include "inputComponent.hpp"
+#include "cameraComponent.hpp"

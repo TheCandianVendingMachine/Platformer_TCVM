@@ -34,6 +34,7 @@ class gameObject
             void addComponent(std::type_index index, component *comp);
             template<typename T>
             T *get();
+			std::unordered_map<std::type_index, component*> *getAllComponents();
 
             luaGameObject *getGameObjectHandle();
 
