@@ -22,6 +22,8 @@ void game::initializeControls()
         globals::_mouseManager->add("editor_left_mouse_press",      sf::Mouse::Left,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
         globals::_mouseManager->add("editor_right_mouse_press",     sf::Mouse::Right,       inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
 
+        globals::_keyboardManager->add("editor_save_level",         sf::Keyboard::F3,       inputState::ON_PRESS,           states::LEVEL_EDITOR_STATE);
+        globals::_keyboardManager->add("editor_load_level",         sf::Keyboard::F4,       inputState::ON_PRESS,           states::LEVEL_EDITOR_STATE);
 
         globals::_keyboardManager->add("editor_spin_block_right",   sf::Keyboard::E,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);
         globals::_keyboardManager->add("editor_spin_block_left",    sf::Keyboard::Q,        inputState::ON_PRESS,			states::LEVEL_EDITOR_STATE);

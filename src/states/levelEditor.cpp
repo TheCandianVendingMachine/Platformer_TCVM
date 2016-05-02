@@ -37,26 +37,63 @@ void levelEditor::handleUI()
                     {
                         ImGui::Checkbox("Snap to grid", &_snapToGrid);
                         ImGui::Checkbox("Resize", &_resizing);
-
-                        ImGui::Text("Place Multiple: "); ImGui::SameLine(120); ImGui::Text(_placeMultiple ? "True" : "False");
+                        ImGui::Checkbox("Place Multiple", &_placeMultiple);
                     }
                 ImGui::End();
 
                 if (ImGui::Begin("Entity Select"))
                     {
+                        ImGui::BeginChild("test", sf::Vector2f(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y - 64), true);
                         if (ImGui::TreeNode("Entities"))
                             {
+                                static unsigned int selected = -1;
                                 for (auto &filepath : *_allGameObjects)
                                     {
-                                        for (auto &entName : filepath.second)
+                                        for (int i = 0; i < filepath.second.size(); i++)
                                             {
-                                                if (ImGui::Selectable(entName.c_str())) _placingEntity = entName;
+                                                if (ImGui::Selectable(filepath.second[i].c_str(), selected == i)) 
+                                                    { 
+                                                        if (selected != i)
+                                                            {
+                                                                _placingEntity = filepath.second[i];
+                                                                selected = i;
+                                                            }
+                                                        else
+                                                            {
+                                                                _placingEntity = "";
+                                                                selected = -1;
+                                                            }
+                                                    }
                                             }
                                     }
                                 ImGui::TreePop();
                             }
+                        ImGui::EndChild();
+                    }
+
+                if (_save || _load)
+                    {
+                        if (ImGui::Begin(_save ? "Save" : "Load"))
+                            {
+                                static char _inputBuffer[128];
+                                if (ImGui::InputText("File Name", _inputBuffer, 128, ImGuiInputTextFlags_EnterReturnsTrue))
+                                    {
+                                        if (_save)
+                                            {
+                                                _level->save("assets/levels/" + std::string(_inputBuffer));
+                                            }
+                                        else
+                                            {
+                                                _level->load("assets/levels/" + std::string(_inputBuffer));
+                                            }
+                                        strcpy_s(_inputBuffer, "");
+                                    }
+                                ImGui::End();
+                            }
                     }
                 ImGui::End();
+                
+                _inUI = ImGui::IsMouseHoveringAnyWindow();
             }
     }
 
@@ -71,100 +108,193 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
 
         _viewImpulse = sf::Vector2f(0, 0);
 
+    #pragma region Setting up editor key binds
         globals::_mouseManager->changeFunction("editor_left_mouse_press", [this] () 
             { 
-                _selectedEntity = _level->getEntityAtPosition(_mousePos);
-                if (!_selectedEntity && !_placingEntity.empty())
+                if (!_inUI)
                     {
-                        _selectedEntity = _level->addEntity(_placingEntity);
-
-                        if (!_placeMultiple) _placingEntity = "";
+                        _selectedEntity = _level->getEntityAtPosition(_mousePos);
+                        if (!_selectedEntity && !_placingEntity.empty())
+                            {
+                                _selectedEntity = _level->addEntity(_placingEntity);
+                            }
                     }
             });
         globals::_mouseManager->changeInverseFunction("editor_left_mouse_press", [this] () 
             {
-                _selectedEntity = nullptr;
+                if (!_inUI)
+                    {
+                        _selectedEntity = nullptr;
+                    }
             });
 
         globals::_keyboardManager->changeFunction("editor_delete_entity", [this] () 
             {
-                _selectedEntity = _level->getEntityAtPosition(_mousePos);
-                if (_selectedEntity)
+                if (!_inUI)
                     {
-                        _level->removeEntity(_selectedEntity);
-                    }
+                        _selectedEntity = _level->getEntityAtPosition(_mousePos);
+                        if (_selectedEntity)
+                            {
+                                _level->removeEntity(_selectedEntity);
+                            }
 
-                _selectedEntity = nullptr;
+                        _selectedEntity = nullptr;
+                    }
             });
+
         globals::_keyboardManager->changeFunction("editor_place_multiple", [this] () 
             {
-                _placeMultiple = true;
+                if (!_inUI)
+                    {
+                        _placeMultiple = false;
+                    }
             });
+
         globals::_keyboardManager->changeInverseFunction("editor_place_multiple", [this] () 
             {
-                _placeMultiple = false;
-                _placingEntity = "";
+                if (!_inUI)
+                    {
+                        _placeMultiple = true;
+                    }
             });
 
         globals::_mouseManager->changeFunction("editor_right_mouse_press", [this] () 
             {
-                _selectedEntity = _level->getEntityAtPosition(_mousePos);
-                if (_selectedEntity)
+                if (!_inUI)
                     {
-                        _level->removeEntity(_selectedEntity);
-                    }
+                        _selectedEntity = _level->getEntityAtPosition(_mousePos);
+                        if (_selectedEntity)
+                            {
+                                _level->removeEntity(_selectedEntity);
+                            }
 
-                _selectedEntity = nullptr;
+                        _selectedEntity = nullptr;
+                    }
             });
 
         globals::_keyboardManager->changeFunction("editor_spin_block_right", [this] () 
             {
-                if (_selectedEntity)
+                if (!_inUI)
                     {
-                        auto tc = _selectedEntity->get<textureComponent>();
-                        if (tc)
+                        if (_selectedEntity)
                             {
-                                tc->getSprite()->rotate(15);
+                                auto tc = _selectedEntity->get<textureComponent>();
+                                if (tc)
+                                    {
+                                        tc->getSprite()->rotate(15);
+                                    }
                             }
                     }
             });
         globals::_keyboardManager->changeFunction("editor_spin_block_left", [this] () 
             {
-                if (_selectedEntity)
+                if (!_inUI)
                     {
-                        auto tc = _selectedEntity->get<textureComponent>();
-                        if (tc)
+                        if (_selectedEntity)
                             {
-                                tc->getSprite()->rotate(-15);
+                                auto tc = _selectedEntity->get<textureComponent>();
+                                if (tc)
+                                    {
+                                        tc->getSprite()->rotate(-15);
+                                    }
                             }
                     }
             });
 
+        globals::_keyboardManager->changeFunction("editor_save_level", [this] ()
+            { 
+                _save = !_save; if (_load) _load = false;
+            });
+        globals::_keyboardManager->changeFunction("editor_load_level", [this] ()
+            { 
+                _load = !_load;
+                if (_save) 
+                    { 
+                        _save = false;
+                    }
+            });
+
         globals::_keyboardManager->changeFunction("editor_move_view_right", [this] () 
-                                                                                { _viewImpulse.x = 250; });
+            { 
+                if (!_inUI) 
+                    { 
+                        _viewImpulse.x = 250;
+                    }
+            });
         globals::_keyboardManager->changeInverseFunction("editor_move_view_right", [this] () 
-                                                                                { _viewImpulse.x = 0; });
+            { 
+                if (!_inUI) 
+                    { 
+                        _viewImpulse.x = 0;
+                    }
+            });
 
         globals::_keyboardManager->changeFunction("editor_move_view_left", [this] () 
-                                                                                { _viewImpulse.x = -250; });
+            {
+                if (!_inUI) 
+                    { 
+                        _viewImpulse.x = -250;
+                    }
+            });
         globals::_keyboardManager->changeInverseFunction("editor_move_view_left", [this] () 
-                                                                                { _viewImpulse.x = 0; });
+            { 
+                if (!_inUI) 
+                    {
+                        _viewImpulse.x = 0;
+                    }
+            });
 
         globals::_keyboardManager->changeFunction("editor_move_view_up", [this] () 
-                                                                                { _viewImpulse.y = -250; });
+            {
+                if (!_inUI) 
+                    { 
+                        _viewImpulse.y = -250;
+                    }
+            });
         globals::_keyboardManager->changeInverseFunction("editor_move_view_up", [this] () 
-                                                                                 { _viewImpulse.y = 0; });
+            { 
+                if (!_inUI) 
+                    { 
+                        _viewImpulse.y = 0;
+                    }
+            });
 
         globals::_keyboardManager->changeFunction("editor_move_view_down", [this] () 
-                                                                                { _viewImpulse.y = 250; });
+            { 
+                if (!_inUI)
+                    { 
+                        _viewImpulse.y = 250;
+                    }
+            });
         globals::_keyboardManager->changeInverseFunction("editor_move_view_down", [this] () 
-                                                                                { _viewImpulse.y = 0; });
+            { 
+                if (!_inUI) 
+                    { 
+                        _viewImpulse.y = 0;
+                    }
+            });
 
         globals::_keyboardManager->changeFunction("editor_zoom_view_out", [this] () 
-                                                                                { if (!_selectedEntity)_editorView.zoom(1.1); });
+            { 
+                if (!_inUI) 
+                    {
+                        if (!_selectedEntity)
+                            {
+                                _editorView.zoom(1.1);
+                            }
+                    }
+            });
         globals::_keyboardManager->changeFunction("editor_zoom_view_in", [this] () 
-                                                                                { if (!_selectedEntity) _editorView.zoom(0.9); });
-
+            { 
+                if (!_inUI) 
+                    {
+                        if (!_selectedEntity) 
+                            {
+                                _editorView.zoom(0.9);
+                            }
+                    }
+            });
+    #pragma endregion
     }
 
 void levelEditor::initialize()
@@ -175,7 +305,12 @@ void levelEditor::initialize()
 
         _snapToGrid = false;
         _resizing = false;
-        _placeMultiple = false;
+        _placeMultiple = true;
+
+        _load = false;
+        _save = false;
+
+        _inUI = false;
 
         _selectedEntity = nullptr;
 
@@ -253,6 +388,8 @@ void levelEditor::cleanup()
     {
         globals::_stateMachine->getWindow()->setView(globals::_stateMachine->getWindow()->getDefaultView());
         globals::_logger->logToConsole("Cleaning up level editor");
+
+        _inUI = false;
 
         globals::_eventManager->unsubscribe(this, events::LOAD_ENTITY_LIST);
         globals::_eventManager->unsubscribe(this, events::RELOAD_ENTITY_LIST);

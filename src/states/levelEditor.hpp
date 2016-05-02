@@ -35,6 +35,8 @@ class levelEditor : public state, public observer
             sf::View _editorView;
             sf::Vector2f _viewImpulse;
 
+            bool _inUI;
+
             bool _save;
             bool _load;
             bool _resizing;
