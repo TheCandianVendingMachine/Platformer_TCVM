@@ -75,6 +75,20 @@
 			"gravity" : 500.0,
 			"terminal_velocity" : 1000.0,
 			"friction_coefficient" : 100.0
+		},
+		"cameraComponent" :
+		{
+			"follow_object" : true,
+			"size" :
+			{
+				"X" : 0,
+				"Y" : 0
+			},
+			"position" :
+			{
+				"X" : 0,
+				"Y" : 0,
+			}
 		}
 	}
 }

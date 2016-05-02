@@ -5,6 +5,7 @@
 #include "../managers/scriptManager/scriptManager.hpp"
 #include "../managers/events/eventManager.hpp"
 #include "../managers/input/inputManager.hpp"
+#include "../states/stateMachine.hpp"
 
 #include "../components/components.hpp"
 
@@ -174,6 +175,22 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
 
                                 int i = 2;
                             }
+						else if (comp == "cameraComponent")
+							{
+								cameraComponent *cc = new cameraComponent;
+								sf::Vector2f camPos(root[objectName][comp]["position"]["X"].asFloat(),
+													root[objectName][comp]["position"]["Y"].asFloat());
+								sf::Vector2f camSize(root[objectName][comp]["size"]["X"].asFloat(),
+													 root[objectName][comp]["size"]["Y"].asFloat());
+
+								bool follow = root[objectName][comp]["follow_object"].asBool();
+
+								cc->setGameObject(newObj);
+								cc->setWindow(globals::_stateMachine->getWindow());
+								cc->setCameraPos(camPos);
+								cc->setCameraSize(camSize);
+								cc->setFollow(follow);
+							}
                     }
 
                 if (addedComp)

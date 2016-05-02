@@ -2,6 +2,7 @@
 #include "textureComponent.hpp"
 #include "physicsComponent.hpp"
 #include "collisionComponent.hpp"
+#include "cameraComponent.hpp"
 
 #include "../gameObject/gameObject.hpp"
 
@@ -38,6 +39,12 @@ void movementComponent::update(sf::Time deltaTime)
                     {
                         cc->update();
                     }
+
+				auto camc = _obj->get<cameraComponent>();
+				if (camc)
+					{
+						camc->update(deltaTime);
+					}
             }
     }
 

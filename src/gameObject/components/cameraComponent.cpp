@@ -6,16 +6,17 @@
 void cameraComponent::setWindow(sf::RenderWindow *app)
 	{
 		_app = app;
+		_app->setView(_view);
 	}
 
 void cameraComponent::setCameraSize(sf::Vector2f size)
 	{
-		_view.setViewport(sf::FloatRect(sf::Vector2f(_view.getViewport().left, _view.getViewport().top), size));
+		_view.setSize(size);
 	}
 
 void cameraComponent::setCameraPos(sf::Vector2f pos)
 	{
-		_view.setViewport(sf::FloatRect(pos, _view.getSize()));
+		_view.setCenter(pos);
 	}
 
 void cameraComponent::setFollow(bool follow)
