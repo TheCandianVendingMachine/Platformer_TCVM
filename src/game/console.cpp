@@ -17,7 +17,7 @@ bool console::_handleCommand(std::string command, std::string data)
             {
                 globals::_scriptManager->runLua(data);
             }
-        else if (command == "reload_entity_lists")
+        else if (command == "reload_entity_list")
             {
                 globals::_eventManager->alert(eventData(RELOAD_ENTITY_LIST));
             }
@@ -37,7 +37,7 @@ bool console::_handleCommand(std::string command, std::string data)
 console::console()
     {
         _commands.push_back("lua");
-        _commands.push_back("reload_entity_lists");
+        _commands.push_back("reload_entity_list");
         _commands.push_back("load_entity_list");
 
         _active = false;

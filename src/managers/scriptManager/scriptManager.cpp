@@ -20,8 +20,6 @@ scriptManager::scriptManager()
 		luaL_openlibs(_state);
 
         initializeLuaHelpers();
-
-		globals::_eventManager->subscribe(this, RELOAD_SCRIPT);
 	}
 
 void scriptManager::initializeLuaHelpers()
@@ -100,6 +98,4 @@ scriptManager::~scriptManager()
                 delete ref.second;
                 ref.second = nullptr;
             }
-
-		globals::_eventManager->unsubscribe(this, RELOAD_SCRIPT);
     }

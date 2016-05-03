@@ -18,6 +18,9 @@ class cameraComponent : public component
 		private:
 			sf::RenderWindow *_app;
 
+            sf::Vector2f _offset;
+            float _followRadius;
+
 			sf::View _view;
 			sf::Vector2f _impulse;
 			bool _follow;
@@ -25,8 +28,10 @@ class cameraComponent : public component
 		public:
 			void setWindow(sf::RenderWindow *app);
 
+            void setFollowRadius(float radius);
+
+			void setCameraOffset(sf::Vector2f offset);
 			void setCameraSize(sf::Vector2f size);
-			void setCameraPos(sf::Vector2f pos);
 
 			void setFollow(bool follow);
 

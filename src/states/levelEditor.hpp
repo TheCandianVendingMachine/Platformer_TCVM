@@ -35,6 +35,7 @@ class levelEditor : public state, public observer
             const int _gridSize;
             bool _snapToGrid;
 
+            sf::View _previousView;
             sf::View _editorView;
             sf::Vector2f _viewImpulse;
 

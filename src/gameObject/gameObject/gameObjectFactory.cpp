@@ -172,23 +172,26 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
                                                     }, false, GAME_STATE);
                                             }
                                     }
-
-                                int i = 2;
                             }
 						else if (comp == "cameraComponent")
 							{
 								cameraComponent *cc = new cameraComponent;
-								sf::Vector2f camPos(root[objectName][comp]["position"]["X"].asFloat(),
-													root[objectName][comp]["position"]["Y"].asFloat());
+                                newObj->addComponent(std::type_index(typeid(cameraComponent)), cc);
+
 								sf::Vector2f camSize(root[objectName][comp]["size"]["X"].asFloat(),
 													 root[objectName][comp]["size"]["Y"].asFloat());
+								sf::Vector2f camOffset(root[objectName][comp]["offset"]["X"].asFloat(),
+													   root[objectName][comp]["offset"]["Y"].asFloat());
+
+                                float followRadius = root[objectName][comp]["follow_radius"].asFloat();
 
 								bool follow = root[objectName][comp]["follow_object"].asBool();
 
 								cc->setGameObject(newObj);
 								cc->setWindow(globals::_stateMachine->getWindow());
-								cc->setCameraPos(camPos);
 								cc->setCameraSize(camSize);
+								cc->setCameraOffset(camOffset);
+                                cc->setFollowRadius(followRadius);
 								cc->setFollow(follow);
 							}
                     }

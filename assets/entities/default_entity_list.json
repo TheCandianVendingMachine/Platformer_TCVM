@@ -79,15 +79,16 @@
 		"cameraComponent" :
 		{
 			"follow_object" : true,
+			"follow_radius" : 75,
 			"size" :
 			{
-				"X" : 0,
-				"Y" : 0
+				"X" : 1280,
+				"Y" : 720
 			},
-			"position" :
+			"offset" :
 			{
 				"X" : 0,
-				"Y" : 0,
+				"Y" : -25
 			}
 		}
 	}

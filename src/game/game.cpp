@@ -11,7 +11,7 @@ void game::initializeWindow()
     {
         globals::_logger->logToConsole("Initializng window");
         
-        app = new sf::RenderWindow(sf::VideoMode(1170, 700), "Window", sf::Style::Close);
+        app = new sf::RenderWindow(sf::VideoMode(1280, 720), "Window", sf::Style::Close);
         app->setFramerateLimit(60.0f);
     }
 

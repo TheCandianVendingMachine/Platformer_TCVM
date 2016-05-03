@@ -56,7 +56,7 @@ void levelEditor::handleUI()
 
                 if (ImGui::Begin("Entity Select"))
                     {
-                        ImGui::BeginChild("EntitySelect", sf::Vector2f(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y - 64), true);
+                        ImGui::BeginChild("EntitySelect", sf::Vector2f(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y - 64));
                         if (ImGui::TreeNode("Entities"))
                             {
                                 static unsigned int selected = -1;
@@ -210,7 +210,11 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
 
         globals::_keyboardManager->changeFunction("editor_save_level", [this] ()
             { 
-                _save = !_save; if (_load) _load = false;
+                _save = !_save; 
+                if (_load) 
+                    { 
+                        _load = false;
+                    }
             });
         globals::_keyboardManager->changeFunction("editor_load_level", [this] ()
             { 
@@ -230,10 +234,7 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
             });
         globals::_keyboardManager->changeInverseFunction("editor_move_view_right", [this] () 
             { 
-                if (!_inUI) 
-                    { 
-                        _viewImpulse.x = 0;
-                    }
+                _viewImpulse.x = 0;
             });
 
         globals::_keyboardManager->changeFunction("editor_move_view_left", [this] () 
@@ -245,10 +246,7 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
             });
         globals::_keyboardManager->changeInverseFunction("editor_move_view_left", [this] () 
             { 
-                if (!_inUI) 
-                    {
-                        _viewImpulse.x = 0;
-                    }
+                _viewImpulse.x = 0;
             });
 
         globals::_keyboardManager->changeFunction("editor_move_view_up", [this] () 
@@ -260,10 +258,7 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
             });
         globals::_keyboardManager->changeInverseFunction("editor_move_view_up", [this] () 
             { 
-                if (!_inUI) 
-                    { 
-                        _viewImpulse.y = 0;
-                    }
+                _viewImpulse.y = 0;
             });
 
         globals::_keyboardManager->changeFunction("editor_move_view_down", [this] () 
@@ -275,10 +270,7 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
             });
         globals::_keyboardManager->changeInverseFunction("editor_move_view_down", [this] () 
             { 
-                if (!_inUI) 
-                    { 
-                        _viewImpulse.y = 0;
-                    }
+                _viewImpulse.y = 0;
             });
 
         globals::_keyboardManager->changeFunction("editor_zoom_view_out", [this] () 
@@ -308,8 +300,6 @@ void levelEditor::initialize()
     {
         globals::_logger->logToConsole("Initializing level editor");
 
-        _editorView = globals::_stateMachine->getWindow()->getView();
-
         _snapToGrid = false;
         _resizing = false;
         _placeMultiple = true;
@@ -325,6 +315,9 @@ void levelEditor::initialize()
 
         globals::_eventManager->subscribe(this, events::LOAD_ENTITY_LIST);
         globals::_eventManager->subscribe(this, events::RELOAD_ENTITY_LIST);
+
+        _previousView = globals::_stateMachine->getWindow()->getView();
+        _editorView = globals::_stateMachine->getWindow()->getDefaultView();
     }
 
 void levelEditor::update(sf::Time deltaTime)
@@ -375,7 +368,6 @@ void levelEditor::update(sf::Time deltaTime)
 void levelEditor::render()
     {
         globals::_stateMachine->getWindow()->setView(_editorView);
-
         handleUI();
     }
 
@@ -394,13 +386,14 @@ void levelEditor::alert(eventData data)
 
 void levelEditor::cleanup()
     {
-        globals::_stateMachine->getWindow()->setView(globals::_stateMachine->getWindow()->getDefaultView());
         globals::_logger->logToConsole("Cleaning up level editor");
 
         _inUI = false;
 
         globals::_eventManager->unsubscribe(this, events::LOAD_ENTITY_LIST);
         globals::_eventManager->unsubscribe(this, events::RELOAD_ENTITY_LIST);
+
+        globals::_stateMachine->getWindow()->setView(_previousView);
     }
 
 levelEditor::~levelEditor()
