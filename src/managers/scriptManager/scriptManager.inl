@@ -119,3 +119,17 @@ void scriptManager::callLuaFunc(const std::string &name, Targ &arg, Targ2 &arg2,
 				globals::_logger->log(e.what());
 			}
 	}
+
+template<typename Targ, typename Targ2, typename Targ3, typename Targ4>
+void scriptManager::callLuaFunc(const std::string &name, Targ &arg, Targ2 &arg2, Targ3 &arg3, Targ4 &arg4)
+	{
+		try 
+			{
+				auto func = _luaFuncs[name];
+				(*func)(arg, arg2, arg3, arg4);
+			}
+		catch (luabridge::LuaException &e)
+			{
+				globals::_logger->log(e.what());
+			}
+	}	

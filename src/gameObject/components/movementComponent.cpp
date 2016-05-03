@@ -34,7 +34,7 @@ void movementComponent::update(sf::Time deltaTime)
 
                 textureComp->getSprite()->move(_impulse * deltaTime.asSeconds());
 
-                auto cc = _obj->get<collisionComponent>();
+				auto cc = _obj->get<collisionComponent>();
                 if (cc)
                     {
                         cc->update();

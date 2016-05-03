@@ -5,6 +5,7 @@
 #include "../utilities/logger/logger.hpp"
 #include "../game/globals.hpp"
 #include "../states/stateMachine.hpp"
+#include "../utilities/strFuncs.hpp"
 
 luaGameObject::luaGameObject(gameObject *obj)
     {
@@ -148,3 +149,8 @@ void luaGameObject::logToConsole(const std::string &message)
     {
         globals::_logger->logToConsole(message);
     }
+
+bool luaGameObject::isType(const std::string &entityName)
+	{
+		return strfn::doesStringContain(_obj->getName(), entityName).second;
+	}

@@ -23,23 +23,27 @@ void physicsComponent::update(sf::Time deltaTime)
         auto mc = _obj->get<movementComponent>();
         if (mc)
             {
-                sf::Vector2f impulse(0, 0);
-                auto cc = _obj->get<collisionComponent>();
+                sf::Vector2f impulse(mc->getImpulse().x, 0);
 
+                auto cc = _obj->get<collisionComponent>();
                 if (cc)
                     {
                         if (!cc->getColliding())
                             {
-                                impulse = sf::Vector2f(mc->getImpulse().x, mc->getImpulse().y + (_gravity * deltaTime.asSeconds()));
+                                impulse.y = mc->getImpulse().y + (_gravity * deltaTime.asSeconds());
                                 if (impulse.y >= _terminalVelocity)
                                     {
                                         impulse.y = _terminalVelocity;
                                     }
                             }
+						else
+							{
+								impulse.y = 0;
+							}
                     }
                 else
                     {
-                        impulse = sf::Vector2f(mc->getImpulse().x, mc->getImpulse().y + (_gravity * deltaTime.asSeconds()));
+                        impulse.y = mc->getImpulse().y + (_gravity * deltaTime.asSeconds());
                         if (impulse.y >= _terminalVelocity)
                             {
                                 impulse.y = _terminalVelocity;

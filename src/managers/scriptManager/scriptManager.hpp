@@ -61,6 +61,8 @@ class scriptManager
             void callLuaFunc(const std::string &name, Targ &arg, Targ2 &arg2);
 			template<typename Targ, typename Targ2, typename Targ3>
 			void callLuaFunc(const std::string &name, Targ &arg, Targ2 &arg2, Targ3 &arg3);
+			template<typename Targ, typename Targ2, typename Targ3, typename Targ4>
+			void callLuaFunc(const std::string &name, Targ &arg, Targ2 &arg2, Targ3 &arg3, Targ4 &arg4);
             #pragma endregion
 
 			void removeCFunc(const std::string &name);

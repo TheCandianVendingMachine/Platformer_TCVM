@@ -36,6 +36,6 @@ class collisionComponent : public component
             bool getColliding();
 
             bool hasCollided(collisionComponent &other);
-            bool collide(collisionComponent &other);
+            bool collide(gameObject *other);
 
     };

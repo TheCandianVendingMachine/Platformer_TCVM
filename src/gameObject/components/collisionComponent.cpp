@@ -51,26 +51,32 @@ bool collisionComponent::hasCollided(collisionComponent &other)
         return _colliding;
     }
 
-bool collisionComponent::collide(collisionComponent &other)
+bool collisionComponent::collide(gameObject *other)
     {
-        if (hasCollided(other))
-            {
-                auto objSprite = _obj->get<textureComponent>();
-                if (objSprite)
-                    {
-                        auto obj = objSprite->getSprite();
-                        sf::Vector2f overlap = _getOverlap(other);
+		auto otherCC = other->get<collisionComponent>();
+		if (otherCC)
+			{
+				if (hasCollided(*otherCC))
+					{
+						auto objSprite = _obj->get<textureComponent>();
+						if (objSprite)
+							{
+						
+								auto obj = objSprite->getSprite();
+								sf::Vector2f overlap = _getOverlap(*otherCC);
                         
-                        if (!_onCollide.empty())
-                            {
-                                globals::_scriptManager->callLuaFunc(_onCollide, *_obj->getGameObjectHandle(), overlap.x, overlap.y);
-                            }
+								if (!_onCollide.empty())
+									{
+										globals::_scriptManager->callLuaFunc(_onCollide,
+											*_obj->getGameObjectHandle(), *other->getGameObjectHandle(),
+											overlap.x, overlap.y);
+									}
 
-                        update();
-                        return true;
-                    }
-            }
-
+								update();
+								return true;
+							}
+					}
+			}
         return false;
     }
 

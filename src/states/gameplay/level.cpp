@@ -172,11 +172,12 @@ void level::update(sf::Time deltaTime)
                     {
                         for (auto &platform : _platforms)
                             {
-                                auto platformCC = platform->get<collisionComponent>();
-                                if (platformCC)
-                                    {
-                                        cc->collide(*platformCC);
-                                    }
+								cc->collide(platform);
+								auto platCC = platform->get<collisionComponent>();
+								if (platCC)
+									{
+										platCC->collide(ent);
+									}
                             }
                     }
             }

@@ -8,8 +8,8 @@
 		},
 		"collisionComponent" :
 		{
-			"on_collide_script" : "",
-			"on_collide_func_name" : "",
+			"on_collide_script" : "assets/scripts/moving_platform.lua",
+			"on_collide_func_name" : "on_collide",
 			"bounding_box" :
 			{
 				"size_X" : 192,

@@ -44,6 +44,8 @@ void scriptManager::initializeLuaHelpers()
                 .addFunction("setAcceleration", &luaGameObject::setAcceleration)
                 .addFunction("getAcceleration", &luaGameObject::getAcceleration)
 
+				.addFunction("isType", &luaGameObject::isType)
+
 				.addFunction("getDeltaTime", &luaGameObject::getDeltaTime)
                 .addFunction("log", &luaGameObject::log)
                 .addFunction("logToConsole", &luaGameObject::logToConsole)
