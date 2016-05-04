@@ -7,7 +7,7 @@
 
 #include <functional>
 
-#include "../../states/states.hpp"
+#include "../states/gameStates/states.hpp"
 
 enum inputState
     {

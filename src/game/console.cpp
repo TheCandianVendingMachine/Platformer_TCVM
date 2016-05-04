@@ -7,7 +7,7 @@
 
 #include "globals.hpp"
 #include "../managers/scriptManager/scriptManager.hpp"
-#include "../states/stateMachine.hpp"
+#include "../states/gameStates/stateMachine.hpp"
 #include "../managers/events/eventManager.hpp"
 #include "../utilities/strFuncs.hpp"
 

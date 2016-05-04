@@ -33,6 +33,9 @@ class luaGameObject
             void setMaxSpeed(float speed);
             float getMaxSpeed();
 
+			void setCurrentState(const std::string &state);
+			std::string getCurrentState();
+
 			float getDeltaTime();
 
             void log(const std::string &message);

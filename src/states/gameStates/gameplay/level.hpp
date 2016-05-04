@@ -10,9 +10,9 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
 
-#include "../../gameObject/gameObject/gameObjectFactory.hpp"
+#include "../gameObject/gameObject/gameObjectFactory.hpp"
 
-#include "../../utilities/json/json/json.h"
+#include "../utilities/json/json/json.h"
 
 class gameObject;
 

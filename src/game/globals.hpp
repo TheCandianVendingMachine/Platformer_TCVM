@@ -8,7 +8,7 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
-#include "../states/states.hpp"
+#include "../states/gameStates/states.hpp"
 
 class console;
 

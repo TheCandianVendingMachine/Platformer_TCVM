@@ -1,5 +1,6 @@
 #include "collisionComponent.hpp"
 #include "textureComponent.hpp"
+#include "stateComponent.hpp"
 
 #include "../../game/globals.hpp"
 #include "../../managers/scriptManager/scriptManager.hpp"
@@ -61,7 +62,6 @@ bool collisionComponent::collide(gameObject *other)
 						auto objSprite = _obj->get<textureComponent>();
 						if (objSprite)
 							{
-						
 								auto obj = objSprite->getSprite();
 								sf::Vector2f overlap = _getOverlap(*otherCC);
                         
@@ -70,6 +70,12 @@ bool collisionComponent::collide(gameObject *other)
 										globals::_scriptManager->callLuaFunc(_onCollide,
 											*_obj->getGameObjectHandle(), *other->getGameObjectHandle(),
 											overlap.x, overlap.y);
+
+										auto sc = _obj->get<stateComponent>();
+										if (sc)
+											{
+												sc->setState(stateComponent::WALKING);
+											}
 									}
 
 								update();

@@ -24,32 +24,36 @@ scriptManager::scriptManager()
 
 void scriptManager::initializeLuaHelpers()
     {
-        getGlobalNamespace(_state).beginClass<luaGameObject>("luaGameObject")
+		getGlobalNamespace(_state).beginClass<luaGameObject>("luaGameObject")
 
-                .addFunction("setImpulse", &luaGameObject::setImpulse)
-                .addFunction("getImpulseX", &luaGameObject::getImpulseX)
-                .addFunction("getImpulseY", &luaGameObject::getImpulseY)
-				
-				.addFunction("setPos", &luaGameObject::setPos)
-				.addFunction("getPosX", &luaGameObject::getPosX)
-				.addFunction("getPosY", &luaGameObject::getPosY)
+			.addFunction("setImpulse", &luaGameObject::setImpulse)
+			.addFunction("getImpulseX", &luaGameObject::getImpulseX)
+			.addFunction("getImpulseY", &luaGameObject::getImpulseY)
 
-				.addFunction("setSize", &luaGameObject::setSize)
-				.addFunction("getSizeX", &luaGameObject::getSizeX)
-				.addFunction("getSizeY", &luaGameObject::getSizeY)
+			.addFunction("setPos", &luaGameObject::setPos)
+			.addFunction("getPosX", &luaGameObject::getPosX)
+			.addFunction("getPosY", &luaGameObject::getPosY)
 
-                .addFunction("setMaxSpeed", &luaGameObject::setMaxSpeed)
-                .addFunction("getMaxSpeed", &luaGameObject::getMaxSpeed)
-            
-                .addFunction("setAcceleration", &luaGameObject::setAcceleration)
-                .addFunction("getAcceleration", &luaGameObject::getAcceleration)
+			.addFunction("setSize", &luaGameObject::setSize)
+			.addFunction("getSizeX", &luaGameObject::getSizeX)
+			.addFunction("getSizeY", &luaGameObject::getSizeY)
 
-				.addFunction("isType", &luaGameObject::isType)
+			.addFunction("setMaxSpeed", &luaGameObject::setMaxSpeed)
+			.addFunction("getMaxSpeed", &luaGameObject::getMaxSpeed)
 
-				.addFunction("getDeltaTime", &luaGameObject::getDeltaTime)
-                .addFunction("log", &luaGameObject::log)
-                .addFunction("logToConsole", &luaGameObject::logToConsole)
-            .endClass();
+			.addFunction("setAcceleration", &luaGameObject::setAcceleration)
+			.addFunction("getAcceleration", &luaGameObject::getAcceleration)
+
+			.addFunction("getCurrentState", &luaGameObject::getCurrentState)
+			.addFunction("setCurrentState", &luaGameObject::setCurrentState)
+
+			.addFunction("isType", &luaGameObject::isType)
+
+			.addFunction("getDeltaTime", &luaGameObject::getDeltaTime)
+            .addFunction("log", &luaGameObject::log)
+            .addFunction("logToConsole", &luaGameObject::logToConsole)
+
+        .endClass();
     }
 
 void scriptManager::callLuaScript(const std::string &scriptPath)

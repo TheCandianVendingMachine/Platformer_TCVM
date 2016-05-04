@@ -8,7 +8,7 @@
 #include "gameplay/level.hpp"
 
 #include "../utilities/logger/logger.hpp"
-#include "../states/stateMachine.hpp"
+#include "../states/gameStates/stateMachine.hpp"
 #include "../managers/input/inputManager.hpp"
 #include "../managers/events/eventManager.hpp"
 

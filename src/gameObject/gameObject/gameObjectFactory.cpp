@@ -5,7 +5,7 @@
 #include "../managers/scriptManager/scriptManager.hpp"
 #include "../managers/events/eventManager.hpp"
 #include "../managers/input/inputManager.hpp"
-#include "../states/stateMachine.hpp"
+#include "../states/gameStates/stateMachine.hpp"
 
 #include "../components/components.hpp"
 

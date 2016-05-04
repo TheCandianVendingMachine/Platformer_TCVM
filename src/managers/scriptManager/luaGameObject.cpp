@@ -4,7 +4,7 @@
 
 #include "../utilities/logger/logger.hpp"
 #include "../game/globals.hpp"
-#include "../states/stateMachine.hpp"
+#include "../states/gameStates/stateMachine.hpp"
 #include "../utilities/strFuncs.hpp"
 
 luaGameObject::luaGameObject(gameObject *obj)
@@ -134,6 +134,26 @@ float luaGameObject::getMaxSpeed()
             }
         return 0.0f;
     }
+
+void luaGameObject::setCurrentState(const std::string &state)
+	{
+		auto sc = _obj->get<stateComponent>();
+		if (sc)
+			{
+				sc->setState(state);
+			}
+	}
+
+std::string luaGameObject::getCurrentState()
+	{
+		auto sc = _obj->get<stateComponent>();
+		if (sc)
+			{
+				return sc->getCurrentStateAsString();
+			}
+
+		return "";
+	}
 
 float luaGameObject::getDeltaTime()
 	{
