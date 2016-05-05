@@ -74,15 +74,18 @@ bool collisionComponent::collide(gameObject *other)
 										auto sc = _obj->get<stateComponent>();
 										if (sc)
 											{
-												sc->setState(stateComponent::WALKING);
+  												sc->setState(stateComponent::WALKING);
 											}
 									}
 
 								update();
+								_colliding = true;
 								return true;
 							}
 					}
 			}
+
+		_colliding = false;
         return false;
     }
 

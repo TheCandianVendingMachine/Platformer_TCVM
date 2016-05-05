@@ -7,8 +7,8 @@ move_right = function(ent)
 end
 
 move_jump = function(ent)
-	if (ent:getCurrentState() ~= "jumping") then
-		ent:setImpulse(ent:getImpulseX(), ent:getImpulseY() - 550 - (ent:getAcceleration()))
+	if (ent:getCurrentState() ~= "jumping" and ent:getCurrentState() ~= "in_air") then
+		ent:setImpulse(ent:getImpulseX(), ent:getImpulseY() - 150 - (ent:getAcceleration()))
 		ent:setCurrentState("jumping")
 	end
 end

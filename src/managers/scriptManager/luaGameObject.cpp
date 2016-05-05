@@ -28,6 +28,8 @@ float luaGameObject::getImpulseX()
             {
                 return mc->getImpulse().x;
             }
+
+		return 0.0f;
     }
 
 float luaGameObject::getImpulseY()
@@ -37,6 +39,8 @@ float luaGameObject::getImpulseY()
             {
                 return mc->getImpulse().y;
             }
+
+		return 0.0f;
     }
 
 void luaGameObject::setPos(float X, float Y)
@@ -55,6 +59,7 @@ float luaGameObject::getPosX()
 			{
 				return tc->getSprite()->getPosition().x;
 			}
+
 		return 0.0f;
 	}
 
@@ -65,6 +70,7 @@ float luaGameObject::getPosY()
 			{
 				return tc->getSprite()->getPosition().y;
 			}
+
 		return 0.0f;
 	}
 
@@ -84,6 +90,7 @@ float luaGameObject::getSizeX()
 			{
 				tc->getSize().x;
 			}
+
 		return 0.0f;
 	}
 
@@ -94,6 +101,7 @@ float luaGameObject::getSizeY()
 			{
 				tc->getSize().y;
 			}
+
 		return 0.0f;
 	}
 

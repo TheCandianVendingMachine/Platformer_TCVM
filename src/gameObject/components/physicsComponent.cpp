@@ -38,7 +38,7 @@ void physicsComponent::update(sf::Time deltaTime)
                             }
 						else
 							{
-								impulse.y = 0;
+								impulse.y = 0.0;
 							}
                     }
                 else

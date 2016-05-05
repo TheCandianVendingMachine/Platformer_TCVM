@@ -21,13 +21,13 @@ inline void scriptManager::runLua(const std::string &lua)
 template<typename Targ>
 void scriptManager::runLua(const std::string &lua, Targ &arg)
     {
-        luaL_dostring(_state, lua.c_str(), arg);
+        luaL_dostring(_state, lua.c_str());
     }
 
 template<typename Targ, typename Targ2>
 void scriptManager::runLua(const std::string &lua, Targ &arg, Targ2 &arg2)
     {
-        luaL_dostring(_state, lua.c_str(), arg, arg2);
+        luaL_dostring(_state, lua.c_str());
     }
 
 template<typename Targ>

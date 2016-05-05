@@ -38,6 +38,9 @@ void levelEditor::handleUI()
                         ImGui::Checkbox("Snap to grid", &_snapToGrid);
                         ImGui::Checkbox("Resize", &_resizing);
                         ImGui::Checkbox("Place Multiple", &_placeMultiple);
+
+						ImGui::Text("X:"); ImGui::SameLine(32); ImGui::Text(std::to_string(_mousePos.x).c_str());
+						ImGui::Text("Y:"); ImGui::SameLine(32); ImGui::Text(std::to_string(_mousePos.y).c_str());
                     }
                 ImGui::End();
 
@@ -62,7 +65,7 @@ void levelEditor::handleUI()
                                 static unsigned int selected = -1;
                                 for (auto &filepath : *_allGameObjects)
                                     {
-                                        for (int i = 0; i < filepath.second.size(); i++)
+                                        for (unsigned int i = 0; i < filepath.second.size(); i++)
                                             {
                                                 if (ImGui::Selectable(filepath.second[i].c_str(), selected == i)) 
                                                     { 
@@ -279,7 +282,7 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
                     {
                         if (!_selectedEntity)
                             {
-                                _editorView.zoom(1.1);
+                                _editorView.zoom(1.1f);
                             }
                     }
             });
@@ -289,7 +292,7 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
                     {
                         if (!_selectedEntity) 
                             {
-                                _editorView.zoom(0.9);
+                                _editorView.zoom(0.9f);
                             }
                     }
             });
@@ -318,6 +321,7 @@ void levelEditor::initialize()
 
         _previousView = globals::_stateMachine->getWindow()->getView();
         _editorView = globals::_stateMachine->getWindow()->getDefaultView();
+		_editorView.setCenter(_previousView.getCenter());
     }
 
 void levelEditor::update(sf::Time deltaTime)
