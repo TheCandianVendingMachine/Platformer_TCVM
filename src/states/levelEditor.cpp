@@ -5,7 +5,7 @@
 
 #include "../game/globals.hpp"
 #include "../managers/scriptManager/scriptManager.hpp"
-#include "level.hpp"
+#include "gameplay/level.hpp"
 
 #include "../utilities/logger/logger.hpp"
 #include "../states/gameStates/stateMachine.hpp"

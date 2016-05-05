@@ -8,7 +8,7 @@ end
 
 move_jump = function(ent)
 	if (ent:getCurrentState() ~= "jumping") then
-		ent:setImpulse(ent:getImpulseX(), ent:getImpulseY() - 150 - (ent:getAcceleration() * ent:getDeltaTime()))
+		ent:setImpulse(ent:getImpulseX(), ent:getImpulseY() - 550 - (ent:getAcceleration()))
 		ent:setCurrentState("jumping")
 	end
 end

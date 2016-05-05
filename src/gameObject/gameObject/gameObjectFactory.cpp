@@ -194,6 +194,12 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
                                 cc->setFollowRadius(followRadius);
 								cc->setFollow(follow);
 							}
+                        else if (comp == "stateComponent")
+                            {
+                                stateComponent *sc = new stateComponent;
+                                sc->setGameObject(newObj);
+                                newObj->addComponent(std::type_index(typeid(stateComponent)), sc);
+                            }
                     }
 
                 if (addedComp)

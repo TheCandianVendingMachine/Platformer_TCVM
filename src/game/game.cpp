@@ -5,7 +5,7 @@
 #include "imgui-SFML.h"
 
 #include "../utilities/randomizer.hpp"
-#include "../states/gameStates/gameplay/gameState.hpp"
+#include "../states/gameStates/gameState.hpp"
 
 void game::initializeWindow()
     {
