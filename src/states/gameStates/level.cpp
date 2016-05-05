@@ -78,7 +78,7 @@ void level::load(const std::string &levelPath)
 
                         if(textureComp)
                             {
-                                textureComp->setPosition(vars["position"]["X"].asFloat(), vars["positon"]["X"].asFloat());
+                                textureComp->setPosition(vars["position"]["X"].asFloat(), vars["position"]["Y"].asFloat());
                             }
 
                         _entities.push_back(obj);
