@@ -29,6 +29,11 @@ class textureComponent : public component
             void setPosition(float X, float Y);
             void setPosition(sf::Vector2f pos);
 
+            sf::Vector2f getPosition();
+
+            void setRotation(float factor);
+            float getRotation();
+
             void draw(sf::RenderWindow &app);
 
     };

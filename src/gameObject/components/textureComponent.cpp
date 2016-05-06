@@ -74,6 +74,26 @@ void textureComponent::setPosition(sf::Vector2f pos)
             }
     }
 
+sf::Vector2f textureComponent::getPosition()
+    {
+        return _sprite.getPosition();
+    }
+
+void textureComponent::setRotation(float factor)
+    {
+        _sprite.setRotation(factor);
+        auto cc = _obj->get<collisionComponent>();
+        if (cc)
+            {
+                cc->update();
+            }
+    }
+
+float textureComponent::getRotation()
+    {
+        return _sprite.getRotation();
+    }
+
 void textureComponent::draw(sf::RenderWindow &app)
     {
         app.draw(_sprite);

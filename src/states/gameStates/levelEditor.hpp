@@ -7,6 +7,7 @@
 #include <SFML/System/Time.hpp>
 #include <SFML/Graphics/View.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 #include <string>
 
@@ -24,6 +25,8 @@ class levelEditor : public state, public observer
             std::unordered_map<std::string, std::vector<std::string>> *_allGameObjects;
 
             level *_level;
+
+            sf::RectangleShape _entityBoundingBox;
 
             gameObject *_selectedEntity;
 			gameObject *_holdingEntity;

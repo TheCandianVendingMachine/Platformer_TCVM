@@ -29,10 +29,10 @@ class collisionComponent : public component
             void setOnCollisionScript(const std::string &collisionScript);
 
             void setBounds(sf::Vector2f size, sf::Vector2f offset);
+            sf::FloatRect getBounds();
 
             void update();
-            sf::FloatRect &getBounds();
-
+            
             bool getColliding();
 
             bool hasCollided(collisionComponent &other);

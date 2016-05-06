@@ -124,6 +124,10 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
 
         _viewImpulse = sf::Vector2f(0, 0);
 
+        _entityBoundingBox.setFillColor(sf::Color::Transparent);
+        _entityBoundingBox.setOutlineThickness(5);
+        _entityBoundingBox.setOutlineColor(sf::Color::Red);
+
     #pragma region Setting up editor key binds
         globals::_mouseManager->changeFunction("editor_left_mouse_press", [this] () 
             { 
@@ -191,7 +195,7 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
                                 auto tc = _selectedEntity->get<textureComponent>();
                                 if (tc)
                                     {
-                                        tc->getSprite()->rotate(15);
+                                        tc->getSprite()->rotate(90);
                                     }
                             }
                     }
@@ -205,7 +209,7 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
                                 auto tc = _selectedEntity->get<textureComponent>();
                                 if (tc)
                                     {
-                                        tc->getSprite()->rotate(-15);
+                                        tc->getSprite()->rotate(-90);
                                     }
                             }
                     }
@@ -330,6 +334,28 @@ void levelEditor::update(sf::Time deltaTime)
 
         _mousePos = _mousePosToWorldCoord();
 		_selectedEntity = _level->getEntityAtPosition(_mousePos);
+
+        if (_selectedEntity || _holdingEntity)
+            {
+                gameObject *ent = nullptr;
+
+                if (_selectedEntity)
+                    {
+                        ent = _selectedEntity;
+                    }
+                else
+                    {
+                        ent = _holdingEntity;
+                    }
+
+                auto tc = ent->get<textureComponent>();
+                if (tc)
+                    {
+                        _entityBoundingBox.setSize(tc->getSize());
+                        _entityBoundingBox.setPosition(tc->getPosition());
+                    }
+            }
+
         if (_holdingEntity)
             {
                 auto tc = _holdingEntity->get<textureComponent>();
@@ -372,6 +398,12 @@ void levelEditor::update(sf::Time deltaTime)
 void levelEditor::render()
     {
         globals::_stateMachine->getWindow()->setView(_editorView);
+
+        if (_holdingEntity || _selectedEntity)
+            {
+                globals::_stateMachine->getWindow()->draw(_entityBoundingBox);
+            }
+
         handleUI();
     }
 

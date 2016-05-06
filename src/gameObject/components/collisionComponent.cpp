@@ -35,11 +35,6 @@ sf::Vector2f collisionComponent::_getOverlap(collisionComponent &other)
                             distance.first.y > 0 ? distance.second.y - distance.first.y : -distance.second.y - distance.first.y);
     }
 
-sf::FloatRect &collisionComponent::getBounds()
-    {
-        return _boundingBox;
-    }
-
 bool collisionComponent::getColliding()
     {
         return _colliding;
@@ -109,15 +104,16 @@ void collisionComponent::setBounds(sf::Vector2f size, sf::Vector2f offset)
         _positionOffset = offset;
     }
 
+sf::FloatRect collisionComponent::getBounds()
+    {
+        return _boundingBox;
+    }
+
 void collisionComponent::update()
     {
         auto objSprite = _obj->get<textureComponent>();
         if (objSprite)
             {
-                sf::Vector2f objPos = objSprite->getSprite()->getPosition();
-                _boundingBox.left = objPos.x + _positionOffset.x;
-                _boundingBox.top = objPos.y + _positionOffset.y;
-				_boundingBox.width = objSprite->getSize().x;
-				_boundingBox.height = objSprite->getSize().y;
+                _boundingBox = objSprite->getSprite()->getGlobalBounds();
             }
     }
