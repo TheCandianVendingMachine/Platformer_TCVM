@@ -138,14 +138,15 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
                                                 std::string controlName = root[objectName][comp][control]["key"].asString() + "_start";
 												std::string scriptPath = root[objectName][comp][control]["script"].asString();
 												std::string scriptName = root[objectName][comp][control]["func_start"].asString();
-                                                auto luaCall = globals::_scriptManager->registerLuaFunction(controlName, scriptPath, scriptName);
-                                                globals::_keyboardManager->add(control, key, [newObj, luaCall] () 
+												ic->addControl(controlName, key, true, GAME_STATE);
+												auto luaCall = globals::_scriptManager->registerLuaFunction(controlName, scriptPath, scriptName);
+												globals::_keyboardManager->changeFunction(controlName, [newObj, luaCall] () 
                                                     { 
 														if (luaCall) 
 															{
 																(*luaCall)(*newObj->getGameObjectHandle());
 															}
-                                                    }, true, GAME_STATE);
+                                                    });
                                             }
 
                                         if (endReal)
@@ -153,14 +154,15 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
 												std::string controlName = root[objectName][comp][control]["key"].asString() + "_end";
 												std::string scriptPath = root[objectName][comp][control]["script"].asString();
 												std::string scriptName = root[objectName][comp][control]["func_end"].asString();
-                                                auto luaCall = globals::_scriptManager->registerLuaFunction(controlName, scriptPath, scriptName);
-                                                globals::_keyboardManager->add(control, key, [newObj, luaCall] ()
-                                                    {
-                                                        if (luaCall) 
+												ic->addControl(controlName, key, false, GAME_STATE);
+												auto luaCall = globals::_scriptManager->registerLuaFunction(controlName, scriptPath, scriptName);
+												globals::_keyboardManager->changeFunction(controlName, [newObj, luaCall] () 
+                                                    { 
+														if (luaCall) 
 															{
 																(*luaCall)(*newObj->getGameObjectHandle());
 															}
-                                                    }, false, GAME_STATE);
+                                                    });
                                             }
                                     }
                             }

@@ -14,3 +14,17 @@ sf::Keyboard::Key inputComponent::setKey(const std::string &key)
         return sf::Keyboard::Key(keyNum);
 
     }
+
+void inputComponent::addControl(const std::string &controlName, sf::Keyboard::Key key, bool onPress, states state)
+	{
+		globals::_keyboardManager->add(controlName, key, onPress, state);
+		_allControls.push_back(controlName);
+	}
+
+inputComponent::~inputComponent()
+	{
+		for (auto &key : _allControls)
+			{
+				globals::_keyboardManager->remove(key);
+			}
+	}

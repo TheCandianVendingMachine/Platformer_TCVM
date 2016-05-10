@@ -69,10 +69,13 @@ luabridge::LuaRef *scriptManager::registerLuaFunction(const std::string &name, c
 	{
         globals::_logger->logToConsole("Adding Lua Function \"" + name + "\"\nwith script \"" + script + "\"\nat \"" + scriptPath + "\"");
 
-		luaL_dofile(_state, scriptPath.c_str());
-		luabridge::lua_pcall(_state, 0, 0, 0);
-		luabridge::LuaRef *ref = new luabridge::LuaRef(luabridge::getGlobal(_state, script.c_str()));
-		_luaFuncs[name] = ref;
+		if (_luaFuncs.find(name) == _luaFuncs.end()) 
+			{
+				luaL_dofile(_state, scriptPath.c_str());
+				luabridge::lua_pcall(_state, 0, 0, 0);
+				luabridge::LuaRef *ref = new luabridge::LuaRef(luabridge::getGlobal(_state, script.c_str()));
+				_luaFuncs[name] = ref;
+			}
 
 		return _luaFuncs[name];
 	}

@@ -2,6 +2,8 @@
 #include "input.hpp"
 #include "inputManager.hpp"
 
+#include "../utilities/logger/logger.hpp"
+
 template<typename T>
 void inputManager<T>::add(const std::string &name, T key, inputState inputState, states activeState)
     {
@@ -66,7 +68,7 @@ void inputManager<T>::add(const std::string &name, T key, bool onPress, states a
                 // user wants to change the inverse function
                 if (_inputs[name].onPress() != onPress)
                     {
-                        _inputs[name].setInverseFunction(onInput);
+						_inputs[name].setInverseFunction([] () {});
                     }
             }
 
