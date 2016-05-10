@@ -24,7 +24,7 @@ bool countdown::getRunning()
         return _running;
     }
 
-bool countdown::hasCountdownFinished()
+bool countdown::isDone()
     {
         if (_running)
             {
@@ -33,8 +33,6 @@ bool countdown::hasCountdownFinished()
                         _running = false;
                         return true;
                     }
-
-                return false;
             }
         
         return false;

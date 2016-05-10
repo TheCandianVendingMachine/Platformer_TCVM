@@ -8,7 +8,7 @@ end
 
 move_jump = function(ent)
 	if (ent:getCurrentState() ~= "jumping" and ent:getCurrentState() ~= "in_air") then
-		ent:setImpulse(ent:getImpulseX(), ent:getImpulseY() - 150 - (ent:getAcceleration()))
+		ent:setImpulse(ent:getImpulseX(), ent:getImpulseY() - 250 - (ent:getAcceleration()))
 		ent:setCurrentState("jumping")
 	end
 end
@@ -22,6 +22,6 @@ on_collide = function(ent, ent_other, offsetX, offsetY)
 		ent:setPos(ent:getPosX() + offsetX, ent:getPosY())
 	else
 		-- equal on both sides. Entity will move in diagonal direction
-	   ent:setPos(ent:getPosX() + offsetX, ent:getPosY() + offsetY)
+		ent:setPos(ent:getPosX() + offsetX, ent:getPosY() + offsetY)
    end
 end

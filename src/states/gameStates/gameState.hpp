@@ -5,10 +5,20 @@
 #include "state.hpp"
 #include "level.hpp"
 
-class gameState : public state
+#include "../managers/events/observer.hpp"
+
+#include <vector>
+#include <string>
+
+class gameState : public state, public observer
     {
         private:
             level _world;
+
+            unsigned int _currentLevel;
+            std::vector<std::string> _levelList;
+
+            bool _nextLevel;
 
         public:
             gameState();
@@ -19,6 +29,8 @@ class gameState : public state
             void update(sf::Time deltaTime);
 
             void cleanup();
+
+            void alert(eventData data);
 
             ~gameState();
 

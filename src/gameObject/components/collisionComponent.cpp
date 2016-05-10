@@ -59,9 +59,15 @@ bool collisionComponent::collide(gameObject *other)
 							{
 								auto obj = objSprite->getSprite();
 								sf::Vector2f overlap = _getOverlap(*otherCC);
-                        
+
 								if (!_onCollide.empty())
 									{
+                                        if (otherCC->getSurfaceType() == NON_COLLIDABLE)
+                                            {
+                                                overlap.x = 0.f;
+                                                overlap.y = 0.f;
+                                            }
+
 										globals::_scriptManager->callLuaFunc(_onCollide,
 											*_obj->getGameObjectHandle(), *other->getGameObjectHandle(),
 											overlap.x, overlap.y);
@@ -107,6 +113,16 @@ void collisionComponent::setBounds(sf::Vector2f size, sf::Vector2f offset)
 sf::FloatRect collisionComponent::getBounds()
     {
         return _boundingBox;
+    }
+
+void collisionComponent::setSurfaceType(surfaceType type)
+    {
+        _surfaceType = type;
+    }
+
+collisionComponent::surfaceType collisionComponent::getSurfaceType()
+    {
+        return _surfaceType;
     }
 
 void collisionComponent::update()

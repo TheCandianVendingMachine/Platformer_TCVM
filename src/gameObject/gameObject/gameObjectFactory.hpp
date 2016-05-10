@@ -25,8 +25,6 @@ class gameObjectFactory : public observer
 
             resourceManager<sf::Texture> _textureManager;
 
-            void loadJsonFile(const std::string &file, Json::Value *root);
-
         public:
             gameObjectFactory();
             
@@ -36,6 +34,8 @@ class gameObjectFactory : public observer
             void initializeJsonFile(const std::string &filepath);
             void deInitializeJsonFile(const std::string &filepath);
             void deInitializeJsonFile();
+
+            void clear();
 
             std::vector<gameObject*> *getGameObjects(const std::string &objectName);
 

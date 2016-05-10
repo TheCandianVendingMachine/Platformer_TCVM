@@ -10,10 +10,32 @@
 		{
 			"on_collide_script" : "",
 			"on_collide_func_name" : "",
+			"surface_type" : "collidable",
 			"bounding_box" :
 			{
 				"size_X" : 192,
 				"size_Y" : 32,
+				"pos_X" : 0,
+				"pos_Y" : 0
+			}
+		}
+	},
+	"exit" :
+	{
+		"textureComponent" :
+		{
+			"texture" : "assets/textures/exit.png",
+			"texture_name" : "exit"
+		},
+		"collisionComponent" :
+		{
+			"on_collide_script" : "assets/scripts/exit.lua",
+			"on_collide_func_name" : "on_collide",
+			"surface_type" : "non_collidable",
+			"bounding_box" :
+			{
+				"size_X" : 32,
+				"size_Y" : 64,
 				"pos_X" : 0,
 				"pos_Y" : 0
 			}
@@ -62,6 +84,7 @@
 		{
 			"on_collide_script" : "assets/scripts/player.lua",
 			"on_collide_func_name" : "on_collide",
+			"surface_type" : "collidable",
 			"bounding_box" :
 			{
 				"size_X" : 64,

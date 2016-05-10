@@ -14,6 +14,8 @@
 
 #include "../utilities/json/json/json.h"
 
+#include "../game/globals.hpp"
+
 class gameObject;
 
 class level
@@ -24,11 +26,10 @@ class level
             std::vector<gameObject*> _platforms;
             std::vector<gameObject*> _entities;
 
-            void loadJsonFile(const std::string &file, Json::Value *root);
-
         public:
             level();
 
+            void unloadLevel();
             void load(const std::string &levelPath);
             void save(const std::string &levelPath);
 
@@ -42,5 +43,7 @@ class level
             std::unordered_map<std::string, std::vector<std::string>> *getInitializedObjects();
 
             void removeEntity(gameObject *obj);
+
+            ~level();
 
     };

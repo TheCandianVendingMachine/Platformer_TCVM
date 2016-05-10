@@ -195,7 +195,7 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
                                 auto tc = _selectedEntity->get<textureComponent>();
                                 if (tc)
                                     {
-                                        tc->getSprite()->rotate(90);
+                                        tc->setRotation(tc->getRotation() + 90);
                                     }
                             }
                     }
@@ -209,7 +209,7 @@ levelEditor::levelEditor(level *lvl) : _gridSize(16)
                                 auto tc = _selectedEntity->get<textureComponent>();
                                 if (tc)
                                     {
-                                        tc->getSprite()->rotate(-90);
+                                        tc->setRotation(tc->getRotation() - 90);
                                     }
                             }
                     }
@@ -335,27 +335,6 @@ void levelEditor::update(sf::Time deltaTime)
         _mousePos = _mousePosToWorldCoord();
 		_selectedEntity = _level->getEntityAtPosition(_mousePos);
 
-        if (_selectedEntity || _holdingEntity)
-            {
-                gameObject *ent = nullptr;
-
-                if (_selectedEntity)
-                    {
-                        ent = _selectedEntity;
-                    }
-                else
-                    {
-                        ent = _holdingEntity;
-                    }
-
-                auto tc = ent->get<textureComponent>();
-                if (tc)
-                    {
-                        _entityBoundingBox.setSize(tc->getSize());
-                        _entityBoundingBox.setPosition(tc->getPosition());
-                    }
-            }
-
         if (_holdingEntity)
             {
                 auto tc = _holdingEntity->get<textureComponent>();
@@ -392,6 +371,28 @@ void levelEditor::update(sf::Time deltaTime)
                                     }
 							}
 					}
+            }
+
+        if (_selectedEntity || _holdingEntity)
+            {
+                gameObject *ent = nullptr;
+
+                if (_selectedEntity)
+                    {
+                        ent = _selectedEntity;
+                    }
+                else
+                    {
+                        ent = _holdingEntity;
+                    }
+
+                auto tc = ent->get<textureComponent>();
+                if (tc)
+                    {
+                        _entityBoundingBox.setSize(tc->getSize());
+                        _entityBoundingBox.setRotation(tc->getRotation());
+                        _entityBoundingBox.setPosition(tc->getPosition());
+                    }
             }
     }
 

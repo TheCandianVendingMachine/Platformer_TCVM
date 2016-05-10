@@ -13,6 +13,8 @@ extern "C"
 #include "../utilities/logger/logger.hpp"
 #include "../managers/events/eventManager.hpp"
 
+#include "functionFrontends.hpp"
+
 using namespace luabridge;
 scriptManager::scriptManager()
 	{
@@ -53,7 +55,8 @@ void scriptManager::initializeLuaHelpers()
             .addFunction("log", &luaGameObject::log)
             .addFunction("logToConsole", &luaGameObject::logToConsole)
 
-        .endClass();
+        .endClass()
+        .addFunction("sendEvent", &frontendFuncs::alert);
     }
 
 void scriptManager::callLuaScript(const std::string &scriptPath)

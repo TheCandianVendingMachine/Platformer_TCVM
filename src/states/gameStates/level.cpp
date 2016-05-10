@@ -10,29 +10,23 @@
 #include "../utilities/logger/logger.hpp"
 #include <fstream>
 
-void level::loadJsonFile(const std::string &file, Json::Value *root)
-    {
-        std::ifstream read(file);
-        try
-            {
-                read >> *root;
-            }
-        catch (std::exception &e)
-            {
-                globals::_logger->log(file + e.what());
-            }
-        read.close();
-    }
+#include "../utilities/loadJsonFile.hpp"
 
 level::level()
     {
         _factory.initializeJsonFile("assets/entities/default_entity_list.json");
     }
 
-void level::load(const std::string &levelPath)
+void level::unloadLevel()
     {
         _platforms.clear();
         _entities.clear();
+        _factory.clear();
+    }
+
+void level::load(const std::string &levelPath)
+    {
+        unloadLevel();
 
         Json::Value root;
         std::ifstream read(levelPath);
@@ -60,7 +54,7 @@ void level::load(const std::string &levelPath)
                     {
                         textureComp->setPosition(vars["position"]["X"].asFloat(), vars["position"]["Y"].asFloat());
                         textureComp->setSize(vars["size"]["X"].asFloat(), vars["size"]["Y"].asFloat());
-                        textureComp->getSprite()->setRotation(vars["rotation"].asFloat());
+                        textureComp->setRotation(vars["rotation"].asFloat());
                     }
 
                 _platforms.push_back(obj);
@@ -69,20 +63,19 @@ void level::load(const std::string &levelPath)
         members = root["level"]["entity"].getMemberNames();
         for (auto &ent : members)
             {
-                if (ent == "player")
+                auto vars = root["level"]["entity"][ent];
+
+                auto obj = _factory.addGameObject(ent);
+
+                auto textureComp = obj->get<textureComponent>();
+                if (textureComp)
                     {
-                        auto vars = root["level"]["entity"][ent];
-
-                        auto obj = _factory.addGameObject("player");
-                        auto textureComp = obj->get<textureComponent>();
-
-                        if(textureComp)
-                            {
-                                textureComp->setPosition(vars["position"]["X"].asFloat(), vars["position"]["Y"].asFloat());
-                            }
-
-                        _entities.push_back(obj);
+                        textureComp->setPosition(vars["position"]["X"].asFloat(), vars["position"]["Y"].asFloat());
+                        textureComp->setSize(vars["size"]["X"].asFloat(), vars["size"]["Y"].asFloat());
+                        textureComp->setRotation(vars["rotation"].asFloat());
                     }
+
+                _entities.push_back(obj);
             }
 
         globals::_logger->logToConsole("Level Loaded");
@@ -102,9 +95,9 @@ void level::save(const std::string &levelPath)
                 auto textureComp = platform->get<textureComponent>();
                 if (textureComp)
                     {
-                        pos = textureComp->getSprite()->getPosition();
+                        pos = textureComp->getPosition();
                         size = textureComp->getSize();
-                        angle = textureComp->getSprite()->getRotation();
+                        angle = textureComp->getRotation();
                     }
                 
                 root["level"]["platforms"]["platform" + std::to_string(platform->getID())]["position"]["X"] = pos.x;
@@ -118,19 +111,26 @@ void level::save(const std::string &levelPath)
         for (auto &ent : _entities)
             {
                 sf::Vector2f pos(0, 0);
+                sf::Vector2f size(0, 0);
+                float angle = 0.f;
 
                 auto textureComp = ent->get<textureComponent>();
                 if (textureComp)
                     {
-                        pos = textureComp->getSprite()->getPosition();
+                        pos = textureComp->getPosition();
+                        size = textureComp->getSize();
+                        angle = textureComp->getRotation();
                     }
-
+                
                 root["level"]["entity"][ent->getName()]["position"]["X"] = pos.x;
                 root["level"]["entity"][ent->getName()]["position"]["Y"] = pos.y;
+                root["level"]["entity"][ent->getName()]["size"]["X"] = size.x;
+                root["level"]["entity"][ent->getName()]["size"]["Y"] = size.y;
+                root["level"]["entity"][ent->getName()]["rotation"] = angle;
             }
 
         Json::Value loadedRoot;
-        loadJsonFile(levelPath, &loadedRoot);
+        ljf::loadJsonFile(levelPath, &loadedRoot);
         root["level_entity_lists"];
         auto members = loadedRoot["level_entity_lists"].getMemberNames();
         for (auto &entLists : members)
@@ -170,6 +170,14 @@ void level::update(sf::Time deltaTime)
                 auto cc = ent->get<collisionComponent>();
                 if (cc)
                     {
+                        for (auto &entCollide : _entities)
+                            {
+                                if (entCollide != ent)
+                                    {
+                                        cc->collide(entCollide);
+                                    }
+                            }
+
                         for (auto &platform : _platforms)
                             {
 								cc->collide(platform);
@@ -275,4 +283,8 @@ void level::removeEntity(gameObject *obj)
                 _factory.removeGameObject(obj);
                 return;
             }
+    }
+
+level::~level()
+    {
     }

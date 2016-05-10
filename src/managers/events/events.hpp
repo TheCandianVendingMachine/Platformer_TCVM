@@ -2,6 +2,8 @@
 // all possible events to be passed to the eventManager
 #pragma once
 
+#include <string>
+
 namespace nonGlobal
     {
         union data
@@ -26,6 +28,7 @@ enum events
     {
         RELOAD_ENTITY_LIST,
         LOAD_ENTITY_LIST,
+        NEXT_LEVEL,
     };
 
 struct eventData
@@ -38,10 +41,13 @@ struct eventData
         // what event will be passed through
         events _event;
 
-        eventData(events event) { _dataType = nonGlobal::NONE; _event = event; }
-        eventData(int data, events event) { _data.intDat = data, _dataType = nonGlobal::INTEGER; _event = event; }
-        eventData(float data, events event) { _data.floatDat = data, _dataType = nonGlobal::DOUBLE;_event = event; }
-        eventData(double data, events event) { _data.doubleDat = data, _dataType = nonGlobal::FLOAT;_event = event; }
-        eventData(const char *data, events event) { _data.stringDat = data, _dataType = nonGlobal::STRING; _event = event; }
+        // event ID
+        std::string _eventID;
+
+        eventData(events event, const std::string &id = "") { _dataType = nonGlobal::NONE; _event = event; _eventID = id; }
+        eventData(int data, events event, const std::string &id = "") { _data.intDat = data, _dataType = nonGlobal::INTEGER; _event = event; _eventID = id; }
+        eventData(float data, events event, const std::string &id = "") { _data.floatDat = data, _dataType = nonGlobal::DOUBLE;_event = event; _eventID = id; }
+        eventData(double data, events event, const std::string &id = "") { _data.doubleDat = data, _dataType = nonGlobal::FLOAT;_event = event; _eventID = id; }
+        eventData(const char *data, events event, const std::string &id = "") { _data.stringDat = data, _dataType = nonGlobal::STRING; _event = event; _eventID = id; }
 
     };

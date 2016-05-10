@@ -21,5 +21,5 @@ class countdown
             sf::Time getRemainingTime();
             bool getRunning();
 
-            bool hasCountdownFinished();
+            bool isDone();
     };

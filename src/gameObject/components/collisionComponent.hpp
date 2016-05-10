@@ -13,6 +13,13 @@ class gameObject;
 
 class collisionComponent : public component
     {
+        public:
+            enum surfaceType
+                {
+                    COLLIDABLE,
+                    NON_COLLIDABLE,
+                };
+
         private:
             sf::FloatRect _boundingBox;
             sf::Vector2f _positionOffset;
@@ -20,6 +27,8 @@ class collisionComponent : public component
             std::string _onCollide;
 
             bool _colliding;
+
+            surfaceType _surfaceType;
 
             std::pair<sf::Vector2f, sf::Vector2f> _getDistance(collisionComponent &other);
             sf::Vector2f _getOverlap(collisionComponent &other);
@@ -30,6 +39,9 @@ class collisionComponent : public component
 
             void setBounds(sf::Vector2f size, sf::Vector2f offset);
             sf::FloatRect getBounds();
+
+            void setSurfaceType(surfaceType type);
+            surfaceType getSurfaceType();
 
             void update();
             

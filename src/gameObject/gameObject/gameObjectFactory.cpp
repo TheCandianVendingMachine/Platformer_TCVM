@@ -9,25 +9,7 @@
 
 #include "../components/components.hpp"
 
-#include "../utilities/json/json/json.h"
-
-#include "../utilities/logger/logger.hpp"
-#include <fstream>
-#include <exception>
-
-void gameObjectFactory::loadJsonFile(const std::string &file, Json::Value *root)
-    {
-        std::ifstream read(file);
-        try
-            {
-                read >> *root;
-            }
-        catch (std::exception &e)
-            {
-                globals::_logger->log(file + e.what());
-            }
-        read.close();
-    }
+#include "../utilities/loadJsonFile.hpp"
 
 gameObjectFactory::gameObjectFactory()
     {
@@ -41,7 +23,7 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
 
         for (auto &init : _initializedFiles)
             {
-                loadJsonFile(init.first, &root);
+                ljf::loadJsonFile(init.first, &root);
             
                 bool addedComp = false;
 
@@ -97,12 +79,23 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
                                 std::string scriptPath = root[objectName][comp]["on_collide_script"].asString();
                                 std::string scriptName = root[objectName][comp]["on_collide_func_name"].asString();
 
+                                std::string surfaceType = root[objectName][comp]["surface_type"].asString();
 
                                 collisionComponent *cc = new collisionComponent();
+
+                                if (surfaceType == "collidable")
+                                    {
+                                        cc->setSurfaceType(collisionComponent::COLLIDABLE);
+                                    }
+                                else if (surfaceType == "non_collidable")
+                                    {
+                                        cc->setSurfaceType(collisionComponent::NON_COLLIDABLE);
+                                    }
+
                                 if (!scriptPath.empty() || !scriptName.empty())
                                     {
-                                        globals::_scriptManager->registerLuaFunction(objectName + scriptName, scriptPath, scriptName);
-                                        cc->setOnCollisionScript(objectName + scriptName);
+                                        globals::_scriptManager->registerLuaFunction(objectName + "_" + scriptName, scriptPath, scriptName);
+                                        cc->setOnCollisionScript(objectName + "_" + scriptName);
                                     }
                                 cc->setBounds(size, offset);
                                 cc->setGameObject(newObj);
@@ -145,7 +138,6 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
                                                 std::string controlName = root[objectName][comp][control]["key"].asString() + "_start";
 												std::string scriptPath = root[objectName][comp][control]["script"].asString();
 												std::string scriptName = root[objectName][comp][control]["func_start"].asString();
-                                                ic->setFuncCallStart(controlName);
                                                 auto luaCall = globals::_scriptManager->registerLuaFunction(controlName, scriptPath, scriptName);
                                                 globals::_keyboardManager->add(control, key, [newObj, luaCall] () 
                                                     { 
@@ -161,7 +153,6 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
 												std::string controlName = root[objectName][comp][control]["key"].asString() + "_end";
 												std::string scriptPath = root[objectName][comp][control]["script"].asString();
 												std::string scriptName = root[objectName][comp][control]["func_end"].asString();
-                                                ic->setFuncCallEnd(controlName);
                                                 auto luaCall = globals::_scriptManager->registerLuaFunction(controlName, scriptPath, scriptName);
                                                 globals::_keyboardManager->add(control, key, [newObj, luaCall] ()
                                                     {
@@ -230,7 +221,7 @@ void gameObjectFactory::initializeJsonFile(const std::string &filepath)
     {
         globals::_logger->logToConsole("Initializing \"" + filepath + "\"");
         Json::Value root;
-        loadJsonFile(filepath, &root);
+        ljf::loadJsonFile(filepath, &root);
 
         for (auto &obj : root.getMemberNames())
             {
@@ -253,7 +244,7 @@ void gameObjectFactory::deInitializeJsonFile(const std::string &filepath)
         globals::_logger->logToConsole("Deinitializing \"" + filepath + "\"");
 
         Json::Value root;
-        loadJsonFile(filepath, &root);
+        ljf::loadJsonFile(filepath, &root);
 
         _gameObjects.clear();
 
@@ -275,6 +266,25 @@ void gameObjectFactory::deInitializeJsonFile()
     {
         globals::_logger->logToConsole("Deinitializing all loaded Json files");
         _textureManager.removeAll();
+    }
+
+void gameObjectFactory::clear()
+    {
+        for (auto &ent : _gameObjects)
+            {
+                for (auto &entList : ent.second)
+                    {
+                        if (entList)
+                            {
+                                delete entList;
+                                entList = nullptr;
+                            }
+                    }
+
+                ent.second.clear();
+            }
+
+        _gameObjects.clear();
     }
 
 std::vector<gameObject*> *gameObjectFactory::getGameObjects(const std::string &objectName)
