@@ -1,0 +1,331 @@
+{
+	"level" : 
+	{
+		"entity" : 
+		{
+			"exit:1" : 
+			{
+				"position" : 
+				{
+					"X" : 1760,
+					"Y" : 816
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 32,
+					"Y" : 64
+				}
+			},
+			"platform:10" : 
+			{
+				"position" : 
+				{
+					"X" : 1728,
+					"Y" : 32
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 32,
+					"Y" : 336
+				}
+			},
+			"platform:11" : 
+			{
+				"position" : 
+				{
+					"X" : 64,
+					"Y" : 0
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 1696,
+					"Y" : 32
+				}
+			},
+			"platform:12" : 
+			{
+				"position" : 
+				{
+					"X" : 928,
+					"Y" : 560
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 32,
+					"Y" : -336
+				}
+			},
+			"platform:13" : 
+			{
+				"position" : 
+				{
+					"X" : 1504,
+					"Y" : 224
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 32,
+					"Y" : 1008
+				}
+			},
+			"platform:14" : 
+			{
+				"position" : 
+				{
+					"X" : 928,
+					"Y" : 192
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 608,
+					"Y" : 32
+				}
+			},
+			"platform:15" : 
+			{
+				"position" : 
+				{
+					"X" : 1504,
+					"Y" : 1232
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 1376,
+					"Y" : 32
+				}
+			},
+			"platform:16" : 
+			{
+				"position" : 
+				{
+					"X" : 1760,
+					"Y" : 336
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 288,
+					"Y" : 32
+				}
+			},
+			"platform:17" : 
+			{
+				"position" : 
+				{
+					"X" : 64,
+					"Y" : 192
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 592,
+					"Y" : 32
+				}
+			},
+			"platform:18" : 
+			{
+				"position" : 
+				{
+					"X" : 64,
+					"Y" : 32
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 32,
+					"Y" : 160
+				}
+			},
+			"platform:19" : 
+			{
+				"position" : 
+				{
+					"X" : 624,
+					"Y" : 224
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 32,
+					"Y" : 336
+				}
+			},
+			"platform:2" : 
+			{
+				"position" : 
+				{
+					"X" : 1760,
+					"Y" : 880
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 912,
+					"Y" : 32
+				}
+			},
+			"platform:20" : 
+			{
+				"position" : 
+				{
+					"X" : 1760,
+					"Y" : 448
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform:21" : 
+			{
+				"position" : 
+				{
+					"X" : 2048,
+					"Y" : 336
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 32,
+					"Y" : 464
+				}
+			},
+			"platform:22" : 
+			{
+				"position" : 
+				{
+					"X" : 1728,
+					"Y" : 1056
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform:3" : 
+			{
+				"position" : 
+				{
+					"X" : 2112,
+					"Y" : 1056
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform:4" : 
+			{
+				"position" : 
+				{
+					"X" : 656,
+					"Y" : 528
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 272,
+					"Y" : 32
+				}
+			},
+			"platform:5" : 
+			{
+				"position" : 
+				{
+					"X" : 2432,
+					"Y" : 1056
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 48,
+					"Y" : 32
+				}
+			},
+			"platform:6" : 
+			{
+				"position" : 
+				{
+					"X" : 2672,
+					"Y" : 1056
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 208,
+					"Y" : 32
+				}
+			},
+			"platform:7" : 
+			{
+				"position" : 
+				{
+					"X" : 2880,
+					"Y" : 1264
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 32,
+					"Y" : -496
+				}
+			},
+			"platform:8" : 
+			{
+				"position" : 
+				{
+					"X" : 2080,
+					"Y" : 768
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 800,
+					"Y" : 32
+				}
+			},
+			"platform:9" : 
+			{
+				"position" : 
+				{
+					"X" : 1728,
+					"Y" : 448
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 32,
+					"Y" : 464
+				}
+			},
+			"player:23" : 
+			{
+				"position" : 
+				{
+					"X" : 243.09446716308594,
+					"Y" : 95.100921630859375
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 64,
+					"Y" : 64
+				}
+			}
+		}
+	},
+	"level_entity_lists" : null
+}

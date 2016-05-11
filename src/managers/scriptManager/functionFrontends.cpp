@@ -1,6 +1,8 @@
 #include "functionFrontends.hpp"
 
 #include "../game/globals.hpp"
+#include "../utilities/logger/logger.hpp"
+#include "../states/gameStates/stateMachine.hpp"
 #include "../managers/events/eventManager.hpp"
 
 namespace frontendFuncs
@@ -15,4 +17,20 @@ namespace frontendFuncs
 
                 globals::_eventManager->alert(eventData(eventUsed));
             }
+
+        float getDeltaTime()
+            {
+                return globals::_stateMachine->getDeltaTime();
+            }
+
+        void log(const std::string &message)
+            {
+                globals::_logger->log(message);
+            }
+
+        void logToConsole(const std::string &message)
+            {
+                globals::_logger->logToConsole(message);
+            }
+
     }

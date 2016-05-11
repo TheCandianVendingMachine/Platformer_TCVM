@@ -51,12 +51,16 @@ void scriptManager::initializeLuaHelpers()
 
 			.addFunction("isType", &luaGameObject::isType)
 
-			.addFunction("getDeltaTime", &luaGameObject::getDeltaTime)
-            .addFunction("log", &luaGameObject::log)
-            .addFunction("logToConsole", &luaGameObject::logToConsole)
-
         .endClass()
-        .addFunction("sendEvent", &frontendFuncs::alert);
+        .addFunction("sendEvent", &frontendFuncs::alert)
+        .addFunction("getDeltaTime", &frontendFuncs::getDeltaTime)
+        .addFunction("log", &frontendFuncs::log)
+        .addFunction("logToConsole", &frontendFuncs::logToConsole);
+    }
+
+void scriptManager::runLua(const std::string &lua)
+    {
+        luaL_dostring(_state, lua.c_str());
     }
 
 void scriptManager::callLuaScript(const std::string &scriptPath)

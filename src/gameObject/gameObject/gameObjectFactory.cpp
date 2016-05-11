@@ -39,189 +39,253 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
                 ljf::loadJsonFile(init.first, &root);
             
                 bool addedComp = false;
+                bool addComponent = true;
 
                 auto obj = fetchFromPool(objectName);
                 if (obj)
                     {
-                        _gameObjects[objectName].push_back(obj);
                         _gameObjectPool.erase(std::find_if(_gameObjectPool.begin(), _gameObjectPool.end(), [obj] (gameObject *objPool) { return objPool->getID() == obj->getID(); }));
-                        return obj;
+                        addComponent = false;
                     }
                 else
                     {
-                        gameObject *newObj = new gameObject(objectName);
-                        for (auto &comp : root[objectName].getMemberNames())
+                        obj = new gameObject(objectName);
+                    }
+                        
+                
+                for (auto &comp : root[objectName].getMemberNames())
+                    {
+                        if (comp == "textureComponent")
                             {
-                                if (comp == "textureComponent")
+                                addedComp = true;
+
+                                std::string texturePath = root[objectName]["textureComponent"]["texture"].asString();
+                                std::string textureName = root[objectName]["textureComponent"]["texture_name"].asString();
+
+                                sf::Texture *texture = _textureManager.get(textureName, false);
+
+                                textureComponent *tc = nullptr;
+                                if (addComponent)
                                     {
-                                        addedComp = true;
-
-                                        std::string texturePath = root[objectName]["textureComponent"]["texture"].asString();
-                                        std::string textureName = root[objectName]["textureComponent"]["texture_name"].asString();
-
-                                        sf::Texture *texture;
-                                        textureComponent *tc = new textureComponent;
-								        tc->setGameObject(newObj);
-                                        texture = _textureManager.get(textureName, false);
-                                        if (texture)
-                                            {
-                                                tc->setTexture(*texture);
-                                            }
-
-                                        newObj->addComponent(std::type_index(typeid(textureComponent)), tc);
+                                        tc = new textureComponent;
+                                        obj->addComponent(std::type_index(typeid(textureComponent)), tc);
                                     }
-                                else if (comp == "movementComponent")
+                                else
                                     {
-                                        addedComp = true;
-
-                                        sf::Vector2f impulse(0, 0);
-
-                                        impulse.x = root[objectName][comp]["impulse"]["X"].asFloat();
-                                        impulse.y = root[objectName][comp]["impulse"]["Y"].asFloat();
-
-                                        float maxSpeed = root[objectName][comp]["max_speed"].asFloat();
-                                        float acceleration = root[objectName][comp]["acceleration"].asFloat();
-
-                                        movementComponent *mc = new movementComponent();
-                                        mc->setGameObject(newObj);
-                                        mc->move(impulse);
-
-                                        mc->setAcceleration(acceleration);
-                                        mc->setMaxSpeed(maxSpeed);
-
-                                        newObj->addComponent(std::type_index(typeid(movementComponent)), mc);
+                                        tc = obj->get<textureComponent>();
                                     }
-                                else if (comp == "collisionComponent")
+
+                                tc->setGameObject(obj);
+                                
+                                if (texture)
                                     {
-                                        addedComp = true;
-
-                                        sf::Vector2f size(root[objectName][comp]["bounding_box"]["size_X"].asFloat(), root[objectName][comp]["bounding_box"]["size_Y"].asFloat());
-                                        sf::Vector2f offset(root[objectName][comp]["bounding_box"]["pos_X"].asFloat(), root[objectName][comp]["bounding_box"]["pos_Y"].asFloat());
-
-                                        std::string scriptPath = root[objectName][comp]["on_collide_script"].asString();
-                                        std::string scriptName = root[objectName][comp]["on_collide_func_name"].asString();
-
-                                        std::string surfaceType = root[objectName][comp]["surface_type"].asString();
-
-                                        collisionComponent *cc = new collisionComponent();
-
-                                        if (surfaceType == "collidable")
-                                            {
-                                                cc->setSurfaceType(collisionComponent::COLLIDABLE);
-                                            }
-                                        else if (surfaceType == "non_collidable")
-                                            {
-                                                cc->setSurfaceType(collisionComponent::NON_COLLIDABLE);
-                                            }
-
-                                        if (!scriptPath.empty() || !scriptName.empty())
-                                            {
-                                                globals::_scriptManager->registerLuaFunction(objectName + "_" + scriptName, scriptPath, scriptName);
-                                                cc->setOnCollisionScript(objectName + "_" + scriptName);
-                                            }
-                                        cc->setBounds(size, offset);
-                                        cc->setGameObject(newObj);
-
-                                        newObj->addComponent(std::type_index(typeid(collisionComponent)), cc);
+                                        tc->setTexture(*texture);
                                     }
-                                else if (comp == "physicsComponent")
+
+                                obj->addComponent(std::type_index(typeid(textureComponent)), tc);
+                            }
+                        else if (comp == "movementComponent")
+                            {
+                                addedComp = true;
+
+                                sf::Vector2f impulse(0, 0);
+
+                                impulse.x = root[objectName][comp]["impulse"]["X"].asFloat();
+                                impulse.y = root[objectName][comp]["impulse"]["Y"].asFloat();
+
+                                float maxSpeed = root[objectName][comp]["max_speed"].asFloat();
+                                float acceleration = root[objectName][comp]["acceleration"].asFloat();
+
+                                movementComponent *mc = nullptr;
+                                if (addComponent)
                                     {
-                                        addedComp = true;
-
-                                        float gravity = root[objectName][comp]["gravity"].asFloat();
-                                        float terminalVelocity = root[objectName][comp]["terminal_velocity"].asFloat();
-
-                                        float friction = root[objectName][comp]["friction_coefficient"].asFloat();
-
-                                        physicsComponent *pc = new physicsComponent();
-                                        pc->setGravity(gravity);
-                                        pc->setTerminalVelocity(terminalVelocity);
-                                        pc->setFriction(friction);
-                                        pc->setGameObject(newObj);
-
-                                        newObj->addComponent(std::type_index(typeid(physicsComponent)), pc);
+                                        mc = new movementComponent();
+                                        obj->addComponent(std::type_index(typeid(movementComponent)), mc);
                                     }
-                                else if (comp == "inputComponent")
+                                else
                                     {
-                                        addedComp = true;
+                                        mc = obj->get<movementComponent>();
+                                    }
 
-                                        inputComponent *ic = new inputComponent();
-								        newObj->addComponent(std::type_index(typeid(inputComponent)), ic);
+                                mc->setGameObject(obj);
+                                mc->move(impulse);
 
-                                        for (auto &control : root[objectName][comp].getMemberNames())
-                                            {
-                                                sf::Keyboard::Key key = ic->setKey(root[objectName][comp][control]["key"].asString());
+                                mc->setAcceleration(acceleration);
+                                mc->setMaxSpeed(maxSpeed);
+                            }
+                        else if (comp == "collisionComponent")
+                            {
+                                addedComp = true;
+
+                                sf::Vector2f size(root[objectName][comp]["bounding_box"]["size_X"].asFloat(), root[objectName][comp]["bounding_box"]["size_Y"].asFloat());
+                                sf::Vector2f offset(root[objectName][comp]["bounding_box"]["pos_X"].asFloat(), root[objectName][comp]["bounding_box"]["pos_Y"].asFloat());
+
+                                std::string scriptPath = root[objectName][comp]["on_collide_script"].asString();
+                                std::string scriptName = root[objectName][comp]["on_collide_func_name"].asString();
+
+                                std::string surfaceType = root[objectName][comp]["surface_type"].asString();
+
+                                collisionComponent *cc = nullptr;
+                                if (addComponent)
+                                    {
+                                        cc = new collisionComponent;
+                                        obj->addComponent(std::type_index(typeid(collisionComponent)), cc);
+                                    }
+                                else
+                                    {
+                                        cc = obj->get<collisionComponent>();
+                                    }
+
+                                if (surfaceType == "collidable")
+                                    {
+                                        cc->setSurfaceType(collisionComponent::COLLIDABLE);
+                                    }
+                                else if (surfaceType == "non_collidable")
+                                    {
+                                        cc->setSurfaceType(collisionComponent::NON_COLLIDABLE);
+                                    }
+
+                                if (!scriptPath.empty() || !scriptName.empty())
+                                    {
+                                        globals::_scriptManager->registerLuaFunction(objectName + "_" + scriptName, scriptPath, scriptName);
+                                        cc->setOnCollisionScript(objectName + "_" + scriptName);
+                                    }
+                                cc->setBounds(size, offset);
+                                cc->setGameObject(obj);
+                            }
+                        else if (comp == "physicsComponent")
+                            {
+                                addedComp = true;
+
+                                float gravity = root[objectName][comp]["gravity"].asFloat();
+                                float terminalVelocity = root[objectName][comp]["terminal_velocity"].asFloat();
+
+                                float friction = root[objectName][comp]["friction_coefficient"].asFloat();
+
+                                physicsComponent *pc = nullptr;
+                                if (addComponent)
+                                    {
+                                        pc = new physicsComponent;
+                                        obj->addComponent(std::type_index(typeid(physicsComponent)), pc);
+                                    }
+                                else
+                                    {
+                                        pc = obj->get<physicsComponent>();
+                                    }
+                                pc->setGravity(gravity);
+                                pc->setTerminalVelocity(terminalVelocity);
+                                pc->setFriction(friction);
+                                pc->setGameObject(obj);
+                            }
+                        else if (comp == "inputComponent")
+                            {
+                                addedComp = true;
+
+                                inputComponent *ic = nullptr;
+                                if (addComponent)
+                                    {
+                                        ic = new inputComponent;
+                                        obj->addComponent(std::type_index(typeid(inputComponent)), ic);
+                                    }
+                                else
+                                    {
+                                        ic = obj->get<inputComponent>();
+                                    }
+                                
+                                for (auto &control : root[objectName][comp].getMemberNames())
+                                    {
+                                        sf::Keyboard::Key key = ic->setKey(root[objectName][comp][control]["key"].asString());
                                         
-                                                bool startReal = !root[objectName][comp][control]["func_start"].isNull();
-                                                bool endReal = !root[objectName][comp][control]["func_end"].isNull();
+                                        bool startReal = !root[objectName][comp][control]["func_start"].isNull();
+                                        bool endReal = !root[objectName][comp][control]["func_end"].isNull();
 
-                                                if (startReal)
-                                                    {
-                                                        std::string controlName = root[objectName][comp][control]["key"].asString() + "_start";
-												        std::string scriptPath = root[objectName][comp][control]["script"].asString();
-												        std::string scriptName = root[objectName][comp][control]["func_start"].asString();
-												        ic->addControl(controlName, key, true, GAME_STATE);
-												        auto luaCall = globals::_scriptManager->registerLuaFunction(controlName, scriptPath, scriptName);
-												        globals::_keyboardManager->changeFunction(controlName, [newObj, luaCall] () 
-                                                            { 
-														        if (luaCall) 
-															        {
-																        (*luaCall)(*newObj->getGameObjectHandle());
-															        }
-                                                            });
-                                                    }
+                                        if (startReal)
+                                            {
+                                                std::string controlName = root[objectName][comp][control]["key"].asString() + "_start";
+												std::string scriptPath = root[objectName][comp][control]["script"].asString();
+												std::string scriptName = root[objectName][comp][control]["func_start"].asString();
+												ic->addControl(controlName, key, true, GAME_STATE);
+												auto luaCall = globals::_scriptManager->registerLuaFunction(controlName, scriptPath, scriptName);
+												globals::_keyboardManager->changeFunction(controlName, [obj, luaCall] ()
+                                                    { 
+														if (luaCall) 
+															{
+																(*luaCall)(*obj->getGameObjectHandle());
+															}
+                                                    });
+                                            }
 
-                                                if (endReal)
-                                                    {
-												        std::string controlName = root[objectName][comp][control]["key"].asString() + "_end";
-												        std::string scriptPath = root[objectName][comp][control]["script"].asString();
-												        std::string scriptName = root[objectName][comp][control]["func_end"].asString();
-												        ic->addControl(controlName, key, false, GAME_STATE);
-												        auto luaCall = globals::_scriptManager->registerLuaFunction(controlName, scriptPath, scriptName);
-												        globals::_keyboardManager->changeFunction(controlName, [newObj, luaCall] () 
-                                                            { 
-														        if (luaCall) 
-															        {
-																        (*luaCall)(*newObj->getGameObjectHandle());
-															        }
-                                                            });
-                                                    }
+                                        if (endReal)
+                                            {
+												std::string controlName = root[objectName][comp][control]["key"].asString() + "_end";
+												std::string scriptPath = root[objectName][comp][control]["script"].asString();
+												std::string scriptName = root[objectName][comp][control]["func_end"].asString();
+												ic->addControl(controlName, key, false, GAME_STATE);
+												auto luaCall = globals::_scriptManager->registerLuaFunction(controlName, scriptPath, scriptName);
+												globals::_keyboardManager->changeFunction(controlName, [obj, luaCall] ()
+                                                    { 
+														if (luaCall) 
+															{
+																(*luaCall)(*obj->getGameObjectHandle());
+															}
+                                                    });
                                             }
                                     }
-						        else if (comp == "cameraComponent")
-							        {
-								        cameraComponent *cc = new cameraComponent;
-                                        newObj->addComponent(std::type_index(typeid(cameraComponent)), cc);
+                            }
+						else if (comp == "cameraComponent")
+							{
+                                addedComp = true;
 
-								        sf::Vector2f camSize(root[objectName][comp]["size"]["X"].asFloat(),
-													         root[objectName][comp]["size"]["Y"].asFloat());
-								        sf::Vector2f camOffset(root[objectName][comp]["offset"]["X"].asFloat(),
-													           root[objectName][comp]["offset"]["Y"].asFloat());
-
-                                        float followRadius = root[objectName][comp]["follow_radius"].asFloat();
-
-								        bool follow = root[objectName][comp]["follow_object"].asBool();
-
-								        cc->setGameObject(newObj);
-								        cc->setWindow(globals::_stateMachine->getWindow());
-								        cc->setCameraSize(camSize);
-								        cc->setCameraOffset(camOffset);
-                                        cc->setFollowRadius(followRadius);
-								        cc->setFollow(follow);
-							        }
-                                else if (comp == "stateComponent")
+                                cameraComponent *cc = nullptr;
+                                if (addComponent)
                                     {
-                                        stateComponent *sc = new stateComponent;
-                                        sc->setGameObject(newObj);
-                                        newObj->addComponent(std::type_index(typeid(stateComponent)), sc);
+                                        cc = new cameraComponent;
+                                        obj->addComponent(std::type_index(typeid(cameraComponent)), cc);
                                     }
-                            }
+                                else
+                                    {
+                                        cc = obj->get<cameraComponent>();
+                                    }
 
-                        if (addedComp)
+								sf::Vector2f camSize(root[objectName][comp]["size"]["X"].asFloat(),
+													    root[objectName][comp]["size"]["Y"].asFloat());
+								sf::Vector2f camOffset(root[objectName][comp]["offset"]["X"].asFloat(),
+													    root[objectName][comp]["offset"]["Y"].asFloat());
+
+                                float followRadius = root[objectName][comp]["follow_radius"].asFloat();
+
+								bool follow = root[objectName][comp]["follow_object"].asBool();
+
+								cc->setGameObject(obj);
+								cc->setWindow(globals::_stateMachine->getWindow());
+								cc->setCameraSize(camSize);
+								cc->setCameraOffset(camOffset);
+                                cc->setFollowRadius(followRadius);
+								cc->setFollow(follow);
+							}
+                        else if (comp == "stateComponent")
                             {
-                                _gameObjects[objectName].push_back(newObj);
-                                return newObj;
+                                addedComp = true;
+
+                                stateComponent *sc = nullptr;
+                                if (addComponent)
+                                    {
+                                        sc = new stateComponent;
+                                        obj->addComponent(std::type_index(typeid(stateComponent)), sc);
+                                    }
+                                else
+                                    {
+                                        sc = obj->get<stateComponent>();
+                                    }
+
+                                sc->setGameObject(obj);
                             }
+                    }
+
+                if (addedComp)
+                    {
+                        _gameObjects[objectName].push_back(obj);
+                        return obj;
                     }
             }
 
@@ -279,6 +343,7 @@ void gameObjectFactory::deInitializeJsonFile(const std::string &filepath)
                         if (comp == "textureComponent")
                             {
                                 _textureManager.remove(root[obj][comp]["texture_name"].asString());
+                                break;
                             }
                     }
             }

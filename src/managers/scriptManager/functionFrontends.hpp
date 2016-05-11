@@ -8,4 +8,10 @@
 namespace frontendFuncs
     {
         void alert(const std::string &event);
+
+        float getDeltaTime();
+
+        void log(const std::string &message);
+        void logToConsole(const std::string &message);
+
     }

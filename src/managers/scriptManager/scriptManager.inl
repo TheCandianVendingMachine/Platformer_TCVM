@@ -13,23 +13,6 @@ inline void scriptManager::registerFunctionToLua(const std::string &name, const 
 		_luaCFuncs[name] = func;
 	}
 
-inline void scriptManager::runLua(const std::string &lua)
-    {
-        luaL_dostring(_state, lua.c_str());
-    }
-
-template<typename Targ>
-void scriptManager::runLua(const std::string &lua, Targ &arg)
-    {
-        luaL_dostring(_state, lua.c_str());
-    }
-
-template<typename Targ, typename Targ2>
-void scriptManager::runLua(const std::string &lua, Targ &arg, Targ2 &arg2)
-    {
-        luaL_dostring(_state, lua.c_str());
-    }
-
 template<typename Targ>
 void scriptManager::registerFunctionToLua(const std::string &name, const std::string &_namespace, void(*func)(Targ))
 	{

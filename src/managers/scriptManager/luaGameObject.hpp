@@ -36,11 +36,6 @@ class luaGameObject
 			void setCurrentState(const std::string &state);
 			std::string getCurrentState();
 
-			float getDeltaTime();
-
-            void log(const std::string &message);
-            void logToConsole(const std::string &message);
-
 			bool isType(const std::string &entityName);
 
     };

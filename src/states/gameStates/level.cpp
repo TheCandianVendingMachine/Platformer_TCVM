@@ -69,6 +69,7 @@ void level::save(const std::string &levelPath)
     {
         if (!levelPath.empty())
             {
+                unsigned int entCount = 0;
                 Json::Value root;
                 root["level"]["entity"];
                 for (auto &ent : _entities)
@@ -85,7 +86,7 @@ void level::save(const std::string &levelPath)
                                 angle = textureComp->getRotation();
                             }
 
-                        std::string entName = ent->getName() + ":" + std::to_string(ent->getID());
+                        std::string entName = ent->getName() + ":" + std::to_string(++entCount);
 
                         root["level"]["entity"][entName]["position"]["X"] = pos.x;
                         root["level"]["entity"][entName]["position"]["Y"] = pos.y;

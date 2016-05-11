@@ -163,21 +163,6 @@ std::string luaGameObject::getCurrentState()
 		return "";
 	}
 
-float luaGameObject::getDeltaTime()
-	{
-		return globals::_stateMachine->getDeltaTime();
-	}
-
-void luaGameObject::log(const std::string &message)
-    {
-        globals::_logger->log(message);
-    }
-
-void luaGameObject::logToConsole(const std::string &message)
-    {
-        globals::_logger->logToConsole(message);
-    }
-
 bool luaGameObject::isType(const std::string &entityName)
 	{
 		return strfn::doesStringContain(_obj->getName(), entityName).second;

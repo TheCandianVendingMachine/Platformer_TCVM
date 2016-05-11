@@ -41,7 +41,10 @@ gameObject::~gameObject()
 
         for (auto &comp : _components)
             {
-                delete comp.second;
-                comp.second = nullptr;
+                if (comp.second)
+                    {
+                        delete comp.second;
+                        comp.second = nullptr;
+                    }
             }
     }

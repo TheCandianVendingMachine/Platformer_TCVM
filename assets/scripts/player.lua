@@ -1,14 +1,14 @@
 move_left = function(ent)
-	ent:setImpulse(ent:getImpulseX() - (ent:getAcceleration() * ent:getDeltaTime()), ent:getImpulseY())
+	ent:setImpulse(ent:getImpulseX() - (ent:getAcceleration() * getDeltaTime()), ent:getImpulseY())
 end
 
 move_right = function(ent)
-	ent:setImpulse(ent:getImpulseX() + (ent:getAcceleration() * ent:getDeltaTime()), ent:getImpulseY())
+	ent:setImpulse(ent:getImpulseX() + (ent:getAcceleration() * getDeltaTime()), ent:getImpulseY())
 end
 
 move_jump = function(ent)
 	if (ent:getCurrentState() ~= "jumping" and ent:getCurrentState() ~= "in_air") then
-		ent:setImpulse(ent:getImpulseX(), ent:getImpulseY() - 250 - (ent:getAcceleration()))
+		ent:setImpulse(ent:getImpulseX(), ent:getImpulseY() - 750)
 		ent:setCurrentState("jumping")
 	end
 end

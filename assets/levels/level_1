@@ -3,7 +3,7 @@
 	{
 		"entity" : 
 		{
-			"exit:6" : 
+			"exit:1" : 
 			{
 				"position" : 
 				{
@@ -17,7 +17,7 @@
 					"Y" : 64
 				}
 			},
-			"platform:0" : 
+			"platform:2" : 
 			{
 				"position" : 
 				{
@@ -31,7 +31,7 @@
 					"Y" : 32
 				}
 			},
-			"platform:1" : 
+			"platform:3" : 
 			{
 				"position" : 
 				{
@@ -45,7 +45,7 @@
 					"Y" : 32
 				}
 			},
-			"platform:2" : 
+			"platform:4" : 
 			{
 				"position" : 
 				{
@@ -59,7 +59,7 @@
 					"Y" : 32
 				}
 			},
-			"platform:3" : 
+			"platform:5" : 
 			{
 				"position" : 
 				{
@@ -73,7 +73,7 @@
 					"Y" : 32
 				}
 			},
-			"platform:4" : 
+			"platform:6" : 
 			{
 				"position" : 
 				{
@@ -101,7 +101,7 @@
 					"Y" : -16
 				}
 			},
-			"player:5" : 
+			"player:8" : 
 			{
 				"position" : 
 				{

@@ -1,0 +1,205 @@
+{
+	"level" : 
+	{
+		"entity" : 
+		{
+			"exit:1" : 
+			{
+				"position" : 
+				{
+					"X" : 688,
+					"Y" : -608
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 32,
+					"Y" : 64
+				}
+			},
+			"platform:10" : 
+			{
+				"position" : 
+				{
+					"X" : 752,
+					"Y" : 544
+				},
+				"rotation" : 90,
+				"size" : 
+				{
+					"X" : -128,
+					"Y" : 0
+				}
+			},
+			"platform:11" : 
+			{
+				"position" : 
+				{
+					"X" : 720,
+					"Y" : -672
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 16,
+					"Y" : 1376
+				}
+			},
+			"platform:12" : 
+			{
+				"position" : 
+				{
+					"X" : 176,
+					"Y" : 496
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform:13" : 
+			{
+				"position" : 
+				{
+					"X" : 528,
+					"Y" : 272
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform:2" : 
+			{
+				"position" : 
+				{
+					"X" : 16,
+					"Y" : -656
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 16,
+					"Y" : 1360
+				}
+			},
+			"platform:3" : 
+			{
+				"position" : 
+				{
+					"X" : 32,
+					"Y" : 144
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform:4" : 
+			{
+				"position" : 
+				{
+					"X" : 256,
+					"Y" : -80
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform:5" : 
+			{
+				"position" : 
+				{
+					"X" : 576,
+					"Y" : -192
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 48,
+					"Y" : 48
+				}
+			},
+			"platform:6" : 
+			{
+				"position" : 
+				{
+					"X" : 240,
+					"Y" : -320
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform:7" : 
+			{
+				"position" : 
+				{
+					"X" : 528,
+					"Y" : -544
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform:8" : 
+			{
+				"position" : 
+				{
+					"X" : 32,
+					"Y" : 688
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 688,
+					"Y" : 16
+				}
+			},
+			"platform:9" : 
+			{
+				"position" : 
+				{
+					"X" : 16,
+					"Y" : -672
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 704,
+					"Y" : 16
+				}
+			},
+			"player:14" : 
+			{
+				"position" : 
+				{
+					"X" : 88.783073425292969,
+					"Y" : 624
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 64,
+					"Y" : 64
+				}
+			}
+		}
+	},
+	"level_entity_lists" : null
+}

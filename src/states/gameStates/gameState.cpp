@@ -43,8 +43,6 @@ void gameState::initialize()
         _currentLevel = 0;
         if (!_levelList.empty())
             {
-                // Because the Json file reads the file and pushed to the stack, we need to reverse it
-                std::reverse(_levelList.begin(), _levelList.end());
                 _world.load(_levelList[_currentLevel]);
             }
     }
@@ -58,7 +56,7 @@ void gameState::update(sf::Time deltaTime)
     {
         if (_nextLevel)
             {
-                _world.unloadLevel();
+                //_world.unloadLevel();
                 if (_levelList.size() > (_currentLevel + 1))
                     {
                         _world.load(_levelList[++_currentLevel]);
