@@ -12,7 +12,7 @@ void game::initializeWindow()
         globals::_logger->logToConsole("Initializng window");
         
         app = new sf::RenderWindow(sf::VideoMode(1280, 720), "Window", sf::Style::Close);
-        app->setFramerateLimit(60.0f);
+        app->setFramerateLimit(1000.0f);
     }
 
 void game::initializeControls()
@@ -144,15 +144,15 @@ void game::start()
 
                 accumulator += deltaTime.asSeconds();
 
+                _stateMachine.setDeltaTime(deltaTime.asSeconds());
+
                 globals::_stateMachine->handleInput();
                 while (accumulator >= updateTime)
                     {
-                        globals::_stateMachine->tick(deltaTime);
+                        globals::_stateMachine->tick(sf::seconds(updateTime));
                         accumulator -= updateTime;
                     }
-                globals::_stateMachine->render();
-
-				_stateMachine.setDeltaTime(deltaTime.asSeconds());
+                globals::_stateMachine->render();	
             }
     }
 

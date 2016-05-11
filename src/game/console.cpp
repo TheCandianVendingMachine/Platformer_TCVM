@@ -25,6 +25,22 @@ bool console::_handleCommand(std::string command, std::string data)
             {
                 globals::_eventManager->alert(eventData(data.c_str(), LOAD_ENTITY_LIST));
             }
+        else if (command == "get_fps")
+            {
+                log(std::to_string(1 / globals::_stateMachine->getDeltaTime()));
+            }
+        else if (command == "clear")
+            {
+                _log.clear();
+            }
+        else if (command == "help")
+            {
+                log("All Possible Commands:");
+                for (auto &comand : _commands)
+                    {
+                        log(comand);
+                    }
+            }
         else
             {
                 log("Error: Command \"" + command + "\" is not real");
@@ -39,6 +55,9 @@ console::console()
         _commands.push_back("lua");
         _commands.push_back("reload_entity_list");
         _commands.push_back("load_entity_list");
+        _commands.push_back("get_fps");
+        _commands.push_back("clear");
+        _commands.push_back("help");
 
         _active = false;
         _logged = false;
@@ -68,10 +87,7 @@ void console::draw()
                                 std::string command = strfn::splitString(std::string(_inputBuffer), ' ').first;
                                 std::string data = strfn::splitString(std::string(_inputBuffer), ' ').second;
 
-                                if (_handleCommand(command, data))
-                                    {
-                                        log(_inputBuffer);
-                                    }
+                                _handleCommand(command, data);
 
                                 strcpy_s(_inputBuffer, "");
                             }
