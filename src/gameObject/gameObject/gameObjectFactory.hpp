@@ -20,10 +20,14 @@ class gameObjectFactory : public observer
     {
         private:
             std::unordered_map<std::string, std::vector<gameObject*>> _gameObjects;
+            // all game objects that have been initialized.
+            std::vector<gameObject*> _gameObjectPool;
             // file path, entity name
             std::unordered_map<std::string, std::vector<std::string>> _initializedFiles;
 
             resourceManager<sf::Texture> _textureManager;
+
+            gameObject *fetchFromPool(const std::string &name);
 
         public:
             gameObjectFactory();

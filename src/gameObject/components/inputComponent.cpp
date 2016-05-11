@@ -8,11 +8,10 @@ sf::Keyboard::Key inputComponent::setKey(const std::string &key)
     {
         Json::Value config;
         ljf::loadJsonFile("assets/config/controls.json", &config);
-
+        
         auto keyNum = config.get(key, config).asInt();
 
         return sf::Keyboard::Key(keyNum);
-
     }
 
 void inputComponent::addControl(const std::string &controlName, sf::Keyboard::Key key, bool onPress, states state)

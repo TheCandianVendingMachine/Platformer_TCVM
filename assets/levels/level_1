@@ -3,231 +3,116 @@
 	{
 		"entity" : 
 		{
-			"exit" : 
+			"exit:6" : 
 			{
 				"position" : 
 				{
-					"X" : 1232.1202392578125,
-					"Y" : -364.29876708984375
+					"X" : 1072,
+					"Y" : 256
 				},
 				"rotation" : 0,
 				"size" : 
 				{
-					"X" : 48,
-					"Y" : 76
+					"X" : 32,
+					"Y" : 64
 				}
 			},
-			"player" : 
+			"platform:0" : 
 			{
 				"position" : 
 				{
-					"X" : 42.334480285644531,
-					"Y" : 144.50007629394531
+					"X" : 144,
+					"Y" : 320
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform:1" : 
+			{
+				"position" : 
+				{
+					"X" : 336,
+					"Y" : 320
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform:2" : 
+			{
+				"position" : 
+				{
+					"X" : 528,
+					"Y" : 320
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform:3" : 
+			{
+				"position" : 
+				{
+					"X" : 720,
+					"Y" : 320
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform:4" : 
+			{
+				"position" : 
+				{
+					"X" : 912,
+					"Y" : 320
+				},
+				"rotation" : 0,
+				"size" : 
+				{
+					"X" : 192,
+					"Y" : 32
+				}
+			},
+			"platform:7" : 
+			{
+				"position" : 
+				{
+					"X" : 608,
+					"Y" : 224
+				},
+				"rotation" : 90,
+				"size" : 
+				{
+					"X" : 96,
+					"Y" : -16
+				}
+			},
+			"player:5" : 
+			{
+				"position" : 
+				{
+					"X" : 144,
+					"Y" : 256
 				},
 				"rotation" : 0,
 				"size" : 
 				{
 					"X" : 64,
 					"Y" : 64
-				}
-			}
-		},
-		"platforms" : 
-		{
-			"platform10" : 
-			{
-				"position" : 
-				{
-					"X" : 0,
-					"Y" : -368
-				},
-				"rotation" : 90,
-				"size" : 
-				{
-					"X" : 864,
-					"Y" : 32
-				}
-			},
-			"platform11" : 
-			{
-				"position" : 
-				{
-					"X" : -32,
-					"Y" : -400
-				},
-				"rotation" : 0,
-				"size" : 
-				{
-					"X" : 1344,
-					"Y" : 32
-				}
-			},
-			"platform12" : 
-			{
-				"position" : 
-				{
-					"X" : 192,
-					"Y" : 368
-				},
-				"rotation" : 0,
-				"size" : 
-				{
-					"X" : 192,
-					"Y" : 32
-				}
-			},
-			"platform13" : 
-			{
-				"position" : 
-				{
-					"X" : 240,
-					"Y" : 144
-				},
-				"rotation" : 0,
-				"size" : 
-				{
-					"X" : 75,
-					"Y" : 27.000015258789063
-				}
-			},
-			"platform14" : 
-			{
-				"position" : 
-				{
-					"X" : 0,
-					"Y" : 16
-				},
-				"rotation" : 0,
-				"size" : 
-				{
-					"X" : 192,
-					"Y" : 32
-				}
-			},
-			"platform15" : 
-			{
-				"position" : 
-				{
-					"X" : 1088,
-					"Y" : -288
-				},
-				"rotation" : 0,
-				"size" : 
-				{
-					"X" : 192,
-					"Y" : 32
-				}
-			},
-			"platform16" : 
-			{
-				"position" : 
-				{
-					"X" : 928,
-					"Y" : -176
-				},
-				"rotation" : 0,
-				"size" : 
-				{
-					"X" : 192,
-					"Y" : 32
-				}
-			},
-			"platform3" : 
-			{
-				"position" : 
-				{
-					"X" : 0,
-					"Y" : 464
-				},
-				"rotation" : 0,
-				"size" : 
-				{
-					"X" : 1280,
-					"Y" : 32
-				}
-			},
-			"platform4" : 
-			{
-				"position" : 
-				{
-					"X" : 928,
-					"Y" : -176
-				},
-				"rotation" : 270,
-				"size" : 
-				{
-					"X" : 192,
-					"Y" : 32
-				}
-			},
-			"platform5" : 
-			{
-				"position" : 
-				{
-					"X" : 896,
-					"Y" : -48
-				},
-				"rotation" : 0,
-				"size" : 
-				{
-					"X" : 384,
-					"Y" : 32
-				}
-			},
-			"platform6" : 
-			{
-				"position" : 
-				{
-					"X" : 272,
-					"Y" : -160
-				},
-				"rotation" : 0,
-				"size" : 
-				{
-					"X" : 192,
-					"Y" : 32
-				}
-			},
-			"platform7" : 
-			{
-				"position" : 
-				{
-					"X" : 608,
-					"Y" : -96
-				},
-				"rotation" : 0,
-				"size" : 
-				{
-					"X" : 192,
-					"Y" : 32
-				}
-			},
-			"platform8" : 
-			{
-				"position" : 
-				{
-					"X" : 512,
-					"Y" : 272
-				},
-				"rotation" : 0,
-				"size" : 
-				{
-					"X" : 192,
-					"Y" : 32
-				}
-			},
-			"platform9" : 
-			{
-				"position" : 
-				{
-					"X" : 1280,
-					"Y" : 496
-				},
-				"rotation" : 270,
-				"size" : 
-				{
-					"X" : 864,
-					"Y" : 32
 				}
 			}
 		}

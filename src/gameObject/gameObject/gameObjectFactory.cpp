@@ -11,6 +11,19 @@
 
 #include "../utilities/loadJsonFile.hpp"
 
+gameObject *gameObjectFactory::fetchFromPool(const std::string &name)
+    {
+        gameObject *retObj = nullptr;
+
+        auto it = std::find_if(_gameObjectPool.begin(), _gameObjectPool.end(), [name] (gameObject *obj) { return obj->getName() == name; });
+        if (it != _gameObjectPool.end())
+            {
+                retObj = *it;
+            }
+        
+        return retObj;
+    }
+
 gameObjectFactory::gameObjectFactory()
     {
         globals::_eventManager->subscribe(this, events::LOAD_ENTITY_LIST);
@@ -27,178 +40,188 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
             
                 bool addedComp = false;
 
-                gameObject *newObj = new gameObject(objectName);
-                for (auto &comp : root[objectName].getMemberNames())
+                auto obj = fetchFromPool(objectName);
+                if (obj)
                     {
-                        if (comp == "textureComponent")
-                            {
-                                addedComp = true;
-
-                                std::string texturePath = root[objectName]["textureComponent"]["texture"].asString();
-                                std::string textureName = root[objectName]["textureComponent"]["texture_name"].asString();
-
-                                sf::Texture *texture;
-                                textureComponent *tc = new textureComponent;
-								tc->setGameObject(newObj);
-                                texture = _textureManager.get(textureName, false);
-                                if (texture)
-                                    {
-                                        tc->setTexture(*texture);
-                                    }
-
-                                newObj->addComponent(std::type_index(typeid(textureComponent)), tc);
-                            }
-                        else if (comp == "movementComponent")
-                            {
-                                addedComp = true;
-
-                                sf::Vector2f impulse(0, 0);
-
-                                impulse.x = root[objectName][comp]["impulse"]["X"].asFloat();
-                                impulse.y = root[objectName][comp]["impulse"]["Y"].asFloat();
-
-                                float maxSpeed = root[objectName][comp]["max_speed"].asFloat();
-                                float acceleration = root[objectName][comp]["acceleration"].asFloat();
-
-                                movementComponent *mc = new movementComponent();
-                                mc->setGameObject(newObj);
-                                mc->move(impulse);
-
-                                mc->setAcceleration(acceleration);
-                                mc->setMaxSpeed(maxSpeed);
-
-                                newObj->addComponent(std::type_index(typeid(movementComponent)), mc);
-                            }
-                        else if (comp == "collisionComponent")
-                            {
-                                addedComp = true;
-
-                                sf::Vector2f size(root[objectName][comp]["bounding_box"]["size_X"].asFloat(), root[objectName][comp]["bounding_box"]["size_Y"].asFloat());
-                                sf::Vector2f offset(root[objectName][comp]["bounding_box"]["pos_X"].asFloat(), root[objectName][comp]["bounding_box"]["pos_Y"].asFloat());
-
-                                std::string scriptPath = root[objectName][comp]["on_collide_script"].asString();
-                                std::string scriptName = root[objectName][comp]["on_collide_func_name"].asString();
-
-                                std::string surfaceType = root[objectName][comp]["surface_type"].asString();
-
-                                collisionComponent *cc = new collisionComponent();
-
-                                if (surfaceType == "collidable")
-                                    {
-                                        cc->setSurfaceType(collisionComponent::COLLIDABLE);
-                                    }
-                                else if (surfaceType == "non_collidable")
-                                    {
-                                        cc->setSurfaceType(collisionComponent::NON_COLLIDABLE);
-                                    }
-
-                                if (!scriptPath.empty() || !scriptName.empty())
-                                    {
-                                        globals::_scriptManager->registerLuaFunction(objectName + "_" + scriptName, scriptPath, scriptName);
-                                        cc->setOnCollisionScript(objectName + "_" + scriptName);
-                                    }
-                                cc->setBounds(size, offset);
-                                cc->setGameObject(newObj);
-
-                                newObj->addComponent(std::type_index(typeid(collisionComponent)), cc);
-                            }
-                        else if (comp == "physicsComponent")
-                            {
-                                addedComp = true;
-
-                                float gravity = root[objectName][comp]["gravity"].asFloat();
-                                float terminalVelocity = root[objectName][comp]["terminal_velocity"].asFloat();
-
-                                float friction = root[objectName][comp]["friction_coefficient"].asFloat();
-
-                                physicsComponent *pc = new physicsComponent();
-                                pc->setGravity(gravity);
-                                pc->setTerminalVelocity(terminalVelocity);
-                                pc->setFriction(friction);
-                                pc->setGameObject(newObj);
-
-                                newObj->addComponent(std::type_index(typeid(physicsComponent)), pc);
-                            }
-                        else if (comp == "inputComponent")
-                            {
-                                addedComp = true;
-
-                                inputComponent *ic = new inputComponent();
-								newObj->addComponent(std::type_index(typeid(inputComponent)), ic);
-
-                                for (auto &control : root[objectName][comp].getMemberNames())
-                                    {
-                                        sf::Keyboard::Key key = ic->setKey(root[objectName][comp][control]["key"].asString());
-                                        
-                                        bool startReal = !root[objectName][comp][control]["func_start"].isNull();
-                                        bool endReal = !root[objectName][comp][control]["func_end"].isNull();
-
-                                        if (startReal)
-                                            {
-                                                std::string controlName = root[objectName][comp][control]["key"].asString() + "_start";
-												std::string scriptPath = root[objectName][comp][control]["script"].asString();
-												std::string scriptName = root[objectName][comp][control]["func_start"].asString();
-												ic->addControl(controlName, key, true, GAME_STATE);
-												auto luaCall = globals::_scriptManager->registerLuaFunction(controlName, scriptPath, scriptName);
-												globals::_keyboardManager->changeFunction(controlName, [newObj, luaCall] () 
-                                                    { 
-														if (luaCall) 
-															{
-																(*luaCall)(*newObj->getGameObjectHandle());
-															}
-                                                    });
-                                            }
-
-                                        if (endReal)
-                                            {
-												std::string controlName = root[objectName][comp][control]["key"].asString() + "_end";
-												std::string scriptPath = root[objectName][comp][control]["script"].asString();
-												std::string scriptName = root[objectName][comp][control]["func_end"].asString();
-												ic->addControl(controlName, key, false, GAME_STATE);
-												auto luaCall = globals::_scriptManager->registerLuaFunction(controlName, scriptPath, scriptName);
-												globals::_keyboardManager->changeFunction(controlName, [newObj, luaCall] () 
-                                                    { 
-														if (luaCall) 
-															{
-																(*luaCall)(*newObj->getGameObjectHandle());
-															}
-                                                    });
-                                            }
-                                    }
-                            }
-						else if (comp == "cameraComponent")
-							{
-								cameraComponent *cc = new cameraComponent;
-                                newObj->addComponent(std::type_index(typeid(cameraComponent)), cc);
-
-								sf::Vector2f camSize(root[objectName][comp]["size"]["X"].asFloat(),
-													 root[objectName][comp]["size"]["Y"].asFloat());
-								sf::Vector2f camOffset(root[objectName][comp]["offset"]["X"].asFloat(),
-													   root[objectName][comp]["offset"]["Y"].asFloat());
-
-                                float followRadius = root[objectName][comp]["follow_radius"].asFloat();
-
-								bool follow = root[objectName][comp]["follow_object"].asBool();
-
-								cc->setGameObject(newObj);
-								cc->setWindow(globals::_stateMachine->getWindow());
-								cc->setCameraSize(camSize);
-								cc->setCameraOffset(camOffset);
-                                cc->setFollowRadius(followRadius);
-								cc->setFollow(follow);
-							}
-                        else if (comp == "stateComponent")
-                            {
-                                stateComponent *sc = new stateComponent;
-                                sc->setGameObject(newObj);
-                                newObj->addComponent(std::type_index(typeid(stateComponent)), sc);
-                            }
+                        _gameObjects[objectName].push_back(obj);
+                        _gameObjectPool.erase(std::find_if(_gameObjectPool.begin(), _gameObjectPool.end(), [obj] (gameObject *objPool) { return objPool->getID() == obj->getID(); }));
+                        return obj;
                     }
-
-                if (addedComp)
+                else
                     {
-                        _gameObjects[objectName].push_back(newObj);
-                        return newObj;
+                        gameObject *newObj = new gameObject(objectName);
+                        for (auto &comp : root[objectName].getMemberNames())
+                            {
+                                if (comp == "textureComponent")
+                                    {
+                                        addedComp = true;
+
+                                        std::string texturePath = root[objectName]["textureComponent"]["texture"].asString();
+                                        std::string textureName = root[objectName]["textureComponent"]["texture_name"].asString();
+
+                                        sf::Texture *texture;
+                                        textureComponent *tc = new textureComponent;
+								        tc->setGameObject(newObj);
+                                        texture = _textureManager.get(textureName, false);
+                                        if (texture)
+                                            {
+                                                tc->setTexture(*texture);
+                                            }
+
+                                        newObj->addComponent(std::type_index(typeid(textureComponent)), tc);
+                                    }
+                                else if (comp == "movementComponent")
+                                    {
+                                        addedComp = true;
+
+                                        sf::Vector2f impulse(0, 0);
+
+                                        impulse.x = root[objectName][comp]["impulse"]["X"].asFloat();
+                                        impulse.y = root[objectName][comp]["impulse"]["Y"].asFloat();
+
+                                        float maxSpeed = root[objectName][comp]["max_speed"].asFloat();
+                                        float acceleration = root[objectName][comp]["acceleration"].asFloat();
+
+                                        movementComponent *mc = new movementComponent();
+                                        mc->setGameObject(newObj);
+                                        mc->move(impulse);
+
+                                        mc->setAcceleration(acceleration);
+                                        mc->setMaxSpeed(maxSpeed);
+
+                                        newObj->addComponent(std::type_index(typeid(movementComponent)), mc);
+                                    }
+                                else if (comp == "collisionComponent")
+                                    {
+                                        addedComp = true;
+
+                                        sf::Vector2f size(root[objectName][comp]["bounding_box"]["size_X"].asFloat(), root[objectName][comp]["bounding_box"]["size_Y"].asFloat());
+                                        sf::Vector2f offset(root[objectName][comp]["bounding_box"]["pos_X"].asFloat(), root[objectName][comp]["bounding_box"]["pos_Y"].asFloat());
+
+                                        std::string scriptPath = root[objectName][comp]["on_collide_script"].asString();
+                                        std::string scriptName = root[objectName][comp]["on_collide_func_name"].asString();
+
+                                        std::string surfaceType = root[objectName][comp]["surface_type"].asString();
+
+                                        collisionComponent *cc = new collisionComponent();
+
+                                        if (surfaceType == "collidable")
+                                            {
+                                                cc->setSurfaceType(collisionComponent::COLLIDABLE);
+                                            }
+                                        else if (surfaceType == "non_collidable")
+                                            {
+                                                cc->setSurfaceType(collisionComponent::NON_COLLIDABLE);
+                                            }
+
+                                        if (!scriptPath.empty() || !scriptName.empty())
+                                            {
+                                                globals::_scriptManager->registerLuaFunction(objectName + "_" + scriptName, scriptPath, scriptName);
+                                                cc->setOnCollisionScript(objectName + "_" + scriptName);
+                                            }
+                                        cc->setBounds(size, offset);
+                                        cc->setGameObject(newObj);
+
+                                        newObj->addComponent(std::type_index(typeid(collisionComponent)), cc);
+                                    }
+                                else if (comp == "physicsComponent")
+                                    {
+                                        addedComp = true;
+
+                                        float gravity = root[objectName][comp]["gravity"].asFloat();
+                                        float terminalVelocity = root[objectName][comp]["terminal_velocity"].asFloat();
+
+                                        float friction = root[objectName][comp]["friction_coefficient"].asFloat();
+
+                                        physicsComponent *pc = new physicsComponent();
+                                        pc->setGravity(gravity);
+                                        pc->setTerminalVelocity(terminalVelocity);
+                                        pc->setFriction(friction);
+                                        pc->setGameObject(newObj);
+
+                                        newObj->addComponent(std::type_index(typeid(physicsComponent)), pc);
+                                    }
+                                else if (comp == "inputComponent")
+                                    {
+                                        addedComp = true;
+
+                                        inputComponent *ic = new inputComponent();
+								        newObj->addComponent(std::type_index(typeid(inputComponent)), ic);
+
+                                        for (auto &control : root[objectName][comp].getMemberNames())
+                                            {
+                                                sf::Keyboard::Key key = ic->setKey(root[objectName][comp][control]["key"].asString());
+                                        
+                                                bool startReal = !root[objectName][comp][control]["func_start"].isNull();
+                                                bool endReal = !root[objectName][comp][control]["func_end"].isNull();
+
+                                                if (startReal)
+                                                    {
+                                                        std::string controlName = root[objectName][comp][control]["key"].asString() + "_start";
+												        std::string scriptPath = root[objectName][comp][control]["script"].asString();
+												        std::string scriptName = root[objectName][comp][control]["func_start"].asString();
+												        ic->addControl(controlName, key, true, GAME_STATE);
+												        auto luaCall = globals::_scriptManager->registerLuaFunction(controlName, scriptPath, scriptName);
+												        globals::_keyboardManager->changeFunction(controlName, [newObj, luaCall] () 
+                                                            { 
+														        if (luaCall) 
+															        {
+																        (*luaCall)(*newObj->getGameObjectHandle());
+															        }
+                                                            });
+                                                    }
+
+                                                if (endReal)
+                                                    {
+												        std::string controlName = root[objectName][comp][control]["key"].asString() + "_end";
+												        std::string scriptPath = root[objectName][comp][control]["script"].asString();
+												        std::string scriptName = root[objectName][comp][control]["func_end"].asString();
+												        ic->addControl(controlName, key, false, GAME_STATE);
+												        auto luaCall = globals::_scriptManager->registerLuaFunction(controlName, scriptPath, scriptName);
+												        globals::_keyboardManager->changeFunction(controlName, [newObj, luaCall] () 
+                                                            { 
+														        if (luaCall) 
+															        {
+																        (*luaCall)(*newObj->getGameObjectHandle());
+															        }
+                                                            });
+                                                    }
+                                            }
+                                    }
+						        else if (comp == "cameraComponent")
+							        {
+								        cameraComponent *cc = new cameraComponent;
+                                        newObj->addComponent(std::type_index(typeid(cameraComponent)), cc);
+
+								        sf::Vector2f camSize(root[objectName][comp]["size"]["X"].asFloat(),
+													         root[objectName][comp]["size"]["Y"].asFloat());
+								        sf::Vector2f camOffset(root[objectName][comp]["offset"]["X"].asFloat(),
+													           root[objectName][comp]["offset"]["Y"].asFloat());
+
+                                        float followRadius = root[objectName][comp]["follow_radius"].asFloat();
+
+								        bool follow = root[objectName][comp]["follow_object"].asBool();
+
+								        cc->setGameObject(newObj);
+								        cc->setWindow(globals::_stateMachine->getWindow());
+								        cc->setCameraSize(camSize);
+								        cc->setCameraOffset(camOffset);
+                                        cc->setFollowRadius(followRadius);
+								        cc->setFollow(follow);
+							        }
+                                else if (comp == "stateComponent")
+                                    {
+                                        stateComponent *sc = new stateComponent;
+                                        sc->setGameObject(newObj);
+                                        newObj->addComponent(std::type_index(typeid(stateComponent)), sc);
+                                    }
+                            }
+
+                        if (addedComp)
+                            {
+                                _gameObjects[objectName].push_back(newObj);
+                                return newObj;
+                            }
                     }
             }
 
@@ -213,6 +236,7 @@ void gameObjectFactory::removeGameObject(gameObject *obj)
                 auto it = std::remove_if(gameObj.second.begin(), gameObj.second.end(), [&obj] (gameObject *eObj) { return eObj->getID() == obj->getID(); });
                 if (it != gameObj.second.end())
                     {
+                        _gameObjectPool.push_back(*it);
                         gameObj.second.erase(it);
                         return;
                     }
@@ -248,8 +272,6 @@ void gameObjectFactory::deInitializeJsonFile(const std::string &filepath)
         Json::Value root;
         ljf::loadJsonFile(filepath, &root);
 
-        _gameObjects.clear();
-
         for (auto &obj : root.getMemberNames())
             {
                 for (auto &comp : root[obj].getMemberNames())
@@ -278,14 +300,12 @@ void gameObjectFactory::clear()
                     {
                         if (entList)
                             {
-                                delete entList;
-                                entList = nullptr;
+                                _gameObjectPool.push_back(entList);
                             }
                     }
 
                 ent.second.clear();
             }
-
         _gameObjects.clear();
     }
 
@@ -337,7 +357,20 @@ gameObjectFactory::~gameObjectFactory()
                                 entList = nullptr;
                             }
                     }
+
+                ent.second.clear();
             }
+        _gameObjects.clear();
+
+        for (auto &ent : _gameObjectPool)
+            {
+                if (ent)
+                    {
+                        delete ent;
+                        ent = nullptr;
+                    }
+            }
+        _gameObjectPool.clear();
 
         globals::_eventManager->unsubscribe(this, events::LOAD_ENTITY_LIST);
         globals::_eventManager->unsubscribe(this, events::RELOAD_ENTITY_LIST);
