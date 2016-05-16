@@ -42,6 +42,8 @@ class level
             std::unordered_map<std::string, std::vector<gameObject*>> *getAllGameObjects();
             std::unordered_map<std::string, std::vector<std::string>> *getInitializedObjects();
 
+			size_t getAmountOfGameObjectsOnLevel();
+
             void removeEntity(gameObject *obj);
 
             ~level();

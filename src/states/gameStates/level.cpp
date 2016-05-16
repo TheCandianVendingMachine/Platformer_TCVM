@@ -132,7 +132,7 @@ void level::update(sf::Time deltaTime)
                             {
                                 if (entCollide != ent)
                                     {
-                                        cc->collide(entCollide);
+										cc->collide(entCollide);
                                     }
                             }
                     }
@@ -197,6 +197,11 @@ std::unordered_map<std::string, std::vector<std::string>> *level::getInitialized
     {
         return _factory.getInitializedEntities();
     }
+
+size_t level::getAmountOfGameObjectsOnLevel()
+	{
+		return _entities.size();
+	}
 
 void level::removeEntity(gameObject *obj)
     {

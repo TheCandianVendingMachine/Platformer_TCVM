@@ -52,42 +52,46 @@ bool collisionComponent::collide(gameObject *other)
 		auto otherCC = other->get<collisionComponent>();
 		if (otherCC)
 			{
-				if (hasCollided(*otherCC))
+				if(!(otherCC->getBounds().left > (getBounds().left + (getBounds().width)) ||
+					(otherCC->getBounds().left + (otherCC->getBounds().width) < getBounds().left)))
 					{
-						auto objSprite = _obj->get<textureComponent>();
-						if (objSprite)
+						if (hasCollided(*otherCC))
 							{
-								auto obj = objSprite->getSprite();
-								sf::Vector2f overlap = _getOverlap(*otherCC);
-
-								if (!_onCollide.empty())
+								auto objSprite = _obj->get<textureComponent>();
+								if (objSprite)
 									{
-                                        if (otherCC->getSurfaceType() == NON_COLLIDABLE)
-                                            {
-                                                overlap.x = 0.f;
-                                                overlap.y = 0.f;
-                                            }
+										auto obj = objSprite->getSprite();
+										sf::Vector2f overlap = _getOverlap(*otherCC);
 
-										globals::_scriptManager->callLuaFunc(_onCollide,
-											*_obj->getGameObjectHandle(), *other->getGameObjectHandle(),
-											overlap.x, overlap.y);
-
-										auto sc = _obj->get<stateComponent>();
-										if (sc)
+										if (!_onCollide.empty())
 											{
-                                                // a hacky way to assume that we are on the ground. Does not work for objects that have a Y value in the bottom corners
-                                                // and its not to the left or right of the player
-                                            if (_boundingBox.top < otherCC->getBounds().top && 
-                                                !(_boundingBox.left < otherCC->getBounds().left || _boundingBox.left > otherCC->getBounds().left + otherCC->getBounds().width))
-                                                    {
-                                                        sc->setState(stateComponent::WALKING);
-                                                    }
-											}
-									}
+												if (otherCC->getSurfaceType() == NON_COLLIDABLE)
+													{
+														overlap.x = 0.f;
+														overlap.y = 0.f;
+													}
 
-								update();
-								_colliding = true;
-								return true;
+												globals::_scriptManager->callLuaFunc(_onCollide,
+													*_obj->getGameObjectHandle(), *other->getGameObjectHandle(),
+													overlap.x, overlap.y);
+
+												auto sc = _obj->get<stateComponent>();
+												if (sc)
+													{
+														// a hacky way to assume that we are on the ground. Does not work for objects that have a Y value in the bottom corners
+														// and its not to the left or right of the player
+													if (_boundingBox.top < otherCC->getBounds().top && 
+														!(_boundingBox.left < otherCC->getBounds().left || _boundingBox.left > otherCC->getBounds().left + otherCC->getBounds().width))
+															{
+																sc->setState(stateComponent::WALKING);
+															}
+													}
+											}
+
+										update();
+										_colliding = true;
+										return true;
+									}
 							}
 					}
 			}

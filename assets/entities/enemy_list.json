@@ -10,7 +10,7 @@
 			{
 				"on_collide_script" : "assets/scripts/spike.lua",
 				"on_collide_func_name" : "on_collide",
-				"surface_type" : "collideable",
+				"surface_type" : "non_collideable",
 				"bounding_box" :
 				{
 					"size_X" : 0,
