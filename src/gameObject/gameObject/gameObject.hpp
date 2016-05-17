@@ -4,7 +4,7 @@
 // allow for easy use.
 #pragma once
 
-#include <unordered_map>
+#include <map>
 #include <typeinfo>
 #include <typeindex>
 #include <memory>
@@ -17,7 +17,7 @@ class component;
 class gameObject
     {
         private:
-            std::unordered_map<std::type_index, component*> _components;
+            std::map<std::type_index, component*> _components;
             std::string _name;
 
             unsigned int _ID;
@@ -34,7 +34,7 @@ class gameObject
             void addComponent(std::type_index index, component *comp);
             template<typename T>
             T *get();
-			std::unordered_map<std::type_index, component*> *getAllComponents();
+			std::map<std::type_index, component*> *getAllComponents();
 
             luaGameObject *getGameObjectHandle();
 

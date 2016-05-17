@@ -11,6 +11,8 @@
 
 #include "../utilities/loadJsonFile.hpp"
 
+#include <algorithm>
+
 gameObject *gameObjectFactory::fetchFromPool(const std::string &name)
     {
         gameObject *retObj = nullptr;

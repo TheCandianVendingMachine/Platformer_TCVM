@@ -52,8 +52,10 @@ bool collisionComponent::collide(gameObject *other)
 		auto otherCC = other->get<collisionComponent>();
 		if (otherCC)
 			{
-				if(!(otherCC->getBounds().left > (getBounds().left + (getBounds().width)) ||
-					(otherCC->getBounds().left + (otherCC->getBounds().width) < getBounds().left)))
+				if(!((otherCC->getBounds().left > (getBounds().left + (getBounds().width)) ||
+					 (otherCC->getBounds().left + (otherCC->getBounds().width) < getBounds().left)) &&
+                     (otherCC->getBounds().top > (getBounds().top + (getBounds().height)) ||
+                     (otherCC->getBounds().top + (otherCC->getBounds().height) < getBounds().top))))
 					{
 						if (hasCollided(*otherCC))
 							{
