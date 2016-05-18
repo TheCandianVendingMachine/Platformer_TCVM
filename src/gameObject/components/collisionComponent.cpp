@@ -76,30 +76,16 @@ bool collisionComponent::collide(gameObject *other)
 												globals::_scriptManager->callLuaFunc(_onCollide,
 													*_obj->getGameObjectHandle(), *other->getGameObjectHandle(),
 													overlap.x, overlap.y);
-
-												auto sc = _obj->get<stateComponent>();
-												if (sc)
-													{
-														// a hacky way to assume that we are on the ground. Does not work for objects that have a Y value in the bottom corners
-														// and its not to the left or right of the player
-													    if (_boundingBox.top < otherCC->getBounds().top && 
-														  !(_boundingBox.left < otherCC->getBounds().left || _boundingBox.left > otherCC->getBounds().left + otherCC->getBounds().width))
-															{
-																sc->setState(stateComponent::WALKING);
-															}
-													}
 											}
 
 										update();
 										_colliding = true;
-										return true;
 									}
 							}
 					}
 			}
 
-		_colliding = false;
-        return false;
+		return _colliding;
     }
 
 collisionComponent::collisionComponent()

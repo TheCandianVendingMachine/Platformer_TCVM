@@ -19,26 +19,35 @@ void quadtree::_merge(quadtree *node)
             }
     }
 
-void quadtree::_undivide()
+bool quadtree::_undivide()
     {
+		if (_objectsInNode.size() > _maxGameObjects)
+			{
+				return false;
+			}
+			
         if (_nWest.get())
             {
-                _nWest->_undivide();
+				if (!_nWest->_undivide()) return false;
                 _merge(_nWest.get());
                 _nWest = nullptr;
 
-                _nEast->_undivide();
+				if (!_nEast->_undivide()) return false;
                 _merge(_nEast.get());
                 _nEast = nullptr;
 
-                _sWest->_undivide();
+                if(_sWest->_undivide()) return false;
                 _merge(_sWest.get());
                 _sWest = nullptr;
 
-                _sEast->_undivide();
+				if (_sEast->_undivide()) return false;
                 _merge(_sEast.get());
                 _sEast = nullptr;
+
+				return true;
             }
+
+		return false;
     }
 
 void quadtree::_divide()
@@ -109,8 +118,8 @@ void quadtree::loadLevelIntoTree(level &lvl)
 
 void quadtree::update(gameObject *obj)
     {
-        /*remove(obj);
-        insert(obj);*/
+        remove(obj);
+        insert(obj);
     }
 
 bool quadtree::remove(gameObject *obj)
@@ -119,10 +128,7 @@ bool quadtree::remove(gameObject *obj)
         if (it != _objectsInNode.end())
             {
                 _objectsInNode.erase(it);
-                if (getObjectsInTree() <= _maxGameObjects && getObjectsInTree() >= 0)
-                    {
-                        _undivide();
-                    }
+				_undivide();
                 return true;
             }
 

@@ -34,7 +34,7 @@ class quadtree
 
             void _merge(quadtree *node);
 
-            void _undivide();
+            bool _undivide();
 			void _divide();
 
 		public:

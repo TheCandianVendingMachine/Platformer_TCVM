@@ -8,9 +8,10 @@ end
 
 move_jump = function(ent)
 	if (ent:getCurrentState() ~= "jumping" and ent:getCurrentState() ~= "in_air") then
-		ent:setImpulse(ent:getImpulseX(), ent:getImpulseY() - 750)
+		
 		ent:setCurrentState("jumping")
 	end
+	ent:setImpulse(ent:getImpulseX(), ent:getImpulseY() - 750)
 end
 
 on_collide = function(ent, ent_other, offsetX, offsetY)

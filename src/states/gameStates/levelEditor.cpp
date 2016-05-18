@@ -352,6 +352,8 @@ void levelEditor::update(sf::Time deltaTime)
 							        {
 								        tc->setPosition(_mousePos);
 							        }
+
+								_level->getQuadTree()->update(_holdingEntity);
                             }
 					}
 				else
@@ -394,7 +396,6 @@ void levelEditor::update(sf::Time deltaTime)
                         _entityBoundingBox.setSize(tc->getSize());
                         _entityBoundingBox.setRotation(tc->getRotation());
                         _entityBoundingBox.setPosition(tc->getPosition());
-                        _level->getQuadTree()->update(ent);
                     }
             }
     }

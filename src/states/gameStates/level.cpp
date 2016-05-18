@@ -179,7 +179,11 @@ void level::update(sf::Time deltaTime)
 
 void level::draw(sf::RenderWindow &app)
     {
-        for (auto &ent : _entities)
+		sf::FloatRect camBound(
+			static_cast<sf::Vector2f>(app.getView().getCenter()) - sf::Vector2f(app.getView().getSize() / 1.5f),
+			app.getView().getSize() * 2.f);
+		auto objectsInNode = _quadtree.getAllObjectsWithinRange(camBound);
+        for (auto &ent : objectsInNode)
             {
                 auto textureComp = ent->get<textureComponent>();
                 if (textureComp)
