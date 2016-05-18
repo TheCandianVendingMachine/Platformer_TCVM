@@ -82,8 +82,8 @@ bool collisionComponent::collide(gameObject *other)
 													{
 														// a hacky way to assume that we are on the ground. Does not work for objects that have a Y value in the bottom corners
 														// and its not to the left or right of the player
-													if (_boundingBox.top < otherCC->getBounds().top && 
-														!(_boundingBox.left < otherCC->getBounds().left || _boundingBox.left > otherCC->getBounds().left + otherCC->getBounds().width))
+													    if (_boundingBox.top < otherCC->getBounds().top && 
+														  !(_boundingBox.left < otherCC->getBounds().left || _boundingBox.left > otherCC->getBounds().left + otherCC->getBounds().width))
 															{
 																sc->setState(stateComponent::WALKING);
 															}

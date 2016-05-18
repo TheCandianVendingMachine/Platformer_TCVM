@@ -394,6 +394,7 @@ void levelEditor::update(sf::Time deltaTime)
                         _entityBoundingBox.setSize(tc->getSize());
                         _entityBoundingBox.setRotation(tc->getRotation());
                         _entityBoundingBox.setPosition(tc->getPosition());
+                        _level->getQuadTree()->update(ent);
                     }
             }
     }

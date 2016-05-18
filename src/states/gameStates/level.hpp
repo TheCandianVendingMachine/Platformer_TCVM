@@ -16,12 +16,19 @@
 
 #include "../game/globals.hpp"
 
+#include "quadtree.hpp"
+
 class gameObject;
 
 class level
     {
         private:
             gameObjectFactory _factory;
+            gameObject *_player;
+
+            quadtree _quadtree;
+
+            sf::Vector2f _levelSize;
 
             std::vector<gameObject*> _platforms;
             std::vector<gameObject*> _entities;
@@ -43,6 +50,7 @@ class level
             std::unordered_map<std::string, std::vector<std::string>> *getInitializedObjects();
 
 			size_t getAmountOfGameObjectsOnLevel();
+            quadtree *getQuadTree();
 
             void removeEntity(gameObject *obj);
 

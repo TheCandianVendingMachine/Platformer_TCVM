@@ -82,6 +82,8 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
                                 if (texture)
                                     {
                                         tc->setTexture(*texture);
+                                        tc->setSize(static_cast<sf::Vector2f>(tc->getTexture()->getSize()));
+                                        tc->setRotation(0);
                                     }
 
                                 obj->addComponent(std::type_index(typeid(textureComponent)), tc);
@@ -424,8 +426,6 @@ gameObjectFactory::~gameObjectFactory()
                                 entList = nullptr;
                             }
                     }
-
-                ent.second.clear();
             }
         _gameObjects.clear();
 

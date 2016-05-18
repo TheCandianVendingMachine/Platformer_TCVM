@@ -7,20 +7,23 @@
 #include "../utilities/strFuncs.hpp"
 #include "../game/globals.hpp"
 
-#include "../utilities/logger/logger.hpp"
-#include <fstream>
+#include "stateMachine.hpp"
 
 #include "../utilities/loadJsonFile.hpp"
+
+#include "../utilities/logger/logger.hpp"
 
 level::level()
     {
         _factory.initializeJsonFile("assets/entities/default_entity_list.json");
+        _quadtree.setBounds(sf::FloatRect(sf::Vector2f(0, 0), sf::Vector2f(3000, 1500)));
     }
 
 void level::unloadLevel()
     {
         _entities.clear();
         _factory.clear();
+        _quadtree.clear();
     }
 
 void level::load(const std::string &levelPath)
@@ -43,26 +46,54 @@ void level::load(const std::string &levelPath)
                         _factory.initializeJsonFile(entLists);
                     }
 
+                sf::Vector2f displacementAmount(0, 0);
+                bool displacement = false;
+
                 members = root["level"]["entity"].getMemberNames();
                 for (auto &ent : members)
                     {
                         auto vars = root["level"]["entity"][ent];
 
-                        auto obj = _factory.addGameObject(strfn::splitString(ent, ':').first);
+                        std::string entName = strfn::splitString(ent, ':').first;
+                        auto obj = addEntity(entName);
 
                         auto textureComp = obj->get<textureComponent>();
                         if (textureComp)
                             {
-                                textureComp->setPosition(vars["position"]["X"].asFloat(), vars["position"]["Y"].asFloat());
+                                sf::Vector2f pos(vars["position"]["X"].asFloat(), vars["position"]["Y"].asFloat());
+                                if (pos.x < 0)
+                                    {
+                                        displacementAmount.x = abs(0 - pos.x);
+                                        displacement = true;
+                                    }
+                                if (pos.y < 0)
+                                    {
+                                        displacementAmount.y = abs(0 - pos.y);
+                                        displacement = true;
+                                    }
+
+                                textureComp->setPosition(pos);
                                 textureComp->setSize(vars["size"]["X"].asFloat(), vars["size"]["Y"].asFloat());
                                 textureComp->setRotation(vars["rotation"].asFloat());
                             }
+                    }
 
-                        _entities.push_back(obj);
+                if (displacement)
+                    {
+                        for (auto &ent : _entities)
+                            {
+                                auto tc = ent->get<textureComponent>();
+                                if (tc)
+                                    {
+                                        tc->setPosition(tc->getPosition() + displacementAmount);
+                                    }
+                            }
                     }
 
                 globals::_logger->logToConsole("Level Loaded");
             }
+
+        _quadtree.loadLevelIntoTree(*this);
     }
 
 void level::save(const std::string &levelPath)
@@ -117,22 +148,29 @@ void level::save(const std::string &levelPath)
 
 void level::update(sf::Time deltaTime)
     {
+        auto collisonComp = &collisionComponent();
+        if (_player)
+            {
+                collisonComp = _player->get<collisionComponent>();
+            }
+
         for (auto &ent : _entities)
             {
                 auto mc = ent->get<movementComponent>();
                 if (mc)
                     {
                         mc->update(deltaTime);
+                        _quadtree.update(ent);
                     }
-
-                auto cc = ent->get<collisionComponent>();
-                if (cc)
+                
+                if (collisonComp)
                     {
-                        for (auto &entCollide : _entities)
+                        auto objectsInNode = _quadtree.getAllObjectsWithinRange(collisonComp->getBounds());
+                        for (auto &collisionEnt : objectsInNode)
                             {
-                                if (entCollide != ent)
+                                if (collisionEnt->getID() != _player->getID())
                                     {
-										cc->collide(entCollide);
+                                        collisonComp->collide(collisionEnt);
                                     }
                             }
                     }
@@ -149,6 +187,8 @@ void level::draw(sf::RenderWindow &app)
                         textureComp->draw(app);
                     }
             }
+
+        _quadtree.draw(app);
     }
 
 gameObject* level::addEntity(const std::string &name)
@@ -157,6 +197,12 @@ gameObject* level::addEntity(const std::string &name)
         if (ent)
             {
                 _entities.push_back(ent);
+                _quadtree.insert(ent);
+            }
+
+        if (name == "player")
+            {
+                _player = ent;
             }
 
         return ent;
@@ -203,6 +249,11 @@ size_t level::getAmountOfGameObjectsOnLevel()
 		return _entities.size();
 	}
 
+quadtree *level::getQuadTree()
+    {
+        return &_quadtree;
+    }
+
 void level::removeEntity(gameObject *obj)
     {
         auto itEnt = std::remove_if(_entities.begin(), _entities.end(), [&obj] (gameObject *eObj) { return eObj->getID() == obj->getID(); });
@@ -210,6 +261,7 @@ void level::removeEntity(gameObject *obj)
             {
                 _entities.erase(itEnt);
                 _factory.removeGameObject(obj);
+                _quadtree.remove(obj);
                 return;
             }
 
@@ -218,6 +270,7 @@ void level::removeEntity(gameObject *obj)
             {
                 _platforms.erase(itPlat);
                 _factory.removeGameObject(obj);
+                _quadtree.remove(obj);
                 return;
             }
     }
