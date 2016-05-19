@@ -57,6 +57,9 @@ class quadtree
 			std::vector<gameObject*> getAllObjectsWithinRange(sf::FloatRect range);
             int getObjectsInTree();
 
+			std::vector<gameObject*> getObjectsInNode(sf::Vector2f pos);
+			quadtree *getNode(gameObject *obj);
+
             quadtree &operator=(const quadtree &other);
 
 	};

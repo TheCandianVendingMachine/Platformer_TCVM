@@ -21,12 +21,7 @@ void quadtree::_merge(quadtree *node)
 
 bool quadtree::_undivide()
     {
-		if (_objectsInNode.size() > _maxGameObjects)
-			{
-				return false;
-			}
-			
-        if (_nWest.get())
+        if (_objectsInNode.size() < _maxGameObjects && _nWest.get())
             {
 				if (!_nWest->_undivide()) return false;
                 _merge(_nWest.get());
@@ -118,8 +113,15 @@ void quadtree::loadLevelIntoTree(level &lvl)
 
 void quadtree::update(gameObject *obj)
     {
-        remove(obj);
-        insert(obj);
+		if (obj)
+			{
+				auto node = getNode(obj);
+				if (node)
+					{
+						node->remove(obj);
+						node->_parent->insert(obj);
+					}
+			}
     }
 
 bool quadtree::remove(gameObject *obj)
@@ -132,15 +134,13 @@ bool quadtree::remove(gameObject *obj)
                 return true;
             }
 
-        if (!_nWest.get())
+        if (_nWest.get())
             {
-                return false;
+				if (_nWest->remove(obj)) return true;
+				if (_nEast->remove(obj)) return true;
+				if (_sWest->remove(obj)) return true;
+				if (_sEast->remove(obj)) return true;
             }
-
-        if (_nWest->remove(obj)) return true;
-        if (_nEast->remove(obj)) return true;
-        if (_sWest->remove(obj)) return true;
-        if (_sEast->remove(obj)) return true;
 
         return false;
     }
@@ -163,7 +163,7 @@ bool quadtree::insert(gameObject *obj)
 						return true;
 					}
 
-				if (!_nWest.get()) 
+				if (!_nWest) 
 					{
 						_divide();
 					}
@@ -174,7 +174,6 @@ bool quadtree::insert(gameObject *obj)
 				if (_sEast->insert(obj)) return true;
 
                 globals::_logger->log("Cannot add \"" + obj->getName() + "\" into tree");
-				return false;
 			}
 
         return false;
@@ -275,6 +274,57 @@ int quadtree::getObjectsInTree()
 
         return amount;
     }
+
+std::vector<gameObject*> quadtree::getObjectsInNode(sf::Vector2f pos)
+	{
+		if (_bounds.contains(pos))
+			{
+				if (_nWest.get())
+					{
+						auto objectsNW = _nWest->getObjectsInNode(pos);
+						auto objectsNE = _nEast->getObjectsInNode(pos);
+						auto objectsSW = _sWest->getObjectsInNode(pos);
+						auto objectsSE = _sEast->getObjectsInNode(pos);
+
+						if (!objectsNW.empty())
+							{
+								return objectsNW;
+							}
+						else if (!objectsNE.empty())
+							{
+								return objectsNE;
+							}
+						else if (!objectsSW.empty())
+							{
+								return objectsSW;
+							}
+						else if (!objectsSE.empty())
+							{
+								return objectsSE;
+							}
+					}
+
+				return _objectsInNode;
+			}
+
+		return std::vector<gameObject*>();
+	}
+
+quadtree *quadtree::getNode(gameObject *obj)
+	{
+		auto it = std::find_if(_objectsInNode.begin(), _objectsInNode.end(), [obj](gameObject *objTest) { return objTest->getID() == obj->getID(); });
+		if (it != _objectsInNode.end())
+			{
+				return this;
+			}
+
+		if (_nWest->getNode(obj)) return _nWest.get();
+		if (_nEast->getNode(obj)) return _nEast.get();
+		if (_sWest->getNode(obj)) return _sWest.get();
+		if (_sEast->getNode(obj)) return _sEast.get();
+
+		return nullptr;
+	}
 
 quadtree &quadtree::operator=(const quadtree &other)
     {

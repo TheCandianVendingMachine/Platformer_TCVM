@@ -42,7 +42,8 @@ void levelEditor::handleUI()
 						ImGui::Text("X:"); ImGui::SameLine(32); ImGui::Text(std::to_string(_mousePos.x).c_str());
 						ImGui::Text("Y:"); ImGui::SameLine(32); ImGui::Text(std::to_string(_mousePos.y).c_str());
 
-						ImGui::Text("Amount of Objects:"); ImGui::SameLine(140); ImGui::Text(std::to_string(_level->getAmountOfGameObjectsOnLevel()).c_str());
+						ImGui::Text("Total Objects:"); ImGui::SameLine(140); ImGui::Text(std::to_string(_level->getAmountOfGameObjectsOnLevel()).c_str());
+						ImGui::Text("Objects In Node:"); ImGui::SameLine(140); ImGui::Text(std::to_string(_level->getQuadTree()->getObjectsInNode(_mousePosToWorldCoord()).size()).c_str());
                     }
                 ImGui::End();
 
