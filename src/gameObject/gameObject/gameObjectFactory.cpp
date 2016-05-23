@@ -46,7 +46,7 @@ gameObject *gameObjectFactory::addGameObject(const std::string &objectName)
                 auto obj = fetchFromPool(objectName);
                 if (obj)
                     {
-                        _gameObjectPool.erase(std::find_if(_gameObjectPool.begin(), _gameObjectPool.end(), [obj] (gameObject *objPool) { return objPool->getID() == obj->getID(); }));
+                        _gameObjectPool.erase(std::remove_if(_gameObjectPool.begin(), _gameObjectPool.end(), [obj] (gameObject *objPool) { return objPool->getID() == obj->getID(); }));
                         addComponent = false;
                     }
                 else
@@ -301,7 +301,7 @@ void gameObjectFactory::removeGameObject(gameObject *obj)
     {
         for (auto &gameObj : _gameObjects)
             {
-                auto it = std::remove_if(gameObj.second.begin(), gameObj.second.end(), [&obj] (gameObject *eObj) { return eObj->getID() == obj->getID(); });
+                auto it = std::find_if(gameObj.second.begin(), gameObj.second.end(), [obj] (gameObject *eObj) { return eObj->getID() == obj->getID(); });
                 if (it != gameObj.second.end())
                     {
                         _gameObjectPool.push_back(*it);

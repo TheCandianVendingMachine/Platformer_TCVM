@@ -56,7 +56,6 @@ void gameState::update(sf::Time deltaTime)
     {
         if (_nextLevel)
             {
-                //_world.unloadLevel();
                 if (_levelList.size() > (_currentLevel + 1))
                     {
                         _world.load(_levelList[++_currentLevel]);

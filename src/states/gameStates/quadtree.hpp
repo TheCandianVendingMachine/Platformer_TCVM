@@ -3,9 +3,9 @@
 #pragma once
 
 #include <SFML/Graphics/Rect.hpp>
-#include <vector>
-#include <memory>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <memory>
+#include <vector>
 
 class gameObject;
 class level;
@@ -17,48 +17,53 @@ namespace sf
 
 class quadtree
 	{
-		private:
-			std::vector<gameObject*> _objectsInNode;
+        private:
+            std::vector<gameObject*> _objectsInNode;
 
-			sf::FloatRect _bounds;
-            sf::RectangleShape _outline;
-
-			std::shared_ptr<quadtree> _nWest;
-			std::shared_ptr<quadtree> _nEast;
-			std::shared_ptr<quadtree> _sWest;
-			std::shared_ptr<quadtree> _sEast;
+            std::shared_ptr<quadtree> _nWest;
+            std::shared_ptr<quadtree> _nEast;
+            std::shared_ptr<quadtree> _sWest;
+            std::shared_ptr<quadtree> _sEast;
 
             quadtree *_parent;
 
-			const int _maxGameObjects;
+            sf::FloatRect _bound;
+            sf::RectangleShape _shape;
 
-            void _merge(quadtree *node);
+            bool _isBranch;
+            unsigned int _level;
 
-            bool _undivide();
-			void _divide();
+            const unsigned int _maxLevel;
+            const unsigned int _maxGameObjects;
 
-		public:
-			quadtree();
-			quadtree(sf::FloatRect size);
+        private:
+            void _divide();
+            void _undivide();
 
-            void setBounds(sf::FloatRect size);
-            // loads an initialized level into the quadtree, and adds all entities into tree
-            void loadLevelIntoTree(level &lvl);
-
-            void update(gameObject *obj);
-
-            bool remove(gameObject *obj);
-			bool insert(gameObject *obj);
+        public:
+            quadtree();
+            quadtree(sf::FloatRect bounds, quadtree *parent = nullptr, unsigned int level = 0);
 
             void clear();
 
+            void loadLevel(level &level);
+
+            bool add(gameObject *obj);
+            bool remove(gameObject *obj);
+
+            void update(gameObject *obj);
+
+            std::vector<gameObject*> getObjectsInRange(sf::FloatRect range);
+            std::vector<gameObject*> getObjects();
+
+            quadtree *getNode(gameObject *obj);
+            quadtree *getNode(sf::Vector2f pos);
+
+            unsigned int getAmountOfObjectsInNode();
+
             void draw(sf::RenderWindow &app);
 
-			std::vector<gameObject*> getAllObjectsWithinRange(sf::FloatRect range);
-            int getObjectsInTree();
-
-			std::vector<gameObject*> getObjectsInNode(sf::Vector2f pos);
-			quadtree *getNode(gameObject *obj);
+            sf::RectangleShape *getOutline();
 
             quadtree &operator=(const quadtree &other);
 

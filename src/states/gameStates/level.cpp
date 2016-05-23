@@ -16,7 +16,7 @@
 level::level()
     {
         _factory.initializeJsonFile("assets/entities/default_entity_list.json");
-        _quadtree.setBounds(sf::FloatRect(sf::Vector2f(0, 0), sf::Vector2f(3000, 1500)));
+        _quadtree = quadtree(sf::FloatRect(sf::Vector2f(0, 0), sf::Vector2f(3000, 1500)));
     }
 
 void level::unloadLevel()
@@ -87,13 +87,16 @@ void level::load(const std::string &levelPath)
                                     {
                                         tc->setPosition(tc->getPosition() + displacementAmount);
                                     }
+
+                                _quadtree.update(ent);
                             }
                     }
 
                 globals::_logger->logToConsole("Level Loaded");
             }
 
-        _quadtree.loadLevelIntoTree(*this);
+        _quadtree.clear();
+        _quadtree.loadLevel(*this);
     }
 
 void level::save(const std::string &levelPath)
@@ -165,12 +168,24 @@ void level::update(sf::Time deltaTime)
                 
                 if (collisonComp)
                     {
-                        auto objectsInNode = _quadtree.getAllObjectsWithinRange(collisonComp->getBounds());
+                        auto objectsInNode = _quadtree.getObjectsInRange(collisonComp->getBounds());
                         for (auto &collisionEnt : objectsInNode)
                             {
                                 if (collisionEnt->getID() != _player->getID())
                                     {
                                         collisonComp->collide(collisionEnt);
+                                    }
+
+                                auto cc = collisionEnt->get<collisionComponent>();
+                                if (cc && collisionEnt->getID() != _player->getID())
+                                    {
+                                        for (auto &otherCollisionEnt : objectsInNode)
+                                            {
+                                                if (otherCollisionEnt->getID() != collisionEnt->getID())
+                                                    {
+                                                        cc->collide(otherCollisionEnt);
+                                                    }
+                                            }
                                     }
                             }
                     }
@@ -182,8 +197,9 @@ void level::draw(sf::RenderWindow &app)
 		sf::FloatRect camBound(
 			static_cast<sf::Vector2f>(app.getView().getCenter()) - sf::Vector2f(app.getView().getSize() / 1.5f),
 			app.getView().getSize() * 2.f);
-		auto objectsInNode = _quadtree.getAllObjectsWithinRange(camBound);
-        for (auto &ent : objectsInNode)
+
+		auto objectsInNode = _quadtree.getObjectsInRange(camBound);
+        for (auto &ent : _entities)
             {
                 auto textureComp = ent->get<textureComponent>();
                 if (textureComp)
@@ -192,7 +208,6 @@ void level::draw(sf::RenderWindow &app)
                     }
             }
 
-        _quadtree.draw(app);
     }
 
 gameObject* level::addEntity(const std::string &name)
@@ -201,7 +216,7 @@ gameObject* level::addEntity(const std::string &name)
         if (ent)
             {
                 _entities.push_back(ent);
-                _quadtree.insert(ent);
+                _quadtree.add(ent);
             }
 
         if (name == "player")
@@ -260,22 +275,13 @@ quadtree *level::getQuadTree()
 
 void level::removeEntity(gameObject *obj)
     {
+        _quadtree.remove(obj);
+
         auto itEnt = std::remove_if(_entities.begin(), _entities.end(), [&obj] (gameObject *eObj) { return eObj->getID() == obj->getID(); });
         if (itEnt != _entities.end())
             {
                 _entities.erase(itEnt);
                 _factory.removeGameObject(obj);
-                _quadtree.remove(obj);
-                return;
-            }
-
-        auto itPlat = std::remove_if(_platforms.begin(), _platforms.end(), [&obj] (gameObject *eObj) { return eObj->getID() == obj->getID(); });
-        if (itPlat != _platforms.end())
-            {
-                _platforms.erase(itPlat);
-                _factory.removeGameObject(obj);
-                _quadtree.remove(obj);
-                return;
             }
     }
 

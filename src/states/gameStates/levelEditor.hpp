@@ -18,6 +18,7 @@
 
 class level;
 class gameObject;
+class quadtree;
 
 class levelEditor : public state, public observer
     {
@@ -31,12 +32,15 @@ class levelEditor : public state, public observer
             gameObject *_selectedEntity;
 			gameObject *_holdingEntity;
 
+            quadtree *_hoveringNode;
+
             std::string _placingEntity;
 
             sf::Vector2f _mousePos;
 
             const int _gridSize;
             bool _snapToGrid;
+            bool _drawQuadTree;
 
             sf::View _previousView;
             sf::View _editorView;

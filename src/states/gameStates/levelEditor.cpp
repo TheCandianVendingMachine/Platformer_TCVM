@@ -6,6 +6,7 @@
 #include "../game/globals.hpp"
 #include "../managers/scriptManager/scriptManager.hpp"
 #include "level.hpp"
+#include "quadtree.hpp"
 
 #include "../utilities/logger/logger.hpp"
 #include "../states/gameStates/stateMachine.hpp"
@@ -35,6 +36,8 @@ void levelEditor::handleUI()
             {
                 if (ImGui::Begin("Options"))
                     {
+                        ImGui::Checkbox("Draw Quadtree", &_drawQuadTree);
+
                         ImGui::Checkbox("Snap to grid", &_snapToGrid);
                         ImGui::Checkbox("Resize", &_resizing);
                         ImGui::Checkbox("Place Multiple", &_placeMultiple);
@@ -43,14 +46,22 @@ void levelEditor::handleUI()
 						ImGui::Text("Y:"); ImGui::SameLine(32); ImGui::Text(std::to_string(_mousePos.y).c_str());
 
 						ImGui::Text("Total Objects:"); ImGui::SameLine(140); ImGui::Text(std::to_string(_level->getAmountOfGameObjectsOnLevel()).c_str());
-						ImGui::Text("Objects In Node:"); ImGui::SameLine(140); ImGui::Text(std::to_string(_level->getQuadTree()->getObjectsInNode(_mousePosToWorldCoord()).size()).c_str());
+
+                        unsigned int amountOfObjects = 0;
+                        if (_hoveringNode)
+                            {
+                                amountOfObjects = _hoveringNode->getObjects().size();
+                                _hoveringNode->getOutline()->setOutlineColor(sf::Color::White);
+                            }
+						ImGui::Text("Objects In Node:"); ImGui::SameLine(140); ImGui::Text(std::to_string(amountOfObjects).c_str());
                     }
                 ImGui::End();
 
-				if (ImGui::Begin("Entity Data"))
+				if (ImGui::Begin("Data"))
 					{
 						if (_selectedEntity)
 							{
+                                ImGui::Text("Entity ID:"); ImGui::SameLine(32); ImGui::Text(std::to_string(_selectedEntity->getID()).c_str());
 								ImGui::Text("Components");
 								for (auto &comp : *_selectedEntity->getAllComponents())
 									{
@@ -338,6 +349,16 @@ void levelEditor::update(sf::Time deltaTime)
         _mousePos = _mousePosToWorldCoord();
 		_selectedEntity = _level->getEntityAtPosition(_mousePos);
 
+        if (_hoveringNode)
+            {
+                sf::Color normalColor(144, 40, 40, 200);
+                if (_hoveringNode->getOutline()->getOutlineColor() != normalColor)
+                    {
+                        _hoveringNode->getOutline()->setOutlineColor(normalColor);
+                    }
+            }
+        _hoveringNode = _level->getQuadTree()->getNode(_mousePos);
+
         if (_holdingEntity)
             {
                 auto tc = _holdingEntity->get<textureComponent>();
@@ -353,8 +374,6 @@ void levelEditor::update(sf::Time deltaTime)
 							        {
 								        tc->setPosition(_mousePos);
 							        }
-
-								_level->getQuadTree()->update(_holdingEntity);
                             }
 					}
 				else
@@ -376,6 +395,8 @@ void levelEditor::update(sf::Time deltaTime)
                                     }
 							}
 					}
+
+                _level->getQuadTree()->update(_holdingEntity);
             }
 
         if (_selectedEntity || _holdingEntity)
@@ -391,6 +412,7 @@ void levelEditor::update(sf::Time deltaTime)
                         ent = _holdingEntity;
                     }
 
+                _hoveringNode = _level->getQuadTree()->getNode(ent);
                 auto tc = ent->get<textureComponent>();
                 if (tc)
                     {
@@ -408,6 +430,11 @@ void levelEditor::render()
         if (_holdingEntity || _selectedEntity)
             {
                 globals::_stateMachine->getWindow()->draw(_entityBoundingBox);
+            }
+
+        if (_drawQuadTree)
+            {
+                _level->getQuadTree()->draw(*globals::_stateMachine->getWindow());
             }
 
         handleUI();
