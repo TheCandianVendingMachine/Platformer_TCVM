@@ -4,9 +4,28 @@
 #include "../gameObject/gameObject/gameObject.hpp"
 #include "../gameObject/components/components.hpp"
 
+#include "../utilities/logger/logger.hpp"
+
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 #include <iterator>
+#include <set>
+
+void quadtree::_getRidOfDuplicates()
+	{
+		std::set<gameObject*> s;
+		unsigned size = _objectsInNode.size();
+		for (unsigned i = 0; i < size; ++i) s.insert(_objectsInNode[i]);
+		_objectsInNode.assign(s.begin(), s.end());
+	}
+
+void quadtree::_getRidOfDuplicates(std::vector<gameObject*> &vec)
+	{
+		std::set<gameObject*> s;
+		unsigned size = vec.size();
+		for (unsigned i = 0; i < size; ++i) s.insert(vec[i]);
+		vec.assign(s.begin(), s.end());
+	}
 
 void quadtree::_divide()
     {
@@ -52,13 +71,13 @@ void quadtree::_undivide()
         _sEast = nullptr;
     }
 
-quadtree::quadtree() : _maxGameObjects(3), _maxLevel(7)
+quadtree::quadtree() : _maxGameObjects(3), _maxLevel(5)
     {
         _bound = sf::FloatRect();
         _isBranch = false;
     }
 
-quadtree::quadtree(sf::FloatRect bounds, quadtree *parent, unsigned int level) : _maxGameObjects(3), _maxLevel(7)
+quadtree::quadtree(sf::FloatRect bounds, quadtree *parent, unsigned int level) : _maxGameObjects(3), _maxLevel(5)
     {
         _parent = parent;
 
@@ -116,7 +135,7 @@ bool quadtree::add(gameObject *obj)
             {
                 auto pos = tc->getPosition();
                 auto size = tc->getSize();
-                if (_bound.contains(pos))
+                if (_bound.intersects(sf::FloatRect(pos, size)))
                     {
                         if ((_objectsInNode.size() < _maxGameObjects && !_isBranch) || !(_level != _maxLevel))
                             {
@@ -161,10 +180,12 @@ bool quadtree::remove(gameObject *obj)
 
         if (_nWest)
             {
-                if (_nWest->remove(obj)) return true;
-                if (_nEast->remove(obj)) return true;
-                if (_sWest->remove(obj)) return true;
-                if (_sEast->remove(obj)) return true;
+				bool removed = false;
+				removed |= _nWest->remove(obj);
+				removed |= _nEast->remove(obj);
+				removed |= _sWest->remove(obj);
+				removed |= _sEast->remove(obj);
+				return removed;
             }
 
         return false;
@@ -172,18 +193,8 @@ bool quadtree::remove(gameObject *obj)
 
 void quadtree::update(gameObject *obj)
     {
-        auto node = getNode(obj);
-        if (node)
-            {
-                if (node->_parent)
-                    {
-                        node->remove(obj);
-                        if (!node->_parent->add(obj))
-                            {
-                                add(obj);
-                            }
-                    }
-            }
+		remove(obj);
+		add(obj);
     }
 
 std::vector<gameObject*> quadtree::getObjectsInRange(sf::FloatRect range)
@@ -205,6 +216,8 @@ std::vector<gameObject*> quadtree::getObjectsInRange(sf::FloatRect range)
 
                         objects = _sEast->getObjectsInRange(range);
                         retVec.insert(retVec.end(), objects.begin(), objects.end());
+
+						_getRidOfDuplicates(retVec);
 
                         return retVec;
                     }

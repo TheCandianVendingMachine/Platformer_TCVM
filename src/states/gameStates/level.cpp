@@ -87,8 +87,6 @@ void level::load(const std::string &levelPath)
                                     {
                                         tc->setPosition(tc->getPosition() + displacementAmount);
                                     }
-
-                                _quadtree.update(ent);
                             }
                     }
 

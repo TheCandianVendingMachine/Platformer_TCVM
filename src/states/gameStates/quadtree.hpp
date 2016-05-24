@@ -37,6 +37,9 @@ class quadtree
             const unsigned int _maxGameObjects;
 
         private:
+			void _getRidOfDuplicates();
+			void _getRidOfDuplicates(std::vector<gameObject*> &vec);
+
             void _divide();
             void _undivide();
 
