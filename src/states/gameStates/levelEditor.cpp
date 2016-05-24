@@ -41,27 +41,27 @@ void levelEditor::handleUI()
                         ImGui::Checkbox("Snap to grid", &_snapToGrid);
                         ImGui::Checkbox("Resize", &_resizing);
                         ImGui::Checkbox("Place Multiple", &_placeMultiple);
-
-						ImGui::Text("X:"); ImGui::SameLine(32); ImGui::Text(std::to_string(_mousePos.x).c_str());
-						ImGui::Text("Y:"); ImGui::SameLine(32); ImGui::Text(std::to_string(_mousePos.y).c_str());
-
-						ImGui::Text("Total Objects:"); ImGui::SameLine(140); ImGui::Text(std::to_string(_level->getAmountOfGameObjectsOnLevel()).c_str());
-
-                        unsigned int amountOfObjects = 0;
-                        if (_hoveringNode)
-                            {
-                                amountOfObjects = _hoveringNode->getObjects().size();
-                                _hoveringNode->getOutline()->setOutlineColor(sf::Color::White);
-                            }
-						ImGui::Text("Objects In Node:"); ImGui::SameLine(140); ImGui::Text(std::to_string(amountOfObjects).c_str());
                     }
                 ImGui::End();
 
 				if (ImGui::Begin("Data"))
 					{
+                        ImGui::Text("X:"); ImGui::SameLine(32); ImGui::Text(std::to_string(_mousePos.x).c_str());
+                        ImGui::Text("Y:"); ImGui::SameLine(32); ImGui::Text(std::to_string(_mousePos.y).c_str());
+
+                        ImGui::Text("Total Objects:"); ImGui::SameLine(125); ImGui::Text(std::to_string(_level->getAmountOfGameObjectsOnLevel()).c_str());
+
+                        if (_hoveringNode)
+                            {
+                                unsigned int amountOfObjects = 0;
+                                amountOfObjects = _hoveringNode->getObjects().size();
+                                ImGui::Text("Objects In Node:"); ImGui::SameLine(125); ImGui::Text(std::to_string(amountOfObjects).c_str());
+                                ImGui::Text("Node Depth:"); ImGui::SameLine(125); ImGui::Text(std::to_string(_hoveringNode->getLevel()).c_str());
+                            }
+						
 						if (_selectedEntity)
 							{
-                                ImGui::Text("Entity ID:"); ImGui::SameLine(32); ImGui::Text(std::to_string(_selectedEntity->getID()).c_str());
+                                ImGui::Text("Entity ID:"); ImGui::SameLine(125); ImGui::Text(std::to_string(_selectedEntity->getID()).c_str());
 								ImGui::Text("Components");
 								for (auto &comp : *_selectedEntity->getAllComponents())
 									{
@@ -358,6 +358,10 @@ void levelEditor::update(sf::Time deltaTime)
                     }
             }
         _hoveringNode = _level->getQuadTree()->getNode(_mousePos);
+        if (_hoveringNode)
+            {
+                _hoveringNode->getOutline()->setOutlineColor(sf::Color::White);
+            }
 
         if (_holdingEntity)
             {

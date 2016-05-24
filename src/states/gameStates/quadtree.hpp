@@ -64,6 +64,7 @@ class quadtree
             void draw(sf::RenderWindow &app);
 
             sf::RectangleShape *getOutline();
+            unsigned int getLevel() const;
 
             quadtree &operator=(const quadtree &other);
 

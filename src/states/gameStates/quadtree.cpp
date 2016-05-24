@@ -52,13 +52,13 @@ void quadtree::_undivide()
         _sEast = nullptr;
     }
 
-quadtree::quadtree() : _maxGameObjects(3), _maxLevel(3)
+quadtree::quadtree() : _maxGameObjects(3), _maxLevel(7)
     {
         _bound = sf::FloatRect();
         _isBranch = false;
     }
 
-quadtree::quadtree(sf::FloatRect bounds, quadtree *parent, unsigned int level) : _maxGameObjects(3), _maxLevel(5)
+quadtree::quadtree(sf::FloatRect bounds, quadtree *parent, unsigned int level) : _maxGameObjects(3), _maxLevel(7)
     {
         _parent = parent;
 
@@ -115,6 +115,7 @@ bool quadtree::add(gameObject *obj)
         if (tc)
             {
                 auto pos = tc->getPosition();
+                auto size = tc->getSize();
                 if (_bound.contains(pos))
                     {
                         if ((_objectsInNode.size() < _maxGameObjects && !_isBranch) || !(_level != _maxLevel))
@@ -129,10 +130,12 @@ bool quadtree::add(gameObject *obj)
                                 _divide();
                             }
 
-                        if (_nWest->add(obj)) return true;
-                        if (_nEast->add(obj)) return true;
-                        if (_sWest->add(obj)) return true;
-                        if (_sEast->add(obj)) return true;
+                        bool added = false;
+                        added |= _nWest->add(obj);
+                        added |= _nEast->add(obj);
+                        added |= _sWest->add(obj);
+                        added |= _sEast->add(obj);
+                        return added;
                     }
             }
 
@@ -307,6 +310,11 @@ void quadtree::draw(sf::RenderWindow &app)
 sf::RectangleShape *quadtree::getOutline()
     {
         return &_shape;
+    }
+
+unsigned int quadtree::getLevel() const
+    {
+        return _level;
     }
 
 quadtree &quadtree::operator=(const quadtree &other)

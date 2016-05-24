@@ -196,10 +196,10 @@ void level::draw(sf::RenderWindow &app)
     {
 		sf::FloatRect camBound(
 			static_cast<sf::Vector2f>(app.getView().getCenter()) - sf::Vector2f(app.getView().getSize() / 1.5f),
-			app.getView().getSize() * 2.f);
+			app.getView().getSize() * 1.5f);
 
 		auto objectsInNode = _quadtree.getObjectsInRange(camBound);
-        for (auto &ent : _entities)
+        for (auto &ent : objectsInNode)
             {
                 auto textureComp = ent->get<textureComponent>();
                 if (textureComp)
