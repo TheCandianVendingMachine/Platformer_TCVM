@@ -65,18 +65,37 @@ bool collisionComponent::collide(gameObject *other)
 										auto obj = objSprite->getSprite();
 										sf::Vector2f overlap = _getOverlap(*otherCC);
 
+                                        if (overlap.x == 0.0f && overlap.y == 0.0f)
+                                            {
+                                                auto sc = _obj->get<stateComponent>();
+                                                if (sc)
+                                                    {
+                                                        sc->setState(stateComponent::IN_AIR);
+                                                    }
+                                            }
+
+                                        if (otherCC->getSurfaceType() == NON_COLLIDABLE)
+                                            {
+                                                overlap.x = 0.f;
+                                                overlap.y = 0.f;
+                                            }
+                                        else if (otherCC->getSurfaceType() == COLLIDABLE)
+                                            {
+                                                auto sc = _obj->get<stateComponent>();
+                                                if (sc)
+                                                    {
+                                                        sc->setState(stateComponent::WALKING);
+                                                    }
+                                            }
+
 										if (!_onCollide.empty())
 											{
-												if (otherCC->getSurfaceType() == NON_COLLIDABLE)
-													{
-														overlap.x = 0.f;
-														overlap.y = 0.f;
-													}
-
 												globals::_scriptManager->callLuaFunc(_onCollide,
 													*_obj->getGameObjectHandle(), *other->getGameObjectHandle(),
 													overlap.x, overlap.y);
 											}
+
+                                        
 
 										update();
 										_colliding = true;
