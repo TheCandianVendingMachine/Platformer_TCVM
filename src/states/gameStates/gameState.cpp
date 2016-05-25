@@ -24,7 +24,10 @@ gameState::gameState()
         _updateUnderneath = false;
         _state = GAME_STATE;
 
+        _lives = 3;
+
         globals::_eventManager->subscribe(this, NEXT_LEVEL);
+        globals::_eventManager->subscribe(this, PLAYER_LOSE_HEALTH);
     }
 
 void gameState::initialize()
@@ -60,8 +63,24 @@ void gameState::update(sf::Time deltaTime)
                     {
                         _world.load(_levelList[++_currentLevel]);
                     }
+                else
+                    {
+                        _lives = 0;
+                    }
                 _nextLevel = false;
             }
+
+        if (_lives <= 0)
+            {
+                globals::_stateMachine->getWindow()->setView(globals::_stateMachine->getWindow()->getDefaultView());
+                globals::_stateMachine->popState();
+            }
+
+        if (_lostLive)
+            {
+                _lostLive = false;
+            }
+
         _world.update(deltaTime);
     }
 
@@ -72,10 +91,25 @@ void gameState::cleanup()
 
 void gameState::alert(eventData data)
     {
-        _nextLevel = true;
+        switch (data._event)
+            {
+                case NEXT_LEVEL:
+                    _nextLevel = true;
+                    break;
+                case PLAYER_LOSE_HEALTH:
+                    if (!_lostLive)
+                        {
+                            _lostLive = true;
+                            _lives--;
+                        }
+                    break;
+                default:
+                    break;
+            }
     }
 
 gameState::~gameState()
     {
         globals::_eventManager->unsubscribe(this, NEXT_LEVEL);
+        globals::_eventManager->unsubscribe(this, PLAYER_LOSE_HEALTH);
     }

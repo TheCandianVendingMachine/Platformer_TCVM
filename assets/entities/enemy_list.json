@@ -1,23 +1,23 @@
 {
 	"spike" :
+	{
+		"textureComponent" :
 		{
-			"textureComponent" :
+			"texture" : "assets/textures/spike.png",
+			"texture_name" : "spike"
+		},
+		"collisionComponent" :
+		{
+			"on_collide_script" : "assets/scripts/spike.lua",
+			"on_collide_func_name" : "on_collide",
+			"surface_type" : "non_collidable",
+			"bounding_box" :
 			{
-				"texture" : "assets/textures/spike.png",
-				"texture_name" : "spike"
-			},
-			"collisionComponent" :
-			{
-				"on_collide_script" : "assets/scripts/spike.lua",
-				"on_collide_func_name" : "on_collide",
-				"surface_type" : "non_collideable",
-				"bounding_box" :
-				{
-					"size_X" : 0,
-					"size_Y" : 0,
-					"pos_X" : 0,
-					"pos_Y" : 0
-				}
+				"size_X" : 44,
+				"size_Y" : 32,
+				"pos_X" : 0,
+				"pos_Y" : 0
 			}
 		}
+	}
 }

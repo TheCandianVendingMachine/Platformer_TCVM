@@ -11,7 +11,7 @@ std::pair<sf::Vector2f, sf::Vector2f> collisionComponent::_getDistance(collision
     {
         auto first = *this;
         auto second = other;
-
+        
         auto firstObjBound = first.getBounds();
         auto secondObjBound = second.getBounds();
 
@@ -21,7 +21,7 @@ std::pair<sf::Vector2f, sf::Vector2f> collisionComponent::_getDistance(collision
         sf::Vector2f centerSecond(secondObjBound.left + (secondObjBound.width / 2),
                                   secondObjBound.top + (secondObjBound.height / 2));
 
-        sf::Vector2f distance(centerFirst - centerSecond);
+        sf::Vector2f distance(centerFirst.x - centerSecond.x, centerFirst.y - centerSecond.y);
         sf::Vector2f minDistance((firstObjBound.width / 2) + (secondObjBound.width / 2),
                                  (firstObjBound.height / 2) + (secondObjBound.height / 2));
 
@@ -95,10 +95,7 @@ bool collisionComponent::collide(gameObject *other)
 													overlap.x, overlap.y);
 											}
 
-                                        
-
 										update();
-										_colliding = true;
 									}
 							}
 					}

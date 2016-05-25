@@ -74,9 +74,4 @@ void userInterfaceFactory::update()
 
 userInterfaceFactory::~userInterfaceFactory()
     {
-        for (auto &elem : _UIButtons)
-            {
-                delete elem.second;
-                elem.second = nullptr;
-            }
     }

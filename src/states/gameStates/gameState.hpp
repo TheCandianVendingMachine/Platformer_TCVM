@@ -20,6 +20,9 @@ class gameState : public state, public observer
 
             bool _nextLevel;
 
+            bool _lostLive;
+            int _lives;
+
         public:
             gameState();
 

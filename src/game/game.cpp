@@ -5,7 +5,7 @@
 #include "imgui-SFML.h"
 
 #include "../utilities/randomizer.hpp"
-#include "../states/gameStates/gameState.hpp"
+#include "../states/gameStates/menuState.hpp"
 
 void game::initializeWindow()
     {
@@ -77,7 +77,7 @@ void game::initialize()
         initializeControls();
 
         globals::_stateMachine->setWindow(app);
-        globals::_stateMachine->queueState(new gameState);
+        globals::_stateMachine->queueState(new menuState);
 
         ImGui::SFML::Init(*app);
         
