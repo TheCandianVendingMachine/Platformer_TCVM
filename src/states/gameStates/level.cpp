@@ -1,22 +1,24 @@
 #include "level.hpp"
-
-#include "../gameObject/gameObject/gameObject.hpp"
-#include "../utilities/collision.hpp"
-#include "../gameObject/components/components.hpp"
-
-#include "../utilities/strFuncs.hpp"
-#include "../game/globals.hpp"
-
 #include "stateMachine.hpp"
 
-#include "../utilities/loadJsonFile.hpp"
+#include "../managers/events/eventManager.hpp"
+#include "../game/globals.hpp"
 
+#include "../gameObject/gameObject/gameObject.hpp"
+#include "../gameObject/components/components.hpp"
+
+#include "../utilities/collision.hpp"
+#include "../utilities/strFuncs.hpp"
+#include "../utilities/loadJsonFile.hpp"
 #include "../utilities/logger/logger.hpp"
 
 level::level()
     {
         _factory.initializeJsonFile("assets/entities/default_entity_list.json");
         _quadtree = quadtree(sf::FloatRect(sf::Vector2f(0, 0), sf::Vector2f(3000, 1500)));
+
+        globals::_eventManager->subscribe(this, PLAYER_LOSE_HEALTH);
+        _reloadLevel = false;
     }
 
 void level::unloadLevel()
@@ -29,6 +31,7 @@ void level::unloadLevel()
 void level::load(const std::string &levelPath)
     {
         unloadLevel();
+        _currentLevel = levelPath;
 
         if (!levelPath.empty())
             {
@@ -149,6 +152,12 @@ void level::save(const std::string &levelPath)
 
 void level::update(sf::Time deltaTime)
     {
+        if (_reloadLevel)
+            {
+                _reloadLevel = false;
+                load(_currentLevel);
+            }
+
         auto collisonComp = &collisionComponent();
         if (_player)
             {
@@ -174,15 +183,14 @@ void level::update(sf::Time deltaTime)
                                         collisonComp->collide(collisionEnt);
                                     }
 
-                                auto cc = collisionEnt->get<collisionComponent>();
-                                if (cc && collisionEnt->getID() != _player->getID())
+                                // manually say which entities will be able to test for collisions. These are hte only 2 that ever need to test for collisions, so we let them
+                                // we do this because gameObject::get<typename T> is super duper slow, for some reason
+                                if (collisionEnt->getName() == "exit" || collisionEnt->getName() == "spike")
                                     {
-                                        for (auto &otherCollisionEnt : objectsInNode)
+                                        auto cc = collisionEnt->get<collisionComponent>();
+                                        if (cc)
                                             {
-                                                if (otherCollisionEnt->getID() != collisionEnt->getID())
-                                                    {
-                                                        cc->collide(otherCollisionEnt);
-                                                    }
+                                                cc->collide(_player);
                                             }
                                     }
                             }
@@ -283,6 +291,12 @@ void level::removeEntity(gameObject *obj)
             }
     }
 
+void level::alert(eventData data)
+    {
+        _reloadLevel = true;
+    }
+
 level::~level()
     {
+        globals::_eventManager->unsubscribe(this, PLAYER_LOSE_HEALTH);
     }

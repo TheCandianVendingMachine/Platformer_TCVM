@@ -71,13 +71,13 @@ void quadtree::_undivide()
         _sEast = nullptr;
     }
 
-quadtree::quadtree() : _maxGameObjects(3), _maxLevel(5)
+quadtree::quadtree() : _maxGameObjects(3), _maxLevel(4)
     {
         _bound = sf::FloatRect();
         _isBranch = false;
     }
 
-quadtree::quadtree(sf::FloatRect bounds, quadtree *parent, unsigned int level) : _maxGameObjects(3), _maxLevel(5)
+quadtree::quadtree(sf::FloatRect bounds, quadtree *parent, unsigned int level) : _maxGameObjects(3), _maxLevel(4)
     {
         _parent = parent;
 
@@ -97,6 +97,8 @@ quadtree::quadtree(sf::FloatRect bounds, quadtree *parent, unsigned int level) :
 
 void quadtree::clear()
     {
+        _objectsInNode.clear();
+
         if (_nWest)
             {
                 _nWest->clear();
@@ -112,7 +114,6 @@ void quadtree::clear()
                 _sEast = nullptr;
             }
 
-        _objectsInNode.clear();
         _isBranch = false;
     }
 
@@ -178,17 +179,12 @@ bool quadtree::remove(gameObject *obj)
                 return true;
             }
 
-        if (_nWest)
-            {
-				bool removed = false;
-				removed |= _nWest->remove(obj);
-				removed |= _nEast->remove(obj);
-				removed |= _sWest->remove(obj);
-				removed |= _sEast->remove(obj);
-				return removed;
-            }
-
-        return false;
+		bool removed = false;
+		if (_nWest) removed |= _nWest->remove(obj);
+		if (_nEast) removed |= _nEast->remove(obj);
+		if (_sWest) removed |= _sWest->remove(obj);
+		if (_sEast) removed |= _sEast->remove(obj);
+        return removed;
     }
 
 void quadtree::update(gameObject *obj)
@@ -217,7 +213,7 @@ std::vector<gameObject*> quadtree::getObjectsInRange(sf::FloatRect range)
                         objects = _sEast->getObjectsInRange(range);
                         retVec.insert(retVec.end(), objects.begin(), objects.end());
 
-						_getRidOfDuplicates(retVec);
+						//_getRidOfDuplicates(retVec);
 
                         return retVec;
                     }

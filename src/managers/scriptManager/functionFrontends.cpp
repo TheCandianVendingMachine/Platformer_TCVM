@@ -14,6 +14,10 @@ namespace frontendFuncs
                     {
                         eventUsed = NEXT_LEVEL;
                     }
+                else if (event == "player_lose_health")
+                    {
+                        eventUsed = PLAYER_LOSE_HEALTH;
+                    }
 
                 globals::_eventManager->alert(eventData(eventUsed));
             }

@@ -29,6 +29,7 @@ enum events
         RELOAD_ENTITY_LIST,
         LOAD_ENTITY_LIST,
         NEXT_LEVEL,
+        PLAYER_LOSE_HEALTH,
     };
 
 struct eventData

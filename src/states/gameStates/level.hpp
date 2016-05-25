@@ -11,8 +11,8 @@
 #include <SFML/System/Vector2.hpp>
 
 #include "../gameObject/gameObject/gameObjectFactory.hpp"
-
 #include "../utilities/json/json/json.h"
+#include "../managers/events/observer.hpp"
 
 #include "../game/globals.hpp"
 
@@ -20,7 +20,7 @@
 
 class gameObject;
 
-class level
+class level : public observer
     {
         private:
             gameObjectFactory _factory;
@@ -32,6 +32,9 @@ class level
 
             std::vector<gameObject*> _platforms;
             std::vector<gameObject*> _entities;
+
+            std::string _currentLevel;
+            bool _reloadLevel;
 
         public:
             level();
@@ -53,6 +56,8 @@ class level
             quadtree *getQuadTree();
 
             void removeEntity(gameObject *obj);
+
+            void alert(eventData data);
 
             ~level();
 

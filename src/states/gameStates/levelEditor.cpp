@@ -62,6 +62,7 @@ void levelEditor::handleUI()
 						if (_selectedEntity)
 							{
                                 ImGui::Text("Entity ID:"); ImGui::SameLine(125); ImGui::Text(std::to_string(_selectedEntity->getID()).c_str());
+                                ImGui::Text("Entity Name:"); ImGui::SameLine(125); ImGui::Text(_selectedEntity->getName().c_str());
 								ImGui::Text("Components");
 								for (auto &comp : *_selectedEntity->getAllComponents())
 									{
