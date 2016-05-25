@@ -16,6 +16,8 @@ class menuState : public state
 
             userInterfaceFactory _uiFactory;
 
+			sf::View _menuView;
+
         public:
             menuState();
 

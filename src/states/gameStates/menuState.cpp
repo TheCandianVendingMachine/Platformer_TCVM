@@ -29,6 +29,9 @@ void menuState::initialize()
         _isInitialized = true;
         auto app = globals::_stateMachine->getWindow();
 
+		_menuView = app->getDefaultView();
+		app->setView(_menuView);
+
         _start.getText()->setFont(*_uiFactory.getFont());
         _start.setString("Start Game");
         _start.setColour(sf::Color::Red);
@@ -37,6 +40,7 @@ void menuState::initialize()
                           (app->getSize().y / 2) - (_start.getText()->getLocalBounds().height / 2) - 30));
         _start.setFunction([] () 
             {
+				globals::_stateMachine->popState();
                 globals::_stateMachine->queueState(new gameState);
             });
         _uiFactory.add("start", &_start);
@@ -61,5 +65,4 @@ void menuState::cleanup()
 
 menuState::~menuState()
     {
-    
     }

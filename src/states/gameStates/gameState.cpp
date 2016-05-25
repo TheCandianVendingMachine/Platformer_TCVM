@@ -16,6 +16,8 @@
 
 #include "../utilities/loadJsonFile.hpp"
 
+#include "menuState.hpp"
+
 #include <algorithm>
 
 gameState::gameState()
@@ -32,6 +34,8 @@ gameState::gameState()
 
 void gameState::initialize()
     {
+		_uiFactory.setFont("assets/textures/fonts/Squares_Bold_Free.otf");
+
         globals::_logger->logToConsole("Initializing game state");
         globals::_keyboardManager->changeFunction("change_to_editor", [this] () { globals::_stateMachine->queueState(new levelEditor(&_world)); });
 
@@ -48,16 +52,38 @@ void gameState::initialize()
             {
                 _world.load(_levelList[_currentLevel]);
             }
+
+		_uiFactory.add("lives", "Lives Left:");
+		_uiFactory.add("livesLeft", std::to_string(_lives));
+
+		_uiFactory.add("gameOverText", "");
+		_uiFactory.getText("gameOverText")->setColor(sf::Color::Red);
+
+		_gameOver = false;
     }
 
 void gameState::render()
     {
         _world.draw(*globals::_stateMachine->getWindow());
+		_uiFactory.draw(*globals::_stateMachine->getWindow());
     }
 
 void gameState::update(sf::Time deltaTime)
     {
-        if (_nextLevel)
+		auto lives = _uiFactory.getText("lives");
+		auto livesLeft = _uiFactory.getText("livesLeft");
+		auto gameOverText = _uiFactory.getText("gameOverText");
+		auto windowView = globals::_stateMachine->getWindow()->getView();
+
+		lives->setPosition(windowView.getCenter() - (windowView.getSize() / 2.f));
+		livesLeft->setPosition(windowView.getCenter() -
+							  (windowView.getSize() / 2.f) +
+				 sf::Vector2f((lives->getCharacterSize() * lives->getString().getSize()) / 1.5, 0));
+
+		gameOverText->setPosition(windowView.getCenter() - 
+			         sf::Vector2f(gameOverText->getGlobalBounds().width / 2, gameOverText->getGlobalBounds().height / 2.f));
+        
+		if (_nextLevel)
             {
                 if (_levelList.size() > (_currentLevel + 1))
                     {
@@ -65,23 +91,44 @@ void gameState::update(sf::Time deltaTime)
                     }
                 else
                     {
-                        _lives = 0;
+						if (!_gameOver)
+							{
+								_endGameCountdown.start(sf::seconds(4));
+							}
+						_gameOver = true;
+						_uiFactory.getText("gameOverText")->setString("You have completed all of the levels. You Win!\n" +
+							                           std::to_string(static_cast<int>(_endGameCountdown.getRemainingTime().asSeconds())));
                     }
                 _nextLevel = false;
-            }
-
-        if (_lives <= 0)
-            {
-                globals::_stateMachine->getWindow()->setView(globals::_stateMachine->getWindow()->getDefaultView());
-                globals::_stateMachine->popState();
             }
 
         if (_lostLive)
             {
                 _lostLive = false;
+				_uiFactory.getText("livesLeft")->setString(std::to_string(_lives));
             }
 
-        _world.update(deltaTime);
+		if (_lives <= 0)
+            {
+				if (!_gameOver) 
+					{
+						_endGameCountdown.start(sf::seconds(4));
+					}
+				_gameOver = true;
+				_uiFactory.getText("gameOverText")->setString("You lost all of your Lives. Game Over\n" +
+									           std::to_string(static_cast<int>(_endGameCountdown.getRemainingTime().asSeconds())));
+            }
+
+		if (_gameOver && _endGameCountdown.isDone())
+			{
+				globals::_stateMachine->popState();
+				globals::_stateMachine->queueState(new menuState);
+			}
+
+		if (!_endGameCountdown.getRunning()) 
+			{
+				_world.update(deltaTime);
+			}
     }
 
 void gameState::cleanup()

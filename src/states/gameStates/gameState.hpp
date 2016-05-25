@@ -5,15 +5,22 @@
 #include "state.hpp"
 #include "level.hpp"
 
+#include "../utilities/countdown.hpp"
+
 #include "../managers/events/observer.hpp"
+#include "../UI/regular/userInterfaceFactory.hpp"
 
 #include <vector>
 #include <string>
 
 class gameState : public state, public observer
     {
-        private:
+		private:
+			userInterfaceFactory _uiFactory;
             level _world;
+
+			bool _gameOver;
+			countdown _endGameCountdown;
 
             unsigned int _currentLevel;
             std::vector<std::string> _levelList;

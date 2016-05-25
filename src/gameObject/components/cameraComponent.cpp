@@ -54,7 +54,7 @@ void cameraComponent::update(sf::Time deltaTime)
 										// Set the speed of camera 100 speeds more than hte follow objects max speed
 										// This is so the follow object can never leave the camera view, and if he does
 										// he will return to the view eventually
-										speed = mc->getMaxSpeed() + 100.f;
+										speed = mc->getMaxSpeed();
 									}
 								float angle = atan2(objPos.y - _view.getCenter().y, objPos.x - _view.getCenter().x);
 								_impulse = sf::Vector2f(cos(angle), sin(angle)) * speed;
